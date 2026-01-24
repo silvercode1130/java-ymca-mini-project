@@ -1,0 +1,173 @@
+1. 프로젝트 개요
+자바 + SQL(이클립스 사용)로 만드는 반려동물 쇼핑몰 + 커뮤니티 미니프로젝트
+
+목표:
+회원/반려동물 정보 관리
+상품 판매(장바구니, 주문)
+게시판 + 파일 첨부
+규모는 미니프로젝트라 PK는 전부 int + auto increment로 간다.
+
+2. 핵심 도메인 및 테이블 설계 요약
+
+=====회원 관련
+-----member
+
+mem_idx (PK, int) : 내부용 회원 번호
+mem_id (String, UNIQUE) : 로그인 아이디 (변경 불가)
+mem_pwd, mem_name, mem_tel, mem_email
+mem_grade_idx (int, FK → grade)
+mem_role_idx (int, FK → role)
+mem_bday, mem_regdate (DB에선 DATE/DATETIME 예정)
+
+-----member_profile
+“회원 1명당 프로필 1개” 가정
+
+mem_idx (PK & FK → member)
+mem_nickname, mem_intro, mem_img
+
+-----member_addr
+회원당 여러 주소 가능
+
+addr_idx (PK, int)
+mem_idx (FK)
+mem_zipcode, mem_addr, mem_addrdetail
+
+-----role
+
+role_idx (PK, int)
+role_name (user / doctor / admin)
+
+-----grade
+
+grade_idx (PK, int)
+grade_name (basic / silver / gold / vip)
+grade_discount_rate (BigDecimal, 예: 0.05, 0.1 등)
+
+
+=====반려동물
+-----pet
+
+pet_idx (PK, int)
+mem_idx (FK)
+pet_name
+is_primary (대표 반려동물 여부, Y/N)
+pet_species, pet_gender, pet_breed
+pet_age (int)
+pet_bday 
+
+
+=====상품 / 장바구니 / 주문
+-----item
+
+item_idx (PK, int)
+item_name
+item_price (int, 원 단위 정수)
+item_thumbnail_img, item_detail_img (이미지 경로)
+item_stock (int)
+item_category
+item_regdate
+
+-----cart
+
+cart_idx (PK, int)
+mem_idx (FK, int)
+cart_regdate
+
+-----cart_item
+
+cart_item_idx (PK, int)
+cart_idx (FK, int)
+item_idx (FK, int)
+cart_item_quantity (int)
+
+-----order
+
+order_idx (PK, int)
+mem_idx (FK, int)
+order_total_price (int)
+order_grade_discount (BigDecimal)
+order_coupon_discount (BigDecimal)
+order_regdate
+order_status (결제됨 / 취소됨 / 배송중 등, 나중에 enum 고려 가능)
+
+-----order_item
+
+order_item_idx (PK, int)
+order_idx (FK, int)
+item_idx (FK, int)
+order_item_quantity (int)
+order_price_at (int 또는 BigDecimal, 주문 시점 단가)
+
+
+=====커뮤니티 / 파일 첨부
+-----board
+
+board_idx (PK, int)
+mem_idx (FK, int)
+board_title, board_content
+board_type (QnA / 공지사항 등, 추후 enum/코드 테이블 가능)
+
+-----board_file
+
+file_idx (PK, int)
+board_idx (FK, int)
+file_original_name (유저가 올린 이름)
+file_saved_name (서버에 저장된 실제 파일명, 중복 방지용)
+file_path (경로)
+file_size (int, 용량)
+file_type (MIME 타입 / 확장자)
+file_regdate
+
+-----reply
+
+reply_idx (PK, int)
+board_idx (FK, int)
+mem_idx (FK, int)
+reply_content
+reply_regdate, reply_moddate
+
+
+3. 구현하려는 기능(도메인 기준)
+-----회원
+회원가입 / 로그인
+회원탈퇴
+
+마이페이지:
+기본 정보 조회
+프로필(닉네임, 소개, 이미지) 조회/수정
+주소 관리(추가/수정/삭제)
+
+-----반려동물
+반려동물 등록/수정/삭제
+대표 반려동물 설정(is_primary)
+
+-----상품/쇼핑
+상품 목록 / 상세
+장바구니 담기 / 수정 / 삭제
+주문 생성(장바구니 → 주문)
+등급/쿠폰 할인 반영된 금액 계산
+회원별 주문 내역 조회
+
+-----커뮤니티
+게시글 목록 / 작성 / 수정 / 삭제
+게시글별 이미지 파일 첨부(여러 개)
+댓글 등록/수정/삭제
+
+4. 이번 프로젝트에서의 MVP 목표
+MVP (Minimum Viable Product) = 최소 기능 제품
+
+회원 + 로그인
+회원가입
+로그인/로그아웃
+마이페이지에서 내 정보 조회
+
+상품 → 장바구니 → 주문 한 사이클
+상품 목록/상세 조회
+장바구니에 담기 / 수량 변경 / 삭제
+주문 생성 + 주문 내역 조회
+
+게시판 + 파일 첨부(이미지)
+게시글 목록/상세
+글 작성 시 이미지 업로드(파일 테이블 활용)
+댓글 작성
+
