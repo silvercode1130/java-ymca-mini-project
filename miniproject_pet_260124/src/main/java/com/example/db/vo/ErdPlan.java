@@ -102,28 +102,28 @@ class cart_item {
 
 //=========== 주문정보 ============
 class orders {
-	int				order_idx;				// pk
+	int				orders_idx;				// pk
 
 	int				mem_idx;				// fk: member(mem_idx)
-	int				order_total_price;
-	BigDecimal 		order_grade_discount;	// 등급할인액
-	BigDecimal 		order_coupon_discount;	// 쿠폰할인액
-	int				order_status_idx;		// fk: order_status(order_status_idx)
-	LocalDateTime	order_regdate;
+	int				orders_total_price;
+	BigDecimal 		orders_grade_discount;	// 등급할인액
+	BigDecimal 		orders_coupon_discount;	// 쿠폰할인액
+	int				orders_status_idx;		// fk: orders_status(orders_status_idx)
+	LocalDateTime	orders_regdate;
 }
 
 class orders_item {
-	int				order_item_idx;			// pk
+	int				orders_item_idx;			// pk
 
-	int				order_idx;				// fk: order(order_idx)
+	int				orders_idx;				// fk: orders(orders_idx)
 	int				item_idx;				// fk: item(item_idx)
-	int				order_item_quantity;
-	int				order_price_at; 		// 주문시점 단가
+	int				orders_item_quantity;
+	int				orders_price_at; 		// 주문시점 단가
 }
 
 class orders_status {
-	int				order_status_idx;		// pk
-	String			order_status_name;		// 주문상태 (결제됨 / 취소됨 / 배송중 등)
+	int				orders_status_idx;		// pk
+	String			orders_status_name;		// 주문상태 (결제됨 / 취소됨 / 배송중 등)
 }
 
 //=========== 커뮤니티 ============
@@ -134,9 +134,18 @@ class board {
 	String			board_title;
 	String			board_content;
 	String			board_ip;
-	String			board_type;		// 게시판 타입 (QnA / 공지사항 등)
+	int				board_type_idx;		// fk: board_type(board_type_idx)
 	LocalDateTime	board_regdate;
 	LocalDateTime	board_moddate;
+}
+
+class board_type {
+	int				board_type_idx;		// pk
+	
+	String			board_type_code;
+	String			board_type_name;
+	String			board_can_comment;	// 댓글여부 (y/n)
+	int				board_min_role;		// 쓰기권한. role
 }
 
 class board_file {

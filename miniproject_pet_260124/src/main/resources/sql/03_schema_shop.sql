@@ -1,3 +1,4 @@
+/*
 -- 3. 상품 / 장바구니
 CREATE TABLE item (
     item_idx            NUMBER          PRIMARY KEY,
@@ -31,3 +32,5 @@ CREATE TABLE cart_item (
     CONSTRAINT fk_cart_item_item
         FOREIGN KEY (item_idx) REFERENCES item(item_idx)
 );
+
+*/

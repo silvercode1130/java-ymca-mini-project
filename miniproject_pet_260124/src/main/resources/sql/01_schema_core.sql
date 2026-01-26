@@ -1,3 +1,4 @@
+/*
 -- 0. 코드 테이블
 CREATE TABLE role (
     role_idx    NUMBER        PRIMARY KEY,
@@ -48,3 +49,5 @@ CREATE TABLE member_addr (
         FOREIGN KEY (mem_idx) REFERENCES member(mem_idx)
         ON DELETE CASCADE
 );
+
+*/

@@ -1,16 +1,27 @@
--- 5. 코드 테이블들
+/*
+-- 5. 커뮤니티
+CREATE TABLE board_type (
+    board_type_idx    NUMBER         PRIMARY KEY,
+    board_type_code   VARCHAR2(50)   UNIQUE NOT NULL,
+    board_type_name   VARCHAR2(100)  NOT NULL,
+    board_can_comment CHAR(1)        DEFAULT 'Y' CHECK (board_can_comment IN ('Y','N')),
+    board_min_role    NUMBER         NOT NULL
+);
+
 CREATE TABLE board (
     board_idx      NUMBER          PRIMARY KEY,
     mem_idx        NUMBER          NOT NULL,
     board_title    VARCHAR2(200)   NOT NULL,
     board_content  CLOB,
     board_ip       VARCHAR2(40),
-    board_type     VARCHAR2(20),       -- QnA / 공지 등
+    board_type_idx NUMBER		   NOT NULL,
     board_regdate  DATE            DEFAULT SYSDATE,
     board_moddate  DATE,
     CONSTRAINT fk_board_member
         FOREIGN KEY (mem_idx) REFERENCES member(mem_idx)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT fk_board_board_type
+        FOREIGN KEY (board_type_idx) REFERENCES board_type(board_type_idx)
 );
 
 CREATE TABLE board_file (
@@ -41,3 +52,5 @@ CREATE TABLE reply (
     CONSTRAINT fk_reply_member
         FOREIGN KEY (mem_idx)  REFERENCES member(mem_idx)
 );
+
+*/
