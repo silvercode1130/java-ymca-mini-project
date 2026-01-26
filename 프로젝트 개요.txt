@@ -80,23 +80,23 @@ cart_idx (FK, int)
 item_idx (FK, int)
 cart_item_quantity (int)
 
------order
+-----orders
 
-order_idx (PK, int)
+orders_idx (PK, int)
 mem_idx (FK, int)
-order_total_price (int)
-order_grade_discount (BigDecimal)
-order_coupon_discount (BigDecimal)
-order_regdate
-order_status (결제됨 / 취소됨 / 배송중 등, 나중에 enum 고려 가능)
+orders_total_price (int)
+orders_grade_discount (BigDecimal)
+orders_coupon_discount (BigDecimal)
+orders_regdate
+orders_status (결제됨 / 취소됨 / 배송중 등, 나중에 enum 고려 가능)
 
------order_item
+-----orders_item
 
-order_item_idx (PK, int)
-order_idx (FK, int)
+orders_item_idx (PK, int)
+orders_idx (FK, int)
 item_idx (FK, int)
-order_item_quantity (int)
-order_price_at (int 또는 BigDecimal, 주문 시점 단가)
+orders_item_quantity (int)
+orders_price_at (int 또는 BigDecimal, 주문 시점 단가)
 
 
 =====커뮤니티 / 파일 첨부
