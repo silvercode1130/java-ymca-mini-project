@@ -3,7 +3,7 @@ package com.example.db.vo;
 import lombok.Data;
 
 @Data
-public class boardVo {
+public class BoardVo {
 	
 		   String board_id;   //pk
 		   
@@ -12,7 +12,7 @@ public class boardVo {
 		   String board_content;
 		   String type;
 		   // 게시판 타입 (QnA / 공지사항 등)
-		   public static int insert(boardVo vo) {
+		   public static int insert(BoardVo vo) {
 			// TODO Auto-generated method stub
 			return 0;
 		   }
