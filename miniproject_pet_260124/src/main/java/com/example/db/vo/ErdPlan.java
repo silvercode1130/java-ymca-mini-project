@@ -17,10 +17,13 @@ class member {
 	String			mem_name;
 	String			mem_tel;
 	String			mem_email;
+	String			mem_ip;
 	int				mem_role_idx;	// fk: role(role_idx)
 	int				mem_grade_idx;	// fk: grade(grade_idx)
 	String			mem_bday;
 	LocalDateTime	mem_regdate;
+	String			mem_is_deleted;	// 탈퇴여부 (y/n)
+	LocalDateTime	mem_deldate;	// 탈퇴일
 }
 
 class member_profile {
@@ -128,15 +131,17 @@ class orders_status {
 
 //=========== 커뮤니티 ============
 class board {
-	int				board_idx;		// pk
+	int				board_idx;			// pk
 
-	int				mem_idx;		// fk: member(mem_idx)
+	int				mem_idx;			// fk: member(mem_idx)
 	String			board_title;
 	String			board_content;
 	String			board_ip;
 	int				board_type_idx;		// fk: board_type(board_type_idx)
 	LocalDateTime	board_regdate;
 	LocalDateTime	board_moddate;
+	String			board_is_deleted;	// 게시글 삭제여부 (y/n)
+	LocalDateTime	board_deldate;		// 삭제일
 }
 
 class board_type {
@@ -162,12 +167,17 @@ class board_file {
 }
 
 class reply {
-	int				reply_idx;		// pk
+	int				reply_idx;			// pk
 
-	int				board_idx;		// fk: board(board_idx)
-	int				mem_idx;		// fk: member(mem_idx)
+	int				board_idx;			// fk: board(board_idx)
+	int				mem_idx;			// fk: member(mem_idx)
 	String			reply_content;
 	String			reply_ip;
 	LocalDateTime	reply_regdate;
 	LocalDateTime	reply_moddate;
+	String			reply_is_deleted;	// 댓글 삭제여부 (y/n)
+	LocalDateTime	reply_deldate;		// 댓글 삭제일
+	int				reply_ref;			// 원댓
+	int				reply_step;			// 댓글 순서
+	int				reply_depth;		// 댓글 깊이
 }
