@@ -137,6 +137,8 @@ class board {
 	String			board_title;
 	String			board_content;
 	String			board_ip;
+	String			board_tag;			// 글 주제 ('DOG', 'CAT', 'NONE')
+	int				board_readhit;		// 조회수
 	int				board_type_idx;		// fk: board_type(board_type_idx)
 	LocalDateTime	board_regdate;
 	LocalDateTime	board_moddate;

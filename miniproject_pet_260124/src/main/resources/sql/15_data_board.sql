@@ -44,19 +44,23 @@ INSERT INTO board (
 -- 예시: 자유게시판 글(board_idx = 3번이라고 가정)에 일반 유저 댓글
 INSERT INTO reply (
     reply_idx, board_idx, mem_idx,
-    reply_content, reply_ip, reply_regdate, reply_moddate
+    reply_content, reply_ip, reply_regdate, reply_moddate,
+    reply_ref, reply_step, reply_depth
 ) VALUES (
     seq_reply_idx.NEXTVAL, 3, 6,
-    '고양이 너무 귀여워요!', '172.30.1.20', SYSDATE, SYSDATE
+    '고양이 너무 귀여워요!', '172.30.1.20', SYSDATE, SYSDATE,
+    seq_reply_idx.CURRVAL, 0, 0
 );
 
 -- 예시: QnA 글(board_idx = 4번이라고 가정)에 수의사 댓글
 INSERT INTO reply (
     reply_idx, board_idx, mem_idx,
-    reply_content, reply_ip, reply_regdate, reply_moddate
+    reply_content, reply_ip, reply_regdate, reply_moddate,
+    reply_ref, reply_step, reply_depth
 ) VALUES (
     seq_reply_idx.NEXTVAL, 4, 2,
-    '해당 증상은 병원 내원 후 검진을 권장드립니다.', '172.30.1.21', SYSDATE, SYSDATE
+    '해당 증상은 병원 내원 후 검진을 권장드립니다.', '172.30.1.21', SYSDATE, SYSDATE,
+    seq_reply_idx.CURRVAL, 0, 0
 );
 
 */
