@@ -2,21 +2,35 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mapper -> MyBatis에서 SQL들이 모여 있는 가장 바깥 상자(컨테이너) 역할 즉, SQL 파일임을 알리는 시작점 -->
+<!-- namespace ->  mapper가 어떤 Dao와 연결되는지 알려주는 이름표 -->
 <mapper namespace="com.example.db.dao.ItemDao">
+	<!-- id -> dao에서 요청한 메서드를 어떤 sql코드를 실행해야할지 알려주는 이름(dao의 메서드 이름과 id는 동일해야함!!) -->
+	<!-- resultType -> SQL 결과를 어떤 Java 객체에 담을지 지정 -->
 	<select id="getItemList" resultType="com.example.db.vo.item">
-        SELECT * FROM item ORDER BY item_idx DESC
+        SELECT * FROM item ORDER BY item_idx DESC  <!-- item이라는 테이블을 내림차순(최신순)으로 조회 -->
     </select>
     
+    <!-- #{} -> 자바에서 받은 값을 sql에서 안전하게 사용할 수 있도록 도와줌(파라미터 바인딩이라고 함) -->
     <select id="getItemDetail" resultType="com.example.db.vo.item">
-    	SELECT * FROM item WHERE item_idx = #{item_idx}
+    	SELECT * FROM item WHERE item_idx = #{item_idx}  <!-- item이라는 테이블에서 요청받은 idx만 조회 -->
     </select>
     
+    <!-- 
+    	태그는 MyBatis가 SQL 목적을 구분하도록 돕는 표시 
+    	select면 MyBatis가 아 이건 select문이구나 하고 생각함
+    	단, 태그 이름 ≠ SQL 문법이 아님 -> <select> 안에는 실제 SQL로 SELECT ... 라고 직접 써야 함
+    -->
     <select id="searchItem"  resultType="com.example.db.vo.item">
-	    SELECT * FROM item WHERE item_name LIKE '%' || #{searchKeyword} || '%'
+	    SELECT * FROM item WHERE REGEXP_REPLACE(item_name, '\s', '') 
+	    							LIKE '%' || REGEXP_REPLACE(#{searchKeyword}, '\s', '') || '%' ORDER BY item_idx DESC 
+	    <!-- item이라는 테이블에서 요청받은 값이 포함된 name을 앞, 뒤, 중간 공백(탭, 스페이스, 줄바꿈 등)을 제거 후 내림차순(최신순)으로 모두 조회 -->
 	</select>
 	
 	<select id="getItemByCategory" resultType="com.example.db.vo.item">
-	    SELECT * FROM item WHERE item_category LIKE '%' || #{category} || '%' ORDER BY item_idx DESC
+	    SELECT * FROM item WHERE REGEXP_REPLACE(item_category, '\s', '') 
+	    							LIKE '%' || REGEXP_REPLACE(#{category}, '\s', '') || '%' ORDER BY item_idx DESC
+	    <!-- item이라는 테이블에서 요청받은 값이 포함된 category를 앞, 뒤, 중간 공백(탭, 스페이스, 줄바꿈 등)을 제거 후 내림차순(최신순)으로 모두 조회-->
 	</select>
 </mapper>
 
