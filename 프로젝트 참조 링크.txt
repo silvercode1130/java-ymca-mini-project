@@ -1,8 +1,0 @@
-비마이펫
-https://bemypet.kr/
-
-구현 페이지 시안
-https://www.figma.com/make/VV34BLmVuKnyRctE863RWd/Pet-Information-Platform?t=Dt0mKmC5eeHKWG2H-20&fullscreen=1
-
-기능설계서 스프레드시트
-https://docs.google.com/spreadsheets/d/1o4zGhT_OBVLwxQK1_C2PXDaeKXXReeqgzKKGeyDpdWw/edit?usp=sharing
