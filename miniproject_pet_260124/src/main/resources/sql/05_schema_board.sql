@@ -13,7 +13,9 @@ CREATE TABLE board (
     mem_idx        	  NUMBER          NOT NULL,
     board_title       VARCHAR2(200)   NOT NULL,
     board_content  	  CLOB,
-    board_ip       	  VARCHAR2(40),
+    board_ip       	  VARCHAR2(40)	  NOT NULL,
+    board_tag		  VARCHAR2(40)	  DEFAULT 'NONE',
+    board_readhit	  NUMBER		  DEFAULT 0,
     board_type_idx 	  NUMBER		  NOT NULL,
     board_regdate  	  DATE            DEFAULT SYSDATE,
     board_moddate  	  DATE,
@@ -25,7 +27,9 @@ CREATE TABLE board (
     CONSTRAINT fk_board_board_type
         FOREIGN KEY (board_type_idx) REFERENCES board_type(board_type_idx),
     CONSTRAINT ck_board_is_deleted
-    	CHECK (board_is_deleted IN ('Y','N'))
+    	CHECK (board_is_deleted IN ('Y','N')),
+    CONSTRAINT ck_board_tag
+    	CHECK (board_tag IN ('DOG','CAT','NONE'))
 );
 
 CREATE TABLE board_file (
