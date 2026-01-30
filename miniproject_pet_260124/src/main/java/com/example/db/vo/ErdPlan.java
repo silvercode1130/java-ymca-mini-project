@@ -7,7 +7,7 @@ public class ErdPlan {
 // 각 클래스 변수들을 한 눈에 보려고 정리한 파일입니다.
 // vo 만들때 참조하세요.
 }
-
+/*
 //=========== 회원정보 ============
 class member {
 	int				mem_idx;		// pk
@@ -183,3 +183,4 @@ class reply {
 	int				reply_step;			// 댓글 순서
 	int				reply_depth;		// 댓글 깊이
 }
+*/

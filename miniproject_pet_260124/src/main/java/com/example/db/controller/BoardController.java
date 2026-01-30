@@ -192,7 +192,7 @@ public class BoardController {
 	    }
 
 	    BoardVo vo = boardDao.selectOne(board_idx); // 글 정보 가져오기
-	    if (vo == null || !vo.getMem_idx().equals(user.getMem_idx())) {
+	    if (vo == null || vo.getMem_idx() != (user.getMem_idx())) {
 	        // 본인 글 아니거나 권한없음
 	        ra.addAttribute("reason", "no_permission");
 	        return "redirect:list.do";
