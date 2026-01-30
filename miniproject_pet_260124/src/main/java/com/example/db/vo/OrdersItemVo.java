@@ -1,5 +1,11 @@
 package com.example.db.vo;
 
+import org.apache.ibatis.type.Alias;
+
+import lombok.Data;
+
+@Data
+@Alias("orders_item")
 public class OrdersItemVo {
 	int				orders_item_idx;			// pk
 

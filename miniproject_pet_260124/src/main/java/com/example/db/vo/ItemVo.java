@@ -2,6 +2,12 @@ package com.example.db.vo;
 
 import java.time.LocalDateTime;
 
+import org.apache.ibatis.type.Alias;
+
+import lombok.Data;
+
+@Data
+@Alias("item")
 public class ItemVo {
 	int				item_idx;		// pk
 
@@ -13,8 +19,7 @@ public class ItemVo {
 	String			item_category;	// 상품분류 (강아지/고양이, 사료, 산책용품 등)
 	LocalDateTime	item_regdate;
 	LocalDateTime	item_moddate;
-	
-	
+
 	public int getItem_idx() {
 		return item_idx;
 	}
@@ -69,5 +74,4 @@ public class ItemVo {
 	public void setItem_moddate(LocalDateTime item_moddate) {
 		this.item_moddate = item_moddate;
 	}
-	
 }

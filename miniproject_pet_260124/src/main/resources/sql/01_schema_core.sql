@@ -19,14 +19,19 @@ CREATE TABLE member (
     mem_name       VARCHAR2(50),
     mem_tel        VARCHAR2(20),
     mem_email      VARCHAR2(100),
+    mem_ip		   VARCHAR2(100)  NOT NULL,
     mem_role_idx   NUMBER         NOT NULL,
     mem_grade_idx  NUMBER         NOT NULL,
     mem_bday       DATE,
     mem_regdate    DATE           DEFAULT SYSDATE,
+    mem_is_deleted CHAR(1) 		  DEFAULT 'N',
+    mem_deldate	   DATE,
     CONSTRAINT fk_member_role
         FOREIGN KEY (mem_role_idx)  REFERENCES role(role_idx),
     CONSTRAINT fk_member_grade
-        FOREIGN KEY (mem_grade_idx) REFERENCES grade(grade_idx)
+        FOREIGN KEY (mem_grade_idx) REFERENCES grade(grade_idx),
+    CONSTRAINT ck_mem_is_deleted
+    	CHECK (mem_is_deleted IN ('Y','N'))
 );
 
 CREATE TABLE member_profile (

@@ -39,7 +39,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<!-- resultMap : 위에서 만든 설계도(id="CartMap")를 사용해서 결과를 포장하겠다는 뜻(resultType 대신 **resultMap**을 쓴다는 게 중요) -->
 	<select id="getCart" resultMap="CartMap">
 	    SELECT ci.cart_item_idx, ci.cart_item_quantity, i.item_idx, i.item_name, i.item_price, i.item_thumbnail_img
-	    			  FROM cart_item ci JOIN item i ON ci.item_idx = i.item_idx WHERE ci.cart_idx = #{cart_idx}
+				        FROM cart_item ci 
+				        JOIN item i ON ci.item_idx = i.item_idx 
+				        JOIN cart c ON ci.cart_idx = c.cart_idx
+				        WHERE c.mem_idx = #{mem_idx}
 	    <!-- 
 	    	(on)상품 번호가 일치하는 / (join)장바구니 상품과 그냥 상품에서 / (where)장바구니 번호가 일치하는 장바구니의  
 	    										(select)장바구니 상품 번호, 상품수량, 상품번호, 상품이름, 상품가격, 상품이미지를 조회

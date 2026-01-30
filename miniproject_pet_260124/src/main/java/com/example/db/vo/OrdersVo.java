@@ -3,6 +3,12 @@ package com.example.db.vo;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.apache.ibatis.type.Alias;
+
+import lombok.Data;
+
+@Data
+@Alias("orders")
 public class OrdersVo {
 	int				orders_idx;				// pk
 
