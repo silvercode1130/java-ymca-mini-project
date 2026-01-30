@@ -1,6 +1,6 @@
 package com.example.db.vo;
 
-public class orders_item {
+public class OrdersItemVo {
 	int				orders_item_idx;			// pk
 
 	int				orders_idx;				// fk: orders(orders_idx)

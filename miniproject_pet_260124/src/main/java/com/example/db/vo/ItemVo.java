@@ -2,7 +2,7 @@ package com.example.db.vo;
 
 import java.time.LocalDateTime;
 
-public class item {
+public class ItemVo {
 	int				item_idx;		// pk
 
 	String			item_name;

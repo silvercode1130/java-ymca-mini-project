@@ -3,7 +3,7 @@ package com.example.db.vo;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class orders {
+public class OrdersVo {
 	int				orders_idx;				// pk
 
 	int				mem_idx;				// fk: member(mem_idx)
