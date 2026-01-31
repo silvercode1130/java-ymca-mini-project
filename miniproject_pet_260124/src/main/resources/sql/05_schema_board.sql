@@ -14,7 +14,7 @@ CREATE TABLE board (
     board_title       VARCHAR2(200)   NOT NULL,
     board_content  	  CLOB,
     board_ip       	  VARCHAR2(40)	  NOT NULL,
-    board_tag		  VARCHAR2(40)	  DEFAULT 'NONE',
+    board_tag		  VARCHAR2(40)	  DEFAULT 'NONE',	-- DOG / CAT / NONE
     board_readhit	  NUMBER		  DEFAULT 0,
     board_type_idx 	  NUMBER		  NOT NULL,
     board_regdate  	  DATE            DEFAULT SYSDATE,

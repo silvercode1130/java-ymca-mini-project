@@ -9,7 +9,7 @@ public class ErdPlan {
 }
 /*
 //=========== 회원정보 ============
-class member {
+class MemberVo {
 	int				mem_idx;		// pk
 
 	String			mem_id;			// unique
@@ -26,7 +26,7 @@ class member {
 	LocalDateTime	mem_deldate;	// 탈퇴일
 }
 
-class member_profile {
+class MemberProfileVo {
 	int				mem_idx;		// pk
 
 	String			mem_nickname;
@@ -34,7 +34,7 @@ class member_profile {
 	String			mem_img;
 }
 
-class member_addr {
+class MemberAddrVo {
 	int				addr_idx;		// pk
 
 	int				mem_idx;		// fk: member(mem_idx)
@@ -43,13 +43,13 @@ class member_addr {
 	String			mem_addr_detail;
 }
 
-class role {
+class RoleVo {
 	int				role_idx;		// pk
 
 	String			role_name;		// user / doctor / admin
 }
 
-class grade {
+class GradeVo {
 	int				grade_idx;				// pk
 
 	String			grade_name;				// basic / silver / gold / vip
@@ -58,7 +58,7 @@ class grade {
 }
 
 //=========== 반려동물정보 ============
-class pet {
+class PetVo {
 	int				pet_idx;		// pk
 
 	int				mem_idx;		// fk: member(mem_idx)
@@ -72,29 +72,38 @@ class pet {
 }
 
 // =========== 상품정보 ============
-class item {
-	int				item_idx;		// pk
+class ItemVo {
+	int				item_idx;			// pk
 
 	String			item_name;
-	int				item_price;
+	int				item_origin_price;	// 정가
+	int				item_now_price;		// 현재가격
+	int				item_stock;			// 재고
+	int				item_type_idx;		// fk: item_type(item_type_idx)
+	String			item_for;			// 사용동물 (DOG/CAT/GENERAL)
+	String			item_is_sale;		// 세일중 여부 (y/n)
+	String			item_brand;			// 제품 브랜드 (로얄캐닌, 하림 등)
 	String			item_thumbnail_img;
 	String			item_detail_img;
-	int				item_stock;		// 재고
-	String			item_category;	// 상품분류 (강아지/고양이, 사료, 산책용품 등)
 	LocalDateTime	item_regdate;
 	LocalDateTime	item_moddate;
+}
 
+class ItemTypeVo {
+	int				item_type_idx;		// pk
+	
+	String			item_type_category;	// 상품 카테고리 (사료, 간식, 장난감, 가구 등)
 }
 
 //=========== 장바구니 ============
-class cart {
+class CartVo {
 	int				cart_idx;		// pk
 
 	int				mem_idx;		// fk: member(mem_idx)
 	LocalDateTime	cart_regdate;
 }
 
-class cart_item {
+class CartItemVo {
 	int				cart_item_idx;	// pk
 
 	int				cart_idx;		// fk: cart(cart_idx)
@@ -104,7 +113,7 @@ class cart_item {
 }
 
 //=========== 주문정보 ============
-class orders {
+class OrdersVo {
 	int				orders_idx;				// pk
 
 	int				mem_idx;				// fk: member(mem_idx)
@@ -115,7 +124,7 @@ class orders {
 	LocalDateTime	orders_regdate;
 }
 
-class orders_item {
+class OrdersItemVo {
 	int				orders_item_idx;			// pk
 
 	int				orders_idx;				// fk: orders(orders_idx)
@@ -124,13 +133,13 @@ class orders_item {
 	int				orders_price_at; 		// 주문시점 단가
 }
 
-class orders_status {
+class OrdersStatusVo {
 	int				orders_status_idx;		// pk
 	String			orders_status_name;		// 주문상태 (결제됨 / 취소됨 / 배송중 등)
 }
 
 //=========== 커뮤니티 ============
-class board {
+class BoardVo {
 	int				board_idx;			// pk
 
 	int				mem_idx;			// fk: member(mem_idx)
@@ -146,7 +155,7 @@ class board {
 	LocalDateTime	board_deldate;		// 삭제일
 }
 
-class board_type {
+class BoardTypeVo {
 	int				board_type_idx;		// pk
 	
 	String			board_type_code;
@@ -155,7 +164,7 @@ class board_type {
 	int				board_min_role;		// 쓰기권한. role
 }
 
-class board_file {
+class BoardFileVo {
 	int				file_idx;			// pk
 
 	int				board_idx;			// fk: board(board_idx)
@@ -163,12 +172,12 @@ class board_file {
 	String			file_saved_name;	// 서버에서 중복을 피하기 위해 임의로 붙이는 이름
 	String			file_path;
 	int				file_size;			// 파일 용량 확인. db 관리에 필요
-	String			file_type;			// jpeg, png 등의 확장자
+	String			file_type;			// jpg, png 등의 확장자
 	LocalDateTime	file_regdate;
 
 }
 
-class reply {
+class ReplyVo {
 	int				reply_idx;			// pk
 
 	int				board_idx;			// fk: board(board_idx)
