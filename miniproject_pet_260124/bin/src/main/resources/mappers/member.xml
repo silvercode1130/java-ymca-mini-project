@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.db.dao.MemberDao">
+
+	<!-- 전체조회 -->
+	<select id="selectList" resultType="member">
+		select * from member
+	</select>
+
+	<!-- mem_idx 이용해 MemberVo 객체 1개 얻기 -->
+	<select id="selectOneFromIdx" parameterType="int" resultType="member">
+		select * from member where mem_idx=#{ mem_idx }
+	</select>
+
+	<!-- mem_id 이용해 MemberVo 객체 1개 얻기 -->
+
+	<select id="selectOneFromId" parameterType="String" resultType="member">
+		select * from member where mem_id=#{ mem_id }
+	</select>
+
+	<!-- 추가 -->
+	<insert id="insert" parameterType="member">
+		insert into member values(
+			seq_mem_idx.nextVal,
+			#{mem_id} ,
+			#{mem_pwd} ,
+			#{mem_name},
+			#{mem_tel} ,
+			#{mem_email} ,
+			#{mem_ip} ,
+			#{mem_role_idx} ,
+			#{mem_grade_idx} ,
+			#{mem_bday} ,
+			default ,
+			default ,
+			#{mem_deldate}
+		)
+	</insert>
+
+	<!-- 수정 -->
+	<update id="update" parameterType="member">
+		update member set
+			mem_id =#{mem_id},
+			mem_pwd =#{mem_pwd},
+			mem_name =#{mem_name},
+			mem_tel =#{mem_tel},
+			mem_email =#{mem_email},
+			mem_ip =#{mem_ip},
+			mem_role_idx =#{mem_role_idx},
+			mem_grade_idx =#{mem_grade_idx},
+			mem_bday =#{mem_bday},
+			mem_ip =#{mem_ip},
+			mem_role =#{mem_role}
+			where mem_idx=#{mem_idx}
+	</update>
+
+	<!-- 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from member where mem_idx=#{ mem_idx }
+	</delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+

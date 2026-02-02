@@ -1,6 +1,7 @@
 package com.example.db.vo;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class ErdPlan {
 // 각 클래스 변수들을 한 눈에 보려고 정리한 파일입니다.
@@ -130,7 +131,16 @@ class board {
 	int mem_idx; // fk
 	String board_title;
 	String board_content;
-	String board_type;
+	String board_ip;
+	//fk: board_type(board_type_idx)
+	String board_tag;
+	// 글 주제 ('DOG', 'CAT', 'NONE')
+	int	   board_readhit;
+	int	   board_type_idx;
+	//fk: board_type(board_type_idx)
+	LocalDateTime	board_regdate;
+	LocalDateTime	board_moddate;
+	// 
 	// 게시판 타입 (QnA / 공지사항 등)
 }
 
