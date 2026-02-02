@@ -10,7 +10,19 @@ INSERT INTO grade (grade_idx, grade_name, grade_discount_rate) VALUES (2, 'silve
 INSERT INTO grade (grade_idx, grade_name, grade_discount_rate) VALUES (3, 'gold', 0.10);
 INSERT INTO grade (grade_idx, grade_name, grade_discount_rate) VALUES (4, 'vip', 0.20);
 
--- 3) orders_status 코드
+-- 3) item_type 코드
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (1,'일반');
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (2,'사료');
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (3,'간식');
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (4,'장난감');
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (5,'위생용품');
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (6,'배변용품');
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (7,'의류');
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (8,'방석/쿠션');
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (9,'야외활동');
+INSERT INTO item_type (item_type_idx, item_type_category) VALUES (10,'하우스/이동장');
+
+-- 4) orders_status 코드
 INSERT INTO orders_status (orders_status_idx, orders_status_name) VALUES (1, '결제대기');
 INSERT INTO orders_status (orders_status_idx, orders_status_name) VALUES (2, '결제완료');
 INSERT INTO orders_status (orders_status_idx, orders_status_name) VALUES (3, '배송중');
@@ -18,7 +30,7 @@ INSERT INTO orders_status (orders_status_idx, orders_status_name) VALUES (4, '�
 INSERT INTO orders_status (orders_status_idx, orders_status_name) VALUES (5, '취소됨');
 INSERT INTO orders_status (orders_status_idx, orders_status_name) VALUES (6, '환불완료');
 
--- 4) board_type 코드
+-- 5) board_type 코드
 -- 공지사항: 관리자만 글쓰기, 댓글 X
 INSERT INTO board_type (
   board_type_idx, board_type_code, board_type_name,

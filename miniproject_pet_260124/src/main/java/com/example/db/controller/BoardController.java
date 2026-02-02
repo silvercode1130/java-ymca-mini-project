@@ -63,19 +63,6 @@ public class BoardController {
         return "board/event_list";
     }
 
-    // 연구소 내 태그별 조회 (tag 로 DOG/CAT/NONE 필터)
-    @GetMapping("/lab/list.do")
-    public String labList(@RequestParam(defaultValue = "ALL") String tag,
-                          Model model) {
-		
-    	// tag 값에 따라 조회 내용이 바뀜
-        List<BoardVo> list = boardDao.selectListByTypeCodeAndTag("LAB", tag);
-        model.addAttribute("list", list);
-        model.addAttribute("tag", tag);
-        
-        return "board/lab_list";
-    }
-
     // 자유게시판 내 태그별 조회 (tag 필터)
     @GetMapping("/free/list.do")
     public String freeList(@RequestParam(defaultValue = "ALL") String tag,
