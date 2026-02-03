@@ -1,5 +1,7 @@
 package com.example.db.vo;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Data;
 
 @Data
@@ -20,13 +22,13 @@ public class BoardVo {
 		   int	  b_type;
 		   String b_use;
 		   String b_moddate;
-		   // 게시판 타입 (QnA / 공지사항 등)
-		   public void setBoard_type_idx(int board_type_idx) {
-			// TODO Auto-generated method stub
-			
-		   }
+		   String filename;
+		   MultipartFile Photo;
+		   int 		board_type;
+		   int board_type_idx; 
+		   
 	
-	
+		
 		}
 
 

@@ -17,10 +17,10 @@ public interface BoardDao {
 		BoardVo		  selectOne(int board_idx); // 글번호로 한개 조회
 		int 		  insert(BoardVo vo); // 글쓰기
 		int 		  update(BoardVo vo); // 수정하기
-		int			  selectTypeIdxByCode(String board_type_code); // 게시판 타입코드로 게시판 조회
+		int			  selectTypeIdxByCode(int board_type_code); // 게시판 타입코드로 게시판 조회
 		int 		  softDelete(int board_idx); // 글 삭제(soft delete)
 		int			  updateReadhit(int board_idx); // 조회수 증가
-		
+		int				Board_type_idx( int board_type_idx);
 		// 게시판 별 전체글조회(NOTICE, EVENT, LAB, QNA, FREE)
 		
 		List<BoardVo> selectListByTypeCode(String board_type_code);
@@ -35,6 +35,8 @@ public interface BoardDao {
 		// 게시판 타입 + 글번호로 상세
 		BoardVo selectOneByIdxAndTypeCode(@Param("board_idx")int board_idx, 
 										  @Param("board_type_code") String board_type_code);
+		int reply(BoardVo vo);
+		int updateStep(BoardVo baseVo);
 }
 
 
