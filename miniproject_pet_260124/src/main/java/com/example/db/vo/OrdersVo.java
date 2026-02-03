@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 @Alias("orders")
 public class OrdersVo {
+//=========== 주문정보 ============
 	int				orders_idx;				// pk
 
 	int				mem_idx;				// fk: member(mem_idx)
@@ -18,6 +19,5 @@ public class OrdersVo {
 	BigDecimal 		orders_coupon_discount;	// 쿠폰할인액
 	int				orders_status_idx;		// fk: orders_status(orders_status_idx)
 	LocalDateTime	orders_regdate;
-	
 	private OrdersStatusVo status;
 }

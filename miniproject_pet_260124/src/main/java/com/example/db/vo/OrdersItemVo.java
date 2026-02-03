@@ -7,6 +7,7 @@ import lombok.Data;
 @Data
 @Alias("orders_item")
 public class OrdersItemVo {
+//=========== 주문 아이템 정보 ============
 	int				orders_item_idx;			// pk
 
 	int				orders_idx;				// fk: orders(orders_idx)
