@@ -5,6 +5,12 @@
 <head>
 <meta charset="UTF-8">
 <title>반려동물 쇼핑몰 - 상품 목록</title>
+<script>
+	function addToCart(idx) {
+	    alert('장바구니에 담겼습니다! 확인하러 갈게요! ><');
+	    location.href = "/cart/add/" + idx;
+	}
+</script>
 <style>
 	.item-container { 
 		display: flex; 
@@ -65,7 +71,12 @@
 				</c:if>
                 <h3>${item.item_name}</h3>
                 <p>가격: <strong>${item.item_price}원</strong></p>
-                <a href="/item/item_detail.do?item_idx=${item.item_idx}">상세보기</a>
+                
+                <div class="item-card">
+				    <a href="/item/item_detail.do?item_idx=${item.item_idx}">상세보기</a>
+				    <br><br>
+				    <button type="button" onclick="addToCart(${item.item_idx})">장바구니 담기</button>
+				</div>
             </div>
         </c:forEach>
     </div>

@@ -13,7 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		id : select 문에서 사용할 때 id에 적은 값으로 부름
 		type : 최종적으로 모든 데이터를 담아서 완성될 메인 바구니(VO)의 경로
 	 -->
-	<resultMap id="CartMap" type="com.example.db.vo.CartItemVO">
+	<resultMap id="CartMap" type="cart_item">
 		<!-- 
 			id 태그 : 기본키(pk)를 매핑
 			result 태그 : 기본키가 아닌 나머지 일반정보들을 매핑
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			property : CartItemVO 안에 적은 ItemVO의 변수 이름
 			javaType : 그 item 변수의 실제 타입(클래스 경로)
 		 -->
-	    <association property="item" javaType="com.example.db.vo.ItemVO">
+	    <association property="item" javaType="item">
 	        <id property="item_idx" column="item_idx" />
 	        <result property="item_name" column="item_name" />
 	        <result property="item_price" column="item_price" />
@@ -37,17 +37,55 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</resultMap>
 	
 	<!-- resultMap : 위에서 만든 설계도(id="CartMap")를 사용해서 결과를 포장하겠다는 뜻(resultType 대신 **resultMap**을 쓴다는 게 중요) -->
-	<select id="getCart" resultMap="CartMap">
+	<select id="getCartList" resultMap="CartMap">
 	    SELECT ci.cart_item_idx, ci.cart_item_quantity, i.item_idx, i.item_name, i.item_price, i.item_thumbnail_img
-				        FROM cart_item ci 
-				        JOIN item i ON ci.item_idx = i.item_idx 
-				        JOIN cart c ON ci.cart_idx = c.cart_idx
-				        WHERE c.mem_idx = #{mem_idx}
+	        FROM cart_item ci 
+		        JOIN item i ON ci.item_idx = i.item_idx 
+			        JOIN cart c ON ci.cart_idx = c.cart_idx
+			        	WHERE c.mem_idx = #{mem_idx}
 	    <!-- 
-	    	(on)상품 번호가 일치하는 / (join)장바구니 상품과 그냥 상품에서 / (where)장바구니 번호가 일치하는 장바구니의  
-	    										(select)장바구니 상품 번호, 상품수량, 상품번호, 상품이름, 상품가격, 상품이미지를 조회
+	    	(on)상품 번호가 일치하고 / (on)장바구니번호가 일치하는 / (join)장바구니 상품과 그냥 상품, 장바구니 에서 
+	    		/ (where)회원 번호가 일치하는 회원장바구니의 
+	    		/ (select)장바구니 상품 번호, 담은 상품수량, 상품번호, 상품이름, 상품가격, 상품이미지를 조회
 	    -->
 	</select>
+	
+	<insert id="addToCart">
+        MERGE INTO cart_item ci
+	    USING dual
+	    ON (ci.cart_idx = (SELECT cart_idx FROM cart WHERE mem_idx = #{mem_idx}) 
+	        AND ci.item_idx = #{item_idx})
+	    WHEN MATCHED THEN
+	        UPDATE SET ci.cart_item_quantity = ci.cart_item_quantity + 1
+	    WHEN NOT MATCHED THEN
+	        INSERT (cart_item_idx, cart_idx, item_idx, cart_item_quantity)
+	        VALUES (seq_cart_item_idx.NEXTVAL, 
+	                (SELECT cart_idx FROM cart WHERE mem_idx = #{mem_idx}), 
+	                #{item_idx}, 1)
+		<!-- 
+			(values(select))회원번호가 일치하는 장바구니의 장바구니번호와, 내가 고른 상품(번호), 그 상품의 수량 1을 
+				/ (insert)장바구니 상품 테이블에 추가
+		 -->
+    </insert>
+	
+	<update id="updateItemQty">
+	    UPDATE cart_item 
+	    SET cart_item_quantity = #{qty} 
+	    WHERE cart_item_idx = #{idx}
+	</update>
+	
+    <delete id="removeFromCart">
+        DELETE FROM cart_item WHERE cart_item_idx = #{cart_item_idx}
+        <!-- 
+        	(where)장바구니 상품 번호가 일치하는 / (delete)장바구니 상품 테이블의 해당 행을 삭제
+         -->
+    </delete>
+    
+    <delete id="clearCart">
+	    DELETE FROM cart_item
+	    WHERE cart_idx = (SELECT cart_idx FROM cart WHERE mem_idx = #{mem_idx})
+	</delete>
+    
 </mapper>
 
 

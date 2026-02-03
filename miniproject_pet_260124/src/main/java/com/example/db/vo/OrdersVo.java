@@ -18,4 +18,6 @@ public class OrdersVo {
 	BigDecimal 		orders_coupon_discount;	// 쿠폰할인액
 	int				orders_status_idx;		// fk: orders_status(orders_status_idx)
 	LocalDateTime	orders_regdate;
+	
+	private OrdersStatusVo status;
 }

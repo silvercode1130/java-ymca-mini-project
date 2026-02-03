@@ -48,7 +48,7 @@ public class ItemController {
     	// 위 메서드의 매개값은 스프링이 브라우저에서 자동으로 값을 받아줌 
         ItemVo vo = itemDao.getItemDetail(item_idx);  // 입력받은 값을 담아서 메서드 실행 후 받은 값을 vo에 담음
         
-     // vo에 있는 값을 jsp로 보냄 -> jsp는 vo라는 값으로 받고 사용
+        // vo에 있는 값을 jsp로 보냄 -> jsp는 vo라는 값으로 받고 사용
         model.addAttribute("vo", vo);
         
         return "item/item_detail";  // 해당 jsp 주소로 이동

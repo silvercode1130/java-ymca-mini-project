@@ -102,5 +102,14 @@
 		
 	select * from item;
 	SELECT * FROM item WHERE item_category = 'food';
-	COMMIT;
+	COMMIT
+	
+-- 1번 회원을 위한 장바구니 생성 (시퀀스 이름: seq_cart_idx)
+	INSERT INTO cart (cart_idx, mem_idx, cart_regdate) 
+	VALUES (seq_cart_idx.NEXTVAL, 1, SYSDATE);
+	
+	COMMIT
+	
+SELECT * FROM item where item_idx=#{item_idx}
+
  */

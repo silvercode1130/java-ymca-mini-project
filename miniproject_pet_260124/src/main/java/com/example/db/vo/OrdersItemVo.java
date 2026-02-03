@@ -13,4 +13,5 @@ public class OrdersItemVo {
 	int				item_idx;				// fk: item(item_idx)
 	int				orders_item_quantity;
 	int				orders_price_at; 		// 주문시점 단가
+	private ItemVo item; // 상품 정보 조인
 }
