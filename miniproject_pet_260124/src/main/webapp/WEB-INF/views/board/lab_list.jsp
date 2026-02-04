@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title>연구소</title>
 
+<<<<<<< HEAD
 <style>
 	 table { border-collapse: collapse; width: 100%; }
         th, td { border: 1px solid #ddd; padding: 8px; }
@@ -18,6 +19,22 @@
  <h2>연구소</h2>
  
  <!-- 태그 필터 -->
+=======
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        th { background: #f4f4f4; }
+        a { text-decoration: none; color: #333; }
+    </style>
+    
+</head>
+
+<body>
+
+<h2>연구소</h2>
+
+<!-- 태그 필터 -->
+>>>>>>> origin/je
 <form method="get" action="list.do">
     <select name="tag">
         <option value="ALL"  ${tag == 'ALL'  ? 'selected' : ''}>전체</option>
@@ -67,5 +84,11 @@
 <p>
     <a href="../insert_form.do?type=LAB">[글쓰기]</a>
 </p>
+<<<<<<< HEAD
 </body>
 </html>
+=======
+
+</body>
+</html>
+>>>>>>> origin/je

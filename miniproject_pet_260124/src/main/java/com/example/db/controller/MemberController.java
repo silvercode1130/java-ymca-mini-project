@@ -29,7 +29,7 @@ public class MemberController {
 	@Autowired
 	HttpSession session;
 	
-	//íšŒì›ì¡°íšŒ
+	//È¸¿øÁ¶È¸
 	@RequestMapping("/member/list.do")
 	public String list(Model model) {
 		
@@ -41,7 +41,7 @@ public class MemberController {
 		return "member/member_list";
 	}
 	
-	//ë¡œê·¸ì¸í¼ ë„ìš°ê¸°
+	//·Î±×ÀÎÆû ¶ç¿ì±â
 	@RequestMapping("/member/login_form.do")
 	public String login_form() {
 		
@@ -49,23 +49,23 @@ public class MemberController {
 		return "member/member_login_form";
 	}
 	
-	//ë¡œê·¸ì¸
+	//·Î±×ÀÎ
 	// /member/login.do?mem_id=hong&mem_pwd=1234
 	@RequestMapping("/member/login.do")
 	public String login(String mem_id,String mem_pwd, RedirectAttributes ra) {
 		                   
 		MemberVo user = memberDao.selectOneFromId(mem_id);
 		
-		//mem_id í‹€ë¦°ê²½ìš°
+		//mem_id Æ²¸°°æ¿ì
 		if(user==null) {
 			
-			//response.sendRedirect("login_form.do?reason=fail_id&msg=ì•„ì´ë””");
+			//response.sendRedirect("login_form.do?reason=fail_id&msg=¾ÆÀÌµğ");
 			ra.addAttribute("reason","fail_id");
-			ra.addAttribute("msg","ì•„ì´ë”” í‹€ë ¸ì–´!!!");
+			ra.addAttribute("msg","¾ÆÀÌµğ Æ²·È¾î!!!");
 			return "redirect:login_form.do";
 		}
 		
-		// mem_pwd í‹€ë¦°ê²½ìš°
+		// mem_pwd Æ²¸°°æ¿ì
 //		if(user.getMem_pwd().equals(mem_pwd)==false) {
 		if(!user.getMem_pwd().equals(mem_pwd)) {
 			
@@ -77,65 +77,65 @@ public class MemberController {
 			
 		}
 		
-		//ì„¸ì…˜ì— ë¡œê·¸ì¸ ì •ë³´ ì €ì¥
+		//¼¼¼Ç¿¡ ·Î±×ÀÎ Á¤º¸ ÀúÀå
 		session.setAttribute("user", user);
 		
 		return "redirect:../board/list.do";
 	}
 	
-	//ë¡œê·¸ì•„ì›ƒ
+	//·Î±×¾Æ¿ô
 	@RequestMapping("/member/logout.do")
 	public String logout() {
 		
-		//ë°©ë²•1) : SessionListenerì— ì˜í•´ì„œ í†µì§€ ëª» ë°›ëŠ”ë‹¤
+		//¹æ¹ı1) : SessionListener¿¡ ÀÇÇØ¼­ ÅëÁö ¸ø ¹Ş´Â´Ù
 		//session.removeAttribute("user");
 		
-		//ë°©ë²•2) : SessionListenerì— ì˜í•´ì„œ í†µì§€ ë°›ëŠ”ë‹¤
+		//¹æ¹ı2) : SessionListener¿¡ ÀÇÇØ¼­ ÅëÁö ¹Ş´Â´Ù
 		session.invalidate();
 		return "redirect:../board/list.do";
 	}
 	
-	//íšŒì›ê°€ì…í¼ ë„ìš°ê¸°
+	//È¸¿ø°¡ÀÔÆû ¶ç¿ì±â
 	@RequestMapping("/member/insert_form.do")
 	public String insert_form() {
 		
 		return "member/member_insert_form";
 	}
 	
-	//ì¤‘ë³µì•„ì´ë”” ì²´í¬
+	//Áßº¹¾ÆÀÌµğ Ã¼Å©
 	@RequestMapping("/member/check_id.do")
 	@ResponseBody
 	public Map<String, Boolean> check_id(String mem_id){
 		
 		// /member/check_id.do?mem_id=hong
 		
-		//1.mem_idì— í•´ë‹¹ë˜ëŠ” íšŒì›ì •ë³´ë¥¼ ì–»ëŠ”ë‹¤
+		//1.mem_id¿¡ ÇØ´çµÇ´Â È¸¿øÁ¤º¸¸¦ ¾ò´Â´Ù
 		MemberVo vo = memberDao.selectOneFromId(mem_id);
 		
-		//2.ì‚¬ìš©ìœ ë¬´ì— ëŒ€í•œ ê²°ê³¼
+		//2.»ç¿ëÀ¯¹«¿¡ ´ëÇÑ °á°ú
 		boolean bResult = false;
 		
-		if(vo==null)bResult = true;//ì‚¬ìš©ê°€ëŠ¥í•œ ì•„ì´ë””
+		if(vo==null)bResult = true;//»ç¿ë°¡´ÉÇÑ ¾ÆÀÌµğ
 		
 		Map<String, Boolean> map = new HashMap<String, Boolean>();
 		
-		//JSON Converterì— ì˜í•´ì„œ Map -> JSONë³€í™˜
+		//JSON Converter¿¡ ÀÇÇØ¼­ Map -> JSONº¯È¯
 		map.put("result", bResult);	//{"result" : true}
 		
 		return map;
 		
 		
 	}
-	// member/insert.do?mem_name=ìœ ì„œìœ¤&mem_id=ysy9038&mem_pwd=1234
+	// member/insert.do?mem_name=À¯¼­À±&mem_id=ysy9038&mem_pwd=1234
 	// 					mem_email=dbdmswlsms%40naver.com&mem_tel=01022969038&
-	// 					mem_zipcode=41919&mem_addr=ëŒ€êµ¬+ì¤‘êµ¬+êµ­ì±„ë³´ìƒë¡œ+541
+	// 					mem_zipcode=41919&mem_addr=´ë±¸+Áß±¸+±¹Ã¤º¸»ó·Î+541
 
 	
-	//íšŒì›ê°€ì…
+	//È¸¿ø°¡ÀÔ
 	@RequestMapping("/member/insert.do")
 	public String insert(MemberVo vo) {
 		
-		// ipêµ¬í•˜ê¸°
+		// ip±¸ÇÏ±â
 		String mem_ip = request.getRemoteAddr();
 		vo.setMem_ip(mem_ip);
 		
