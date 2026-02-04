@@ -10,8 +10,11 @@ import com.example.db.vo.MemberVo;
 public interface MemberDao {
 	
 	List<MemberVo>	selectList();
-	MemberVo		selectOne(int mem_idx);
+	MemberVo		selectOneFromIdx(int mem_idx);
+	MemberVo		selectOneFromId(int mem_idx);
 	int				insert(MemberVo vo);
 	int				update(MemberVo vo);
 	int				delete(int mem_idx);
+	MemberVo		selectOneLogin(String mem_id);
+	
 }

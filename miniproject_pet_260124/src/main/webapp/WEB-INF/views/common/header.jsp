@@ -41,20 +41,21 @@
     </nav>
 
     <!-- 우측 로그인/회원가입 -->
-    <div class="header-user">
-      <c:choose>
-        <c:when test="${empty sessionScope.loginMember}">
-          <a href="${pageContext.request.contextPath}/member/login" class="btn btn-login">로그인</a>
-          <a href="${pageContext.request.contextPath}/member/join" class="btn btn-join">회원가입</a>
-        </c:when>
-        <c:otherwise>
-          <span class="header-welcome">
-            <c:out value="${sessionScope.loginMember.mem_name}" />님
-          </span>
-          <a href="${pageContext.request.contextPath}/member/logout" class="btn btn-logout">로그아웃</a>
-        </c:otherwise>
-      </c:choose>
-    </div>
+	<div class="header-user">
+	  <c:choose>
+	    <c:when test="${empty sessionScope.user}">  <!-- loginMember → user로 수정 -->
+	      <a href="${pageContext.request.contextPath}/member/login_form.do" class="btn btn-login">로그인</a>
+	      <a href="${pageContext.request.contextPath}/member/join_form.do" class="btn btn-join">회원가입</a>
+	    </c:when>
+	    <c:otherwise>
+	      <span class="header-welcome">
+	        <c:out value="${sessionScope.user.mem_name}" />님  <!-- loginMember → user -->
+	      </span>
+	      <a href="${pageContext.request.contextPath}/member/logout.do" class="btn btn-logout">로그아웃</a>
+	    </c:otherwise>
+	  </c:choose>
+	</div>
+
 
     <!-- 모바일 토글 -->
     <button type="button" class="btn-gnb-toggle" id="btnGnbToggle" aria-label="메뉴 열기">
@@ -78,31 +79,29 @@
             <span class="mega-item-title">기업소개</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/board?type=NOTICE" class="mega-item">
-            <span class="mega-item-title">공지사항</span>
-            <span class="mega-item-bar"></span>
-          </a>
-          <a href="${pageContext.request.contextPath}/board?type=EVENT" class="mega-item">
-            <span class="mega-item-title">이벤트</span>
-            <span class="mega-item-bar"></span>
-          </a>
-        </div>
+          <a href="${pageContext.request.contextPath}/notice/list.do" class="mega-item">
+		    <span class="mega-item-title">공지사항</span>
+		  </a>
+		  <a href="${pageContext.request.contextPath}/event/list.do" class="mega-item">
+		    <span class="mega-item-title">이벤트</span>
+		  </a>
+		</div>
 
         <!-- 연구소 -->
         <div class="mega-group" data-menu="lab">
-          <a href="${pageContext.request.contextPath}/lab/recommend" class="mega-item">
+           <a href="${pageContext.request.contextPath}/lab/list.do" class="mega-item">
             <span class="mega-item-title">추천 연구</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/lab/dog" class="mega-item">
+          <a href="${pageContext.request.contextPath}/lab/list.do?tag=DOG" class="mega-item">
             <span class="mega-item-title">강아지 연구소</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/lab/cat" class="mega-item">
+           <a href="${pageContext.request.contextPath}/lab/list.do?tag=CAT" class="mega-item">
             <span class="mega-item-title">고양이 연구소</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/lab/news" class="mega-item">
+          <a href="${pageContext.request.contextPath}/lab/list.do?tag=FREE" class="mega-item">
             <span class="mega-item-title">뉴스</span>
             <span class="mega-item-bar"></span>
           </a>

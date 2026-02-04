@@ -25,4 +25,7 @@ public class MemberVo {
 	LocalDateTime	mem_regdate;
 	String			mem_is_deleted;	// 탈퇴여부 (y/n)
 	LocalDateTime	mem_deldate;	// 탈퇴일
+	
+	//=========== 조인객체 ============
+	RoleVo			role;
 }

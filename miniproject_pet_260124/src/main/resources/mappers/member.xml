@@ -3,7 +3,51 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.db.dao.MemberDao">
+	
+	<!-- resultMap 정의 -->
+	<resultMap id="memberWithRoleMap" type="member">
+	    <!-- Member 기본 필드 -->
+	    <id property="mem_idx" column="mem_idx"/>
+	    <result property="mem_id" column="mem_id"/>
+	    <result property="mem_pwd" column="mem_pwd"/>
+	    <result property="mem_name" column="mem_name"/>
+	    <result property="mem_tel" column="mem_tel"/>
+	    <result property="mem_email" column="mem_email"/>
+	    <result property="mem_ip" column="mem_ip"/>
+	    <result property="mem_role_idx" column="mem_role_idx"/>
+	    <result property="mem_grade_idx" column="mem_grade_idx"/>
+	    <result property="mem_regdate" column="mem_regdate"/>
+	    <result property="mem_is_deleted" column="mem_is_deleted"/>
+	    <result property="mem_deldate" column="mem_deldate"/>
+	    
+	    <!-- Role 조인 -->
+	    <association property="role" javaType="role">
+	        <result property="role_name" column="role_name"/>
+	    </association>
+	</resultMap>
+	
+	<!-- 로그인 쿼리 -->
+	<select id="selectOneLogin" parameterType="map" resultMap="memberWithRoleMap">
+	    SELECT m.*, r.role_name
+	    FROM member m
+	    LEFT JOIN role r ON m.mem_role_idx = r.role_idx
+	    WHERE m.mem_id = #{mem_id} AND m.mem_is_deleted = 'N'
+	</select>
 
+	
+	<!-- 회원가입 (기본 role_idx=1로 USER) -->
+	<insert id="insert" parameterType="member">
+	    INSERT INTO member (
+	        mem_idx, mem_id, mem_pwd, mem_name, mem_tel, mem_email,
+	        mem_role_idx, mem_grade_idx, mem_regdate
+	    ) VALUES (
+	        seq_member_idx.NEXTVAL, #{mem_id}, #{mem_pwd}, #{mem_name}, 
+	        #{mem_tel}, #{mem_email}, 1, 1, SYSDATE  -- USER role_idx=1, 기본 등급
+	    )
+	</insert>
+		
+	
+	
 	<!-- 전체조회 -->
 	<select id="selectList" resultType="member">
 		select * from member
@@ -20,7 +64,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select * from member where mem_id=#{ mem_id }
 	</select>
 
-	<!-- 추가 -->
+<!-- 	추가
 	<insert id="insert" parameterType="member">
 		insert into member values(
 			seq_mem_idx.nextVal,
@@ -37,7 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			default ,
 			#{mem_deldate}
 		)
-	</insert>
+	</insert> -->
 
 	<!-- 수정 -->
 	<update id="update" parameterType="member">

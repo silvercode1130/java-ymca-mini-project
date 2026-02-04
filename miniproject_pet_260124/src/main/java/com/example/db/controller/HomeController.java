@@ -10,8 +10,4 @@ public class HomeController {
         return "main";   // /WEB-INF/views/main.jsp
     }
 	
-	// 공지사항
-	// 공지사항 세부
-	// 이벤트
-	// 이벤트 세부
 }

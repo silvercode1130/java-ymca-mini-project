@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +20,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping("/board")
 public class BoardController {
 	
 	@Autowired
@@ -34,7 +34,7 @@ public class BoardController {
 	
 //	===== 게시글 조회 =====
 	// 사이트 전체글 조회
-	@RequestMapping("/list.do")
+	@RequestMapping("/board/list.do")
 	public String list(Model model){
 		
 		List<BoardVo> list = boardDao.selectList();
@@ -63,6 +63,18 @@ public class BoardController {
         return "board/event_list";
     }
 
+    // 연구소 내 태그별 조회 (tag 로 DOG/CAT/NONE 필터)
+    @GetMapping("/lab/list.do")
+    public String labList(@RequestParam(defaultValue = "ALL") String tag,
+                          Model model) {
+		
+    	// tag 값에 따라 조회 내용이 바뀜
+        List<BoardVo> list = boardDao.selectListByTypeCodeAndTag("LAB", tag);
+        model.addAttribute("list", list);
+        model.addAttribute("tag", tag);
+        
+        return "lab/lab_list";
+    }
 
     // QnA 태그별 조회 (tag 필터)
     @GetMapping("/qna/list.do")
@@ -89,44 +101,44 @@ public class BoardController {
     }
 	
 //	===== 게시글 상세 =====
-	@RequestMapping("/view.do")
-	public String select_one(int board_idx, Model model) {
-		
-		BoardVo vo = boardDao.selectOne(board_idx);
-		
-		// 게시물 조회수 카운팅을 최초 1번으로 제한하는 법
-		// 현재 게시물을 봤냐? 를 얻기
-		// 싱글톤과 같은 구조. 객체가 없으면 만들기 -> 객체가 생긴 후엔 호출 안됨
-		if(session.getAttribute("show")==null) {
-			
-			// 조회수 증가 mapper 호출
-			int res = boardDao.updateReadhit(board_idx);
-			
-			// 봤다는 정보를 세션에 넣음
-			session.setAttribute("show", true);
-		}
-
-		model.addAttribute("vo", vo);
-		
-		return "board/board_view";
-	}
+    @GetMapping("/{boardType}/view.do")
+    public String view(@PathVariable String boardType,	// PathVariable : url 에서 값 받음
+                       @RequestParam int board_idx,		// request 호출시 parameter 값 받음
+                       @RequestParam(required = false, defaultValue = "1") int page,
+                       Model model) {
+        
+        BoardVo vo = boardDao.selectOneByIdxAndTypeCode(board_idx, boardType);
+        
+        // 조회수 증가
+        if (session.getAttribute("show") == null) {
+            boardDao.updateReadhit(board_idx);
+            session.setAttribute("show", true);
+        }
+        
+        model.addAttribute("vo", vo);
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("page",page);
+        
+        return "board/board_view";  // 같은 jsp 사용 가능!(동적 url 이므로)
+    }
 	
 //	===== 글쓰기 폼 =====
-	@GetMapping("insert_form.do")
-	public String insertForm(String type, Model model) {
-	    // type: NOTICE / EVENT / LAB / QNA / FREE
-	    model.addAttribute("type", type);
-	    return "board/board_insert_form";
-	}
-	
+    @GetMapping("/{boardType}/insert_form.do")
+    public String insertForm(@PathVariable String boardType,
+    						 Model model) {
+    	
+        model.addAttribute("boardType", boardType);
+        
+        return "board/board_insert_form";
+    }
 	
 //	===== 글쓰기 =====
 	// f.method = "POST"
-	// board/insert.do?board_subject=제목&board_content=...
-	@PostMapping("insert.do")
-	public String insert(BoardVo vo,
-	                     @RequestParam String board_type_code,
-	                     RedirectAttributes ra) {
+	// board/insert.do?board_title=제목&board_content=...
+    @PostMapping("/{boardType}/insert.do")
+    public String insert(@PathVariable String boardType,
+			             BoardVo vo,
+			             RedirectAttributes ra) {
 
 	    // 1) 로그인 체크
 	    MemberVo user = (MemberVo) session.getAttribute("user");
@@ -139,50 +151,107 @@ public class BoardController {
 	    String board_ip = request.getRemoteAddr();
 	    vo.setBoard_ip(board_ip);
 
-	    // 3) 아이피 밴 체크
-	    if ("172.30.1.98".equals(board_ip)) {
-	        ra.addAttribute("reason", "ban_ip");
-	        return "redirect:list.do";
-	    }
+//	    // 3) 아이피 밴 체크
+//	    if ("172.30.1.00".equals(board_ip)) {
+//	        ra.addAttribute("reason", "ban_ip");
+//	        return "redirect:/" + boardType + "/list.do";
+//	    }
 
 	    // 4) 내용 줄바꿈 치환
 	    if (vo.getBoard_content() != null) {
 	        vo.setBoard_content(vo.getBoard_content().replace("\n", "<br>"));
 	    }
 
-	    // 5) 회원정보 (BoardVo에는 mem_id, mem_name 없음 → 이 두 줄 삭제)
+	    // 5) 회원정보 넣기
 	    vo.setMem_idx(user.getMem_idx());
 
 
-	    // 6) board_type_code → board_type_idx 조회 (이미 만든 메서드 사용)
-	    int board_type_idx = boardDao.selectTypeIdxByCode(board_type_code);
+	    // 6) boardType 사용해 board_type_idx 조회
+	    int board_type_idx = boardDao.selectTypeIdxByCode(boardType);
 	    vo.setBoard_type_idx(board_type_idx);
 
 	    // 7) insert
 	    int res = boardDao.insert(vo);
 
-	    return "redirect:list.do";
+	    return "redirect:/" + boardType + "/list.do";
 	}
 
+ // ===== 수정 폼 =====
+    @GetMapping("/{boardType}/modify_form.do")
+    public String updateForm(@PathVariable String boardType,
+                             @RequestParam int board_idx,
+                             @RequestParam(required = false, defaultValue = "1") int page,
+                             Model model) {
+        
+        BoardVo vo = boardDao.selectOneByIdxAndTypeCode(board_idx, boardType);
+        
+        // 본인 글 체크
+        MemberVo user = (MemberVo) session.getAttribute("user");
+        if (user == null || vo.getMem_idx() != user.getMem_idx()) {
+            return "redirect:/board/" + boardType + "/list.do?page=" + page;
+        }
+        
+        model.addAttribute("vo", vo);
+        model.addAttribute("boardType", boardType);
+        model.addAttribute("page", page);
+        
+        return "board/board_modify_form";
+    }
 
+    // ===== 수정 처리 =====
+    @PostMapping("/{boardType}/modify.do")
+    public String update(@PathVariable String boardType,
+                         @RequestParam int board_idx,
+                         @RequestParam(required = false, defaultValue = "1") int page,
+                         BoardVo vo,
+                         RedirectAttributes ra) {
+        
+        // 로그인 체크
+        MemberVo user = (MemberVo) session.getAttribute("user");
+        if (user == null) {
+            ra.addAttribute("reason", "session_timeout");
+            ra.addAttribute("page", page);
+            return "redirect:../member/login_form.do";
+        }
+        
+        // 권한 체크
+        BoardVo originVo = boardDao.selectOne(board_idx);
+        if (originVo.getMem_idx() != user.getMem_idx()) {
+            ra.addAttribute("reason", "no_permission");
+            ra.addAttribute("page", page);
+            return "redirect:/board/" + boardType + "/list.do";
+        }
+        
+        // 수정 날짜 업데이트
+        vo.setBoard_moddate(null);  // mapper에서 SYSDATE로 세팅되므로 null
+        vo.setBoard_idx(board_idx);  // 기존 PK 유지
+        
+        // update
+        int res = boardDao.update(vo);
+        
+        ra.addAttribute("page", page);
+        return "redirect:/board/" + boardType + "/list.do";
+    }
 
-
-	
 //	===== 게시글 삭제(soft delete) =====	
-	@PostMapping("delete.do")
-	public String delete(int board_idx, int page, RedirectAttributes ra) {
-
+    @PostMapping("/{boardType}/delete.do")
+    public String delete(@PathVariable String boardType,  // PathVariable 먼저 받아야 함
+			             @RequestParam int board_idx,
+			             @RequestParam(required = false, defaultValue = "1") int page,
+			             RedirectAttributes ra) {
+		
+		// 로그인 체크
 	    MemberVo user = (MemberVo) session.getAttribute("user");
 	    if (user == null) {
 	        ra.addAttribute("reason", "session_timeout");
 	        return "redirect:../member/login_form.do";
 	    }
-
-	    BoardVo vo = boardDao.selectOne(board_idx); // 글 정보 가져오기
+	    
+	    // 본인 글 아니거나 권한없음
+	    BoardVo vo = boardDao.selectOne(board_idx);
 	    if (vo == null || vo.getMem_idx() != (user.getMem_idx())) {
-	        // 본인 글 아니거나 권한없음
 	        ra.addAttribute("reason", "no_permission");
-	        return "redirect:list.do";
+	        return "redirect:/" + boardType + "/list.do";
 	    }
 	    
 	    // DB 값 변경(update) board_is_deleted 값 'y' 로 변경
@@ -190,7 +259,7 @@ public class BoardController {
 	    
 	    ra.addAttribute("page", page);
 	    
-	    return "redirect:list.do";
+	    return "redirect:/" + boardType + "/list.do";
 	}
 
 }
