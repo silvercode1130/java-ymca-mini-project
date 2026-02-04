@@ -139,7 +139,8 @@ public class BoardController {
 	// /board/insert.do?b_subject=제목&b_content=내용
 	@PostMapping("insert.do")
 	public String insert(BoardVo vo, RedirectAttributes ra) {
-
+		// ...(로그인 체크, IP 설정 등 기존 코드) ... 
+		
 		// login 상태유무 체크
 		MemberVo user = (MemberVo) session.getAttribute("user");
 
@@ -170,10 +171,13 @@ public class BoardController {
 		// 회원정보 넣기
 		vo.setMem_idx(user.getMem_idx());
 
-	    String board_type_code = null;
+	 
 		// 6) board_type_code → board_type_idx 조회 (이미 만든 메서드 사용)
-	    int board_type_idx = boardDao.selectTypeIdxByCode(board_type_code);
-	    vo.setBoard_type_idx(board_type_idx);
+	//	int typeIdx = boardDao.selectTypeIdxByCode(code);
+	 
+	    
+	    // 3.변환된 숫자 IDX를 VO에 세팅합니다.
+	 //   vo.setBoard_type_idx(typeIdx);
 
 		// DB insert
 		int res = boardDao.insert(vo);

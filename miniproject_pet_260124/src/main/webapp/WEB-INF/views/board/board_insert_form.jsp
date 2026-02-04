@@ -6,12 +6,16 @@
 <head>
 <meta charset="UTF-8">
 <title>글쓰기</title>
+
+
 </head>
 <body>
+	
 
+      
 <h2>글쓰기 (${type})</h2>
 
-<form action="insert.do" method="post">
+<form action="insert.do" method="post" enctype="multipart/form-data">
     <!-- 게시판 타입 코드 넘기기 -->
     <input type="hidden" name="board_type_code" value="${type}"/>
 
@@ -38,6 +42,7 @@
         <button type="submit">등록</button>
         <a href="list.do">목록</a>
     </p>
+ 
 </form>
 
 </body>

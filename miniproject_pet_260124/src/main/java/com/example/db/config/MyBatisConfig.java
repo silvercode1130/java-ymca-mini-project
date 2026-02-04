@@ -19,6 +19,7 @@ public class MyBatisConfig {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
 
+       
         org.apache.ibatis.session.Configuration configuration =
                 new org.apache.ibatis.session.Configuration();
         

@@ -165,8 +165,8 @@ public class CommunityController {
 		    
 		    // board_type_code는 파라미터나 상황에 맞게 설정 (예: vo에서 가져오거나 직접 지정)
 		    int board_type_code = vo.getBoard_type(); 
-		    int board_type_idx = boardDao.selectTypeIdxByCode(board_type_code);
-		    vo.setBoard_type_idx(board_type_idx);
+//		    int board_type_idx = boardDao.selectTypeIdxByCode(board_type_code);
+//		    vo.setBoard_type_idx(board_type_idx);
 
 		    // 6. DB insert
 		    int res = boardDao.insert(vo);
