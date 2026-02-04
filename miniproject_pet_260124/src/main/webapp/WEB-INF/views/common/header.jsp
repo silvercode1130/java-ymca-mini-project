@@ -45,7 +45,7 @@
       <c:choose>
         <c:when test="${empty sessionScope.loginMember}">
           <a href="${pageContext.request.contextPath}/member/login" class="btn btn-login">로그인</a>
-          <a href="${pageContext.request.contextPath}/member/join" class="btn btn-join">회원가입</a>
+          <a href="${pageContext.request.contextPath}/member/signUp.do" class="btn btn-join">회원가입</a>
         </c:when>
         <c:otherwise>
           <span class="header-welcome">

@@ -38,7 +38,7 @@
 		<hr>
 		
 		<!-- #추가 - 가입 시키기(db) -->
-		<div class="btn"><!-- #변경 + 연결 - onclick=메인홈(재웅님) -->
+		<div class="btn"><!-- #변경 + 연결 - onclick=메인홈(재웅님) location 바꾸지 마!!!!! -->
 			<input type="button"  value="이메일로 로그인"  onclick="location.href='/member/emailLogin.do'">
 		</div>
 		

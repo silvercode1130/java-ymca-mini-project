@@ -1,9 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-<!-- 
-	회원가입 폼 == signUp.jsp	/  로그인 폼 == loginForm.jsp	 /    비번찾기 == pwdFind.jsp	  /   == emailLogin.jsp
--->
+
 
 <!DOCTYPE html>
 <html>
@@ -18,11 +15,11 @@
 <script type="text/javascript">
 	function send(f) {
 		// 변수 선언
-		let id 		= f.mem_id.value.trim();
-		let pwd 	= f.mem_pwd.value.trim();
-		let name  = f.mem_name.value.trim();
-		let tel		= f.mem_tel.value.trim();
-		let email  = f.mem_email.value.trim();
+		let mem_id 		= f.mem_id.value.trim();
+		let mem_pwd 	= f.mem_pwd.value.trim();
+		let mem_name  = f.mem_name.value.trim();
+		let mem_tel		= f.mem_tel.value.trim();
+		let mem_email  = f.mem_email.value.trim();
 		
 		f.action = "/member/signUp.do";		// 메인 홈(재웅님)
 		f.submit();
@@ -42,15 +39,15 @@
 	    };
 
 	    // 아이디 중복여부 확인하는 메시지 (창 x)
-	    document.querySelector("#id").addEventListener("input", idCheck);
+	    document.querySelector("#mem_id").addEventListener("input", idCheck);
 
 	    // 비밀번호 동일한지 확인하는 메시지 (창 x)
-	    document.querySelector("#pwd").addEventListener("input", pwdMsg);
-	    document.querySelector("#pwdCheck").addEventListener("input", pwdMsg);
+	    document.querySelector("#mem_pwd").addEventListener("input", mem_pwdMsg);
+	    document.querySelector("#mem_pwdCheck").addEventListener("input", mem_pwdMsg);
 
 	    // 회원가입 버튼 활성 / 비활성
-	    document.querySelector("#id").addEventListener("input", checkValid);
-	    document.querySelector("#pwd").addEventListener("input", checkValid);
+	    document.querySelector("#mem_id").addEventListener("input", checkValid);
+	    document.querySelector("#mem_pwd").addEventListener("input", checkValid);
 	    document.querySelector("input[name='mem_name']").addEventListener("input", checkValid);
 	    document.querySelector("input[name='mem_tel']").addEventListener("input", checkValid);
 	    document.querySelector("input[name='mem_email']").addEventListener("input", checkValid);
@@ -69,20 +66,20 @@
 	
 	
 	
-	// 아이디 중복 여부 체크
+	// 아이디 중복 여부 체크		
 	function idCheck() {
 			// 변수 선언
-		    let id = document.querySelector("#id").value.trim();
-		    let msg = document.querySelector("#idMsg");
+		    let mem_id = document.querySelector("#mem_id").value.trim();
+		    let mem_msg = document.querySelector("#mem_idMsg");
 	
 		    // 미입력 시 메시지 안뜨게
-		    if (id === "") {
+		    if (mem_id === "") {
 		        msg.textContent = "";
 		        return;
 		    }
 			
 		    // 입력 시 일치 여부에 따른 메시지
-		    fetch("/member/check_id.do?mem_id=" + id)
+		    fetch("/member/check_id.do?mem_id=" + mem_id)
 		        .then(r => r.json())
 		        .then(data => {
 		            if (data.result) {
@@ -101,24 +98,24 @@
 	// 비밀번호 일치 여부 확인
 	function pwdMsg() {
 		// 변수 선언
-		let pwd = document.querySelector("#pwd").value;
-		let pwdCheck = document.querySelector("#pwdCheck").value;
-		let pwdMsg = document.querySelector("#pwdMsg");
+		let mem_pwd = document.querySelector("#mem_pwd").value;
+		let mem_pwdCheck = document.querySelector("#mem_pwdCheck").value;
+		let mem_pwdMsg = document.querySelector("#mem_pwdMsg");
 		
 		// 미입력 시 메시지 안뜨게
-		if (pwd === "" && pwdCheck === "") {
-			pwdMsg.textContent = "";
+		if (mem_pwd === "" && mem_pwdCheck === "") {
+			mem_pwdMsg.textContent = "";
 			return;
 		}
 		
 		// 입력 시 일치 여부에 따른 메시지
-		if (pwd === pwdCheck) {
-			pwdMsg.style.color="gray";
-			pwdMsg.textContent = "✔ 비밀번호가 일치합니다.";
+		if (mem_pwd === mem_pwdCheck) {
+			mem_pwdMsg.style.color="gray";
+			mem_pwdMsg.textContent = "✔ 비밀번호가 일치합니다.";
 		}
 		else {
-			pwdMsg.style.color="red";
-			pwdMsg.textContent = "✘ 비밀번호가 일치하지 않습니다.";
+			mem_pwdMsg.style.color="red";
+			mem_pwdMsg.textContent = "✘ 비밀번호가 일치하지 않습니다.";
 		}
 	}
 
@@ -127,11 +124,11 @@
 	// 필수 항목 체크 안되면 못 넘어가게 하는 기능
 	function checkValid() {
 	    // 변수 선언
-	    let id = document.querySelector("#id").value.trim();
-	    let pwd = document.querySelector("#pwd").value.trim();
-	    let name = document.querySelector("input[name='mem_name']").value.trim();
-	    let tel = document.querySelector("input[name='mem_tel']").value.trim();
-	    let email = document.querySelector("input[name='mem_email']").value.trim();
+	    let mem_id = document.querySelector("#mem_id").value.trim();
+	    let mem_pwd = document.querySelector("#mem_pwd").value.trim();
+	    let mem_name = document.querySelector("input[name='mem_name']").value.trim();
+	    let mem_tel = document.querySelector("input[name='mem_tel']").value.trim();
+	    let mem_email = document.querySelector("input[name='mem_email']").value.trim();
 
 	    // 필수 동의 체크 박스 (name='agree')
 	    let agrees = document.querySelectorAll("input[name='agree']");
@@ -142,13 +139,13 @@
 
 	    let btn = document.querySelector("input[name='signUp']");
 
-	    // 모든 값을 입력해야 버튼 활성화
+	    // 모든 값을 입력해야 버튼 활성화		
 	    let isValid =
-	        id !== "" &&
-	        pwd !== "" &&
-	        name !== "" &&
-	        tel !== "" &&
-	        email !== "" &&
+	    	mem_id !== "" &&
+	    	mem_pwd !== "" &&
+	    	mem_name !== "" &&
+	    	mem_tel !== "" &&
+	    	mem_email !== "" &&
 	        agree1 && agree2 && agree3;
 
 	    // 버튼 활성화 / 비활성화
@@ -171,7 +168,8 @@
 </head>
 <body>	
 
-	<form class="signUp"  f.action="/member/signUp.do";>		<!-- 테스트 중이여서 get임 -->
+	<!-- <form class="signUp"  f.action="/member/signUp.do";  method="post">		 -->
+	<form class="signUp" action="/member/signUp.do" method="post">
 		<!-- <img alt="(웹 로고)" src="/images/miniProject01_logo_practice.png"> -->
 		<div class="title">
 			<h2>회원가입</h2>
@@ -197,37 +195,37 @@
 		<h2>이메일로 회원가입</h2>
 		
 		<div class="id">     
-			<input name="mem_id"  id="id"  type="text"  placeholder="아이디">
-			<span id="idMsg" style="font-size:12px; margin-top:4px;"></span>
+			<input name="mem_id"  id="mem_id"  type="text"  placeholder="아이디">
+			<span id="mem_idMsg" style="font-size:12px; margin-top:4px;"></span>
 		</div>
 		
 		<div class="pwd">
-			<input name="mem_pwd"  id="pwd"  type="password"  placeholder="비밀번호">
+			<input name="mem_pwd"  id="mem_pwd"  type="password"  placeholder="비밀번호">
 		</div>
 		
 		<div class="pwdCheck">
-			<input name="pwdCheck"   id="pwdCheck"  type="password"  placeholder="비밀번호 확인">
+			<input name="pwdCheck"  id="mem_pwdCheck"  type="password"  placeholder="비밀번호 확인">
 			<span id="pwdMsg"  style="font-size:12px; margin-top:4px;"></span>
 		</div>
 
 		<div class="name">
-			<input name="mem_name" type="text"  placeholder="이름">
+			<input name="mem_name"  id="mem_name"  type="text"  placeholder="이름">
 		</div>
 		
 		<div class="bday">
-			<input name="mem_bday" type="date"  placeholder="생년월일">
+			<input name="mem_bday"  id="mem_bday"  type="date"  placeholder="생년월일">
 		</div>
 		
 		<div class="tel">
-			<input name="mem_tel" type="text"  placeholder="연락처">
+			<input name="mem_tel"  id="mem_tel"  type="text"  placeholder="연락처">
 		</div>
 		
 		<div class="email">
-			<input name="mem_email" type="email" placeholder="이메일">
+			<input name="mem_email"  id="mem_email" type="email" placeholder="이메일">
 		</div>
 		
 		<div class="agree">
-			<input type="checkbox" name="allAgree" >전체 동의
+			<input type="checkbox"  id="allAgree"   name="allAgree" >전체 동의
 		</div>
 		
 		<div class="agree">

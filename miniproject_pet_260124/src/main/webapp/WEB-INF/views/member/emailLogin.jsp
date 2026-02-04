@@ -16,7 +16,7 @@
 		let id = f.id.value.trim();
 		let pwd = f.pwd.value.trim();
 		
-		f.action = "/member/emailLoginForm.do";		// #수정 - 메인 홈(재웅님)
+		f.action = "/main.do";		// #수정 - 메인 홈(재웅님)  member/emailLoginForm
 		f.submit();
 		
 	} 

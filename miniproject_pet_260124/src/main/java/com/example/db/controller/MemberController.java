@@ -92,7 +92,7 @@ public class MemberController {
    
    
     // signUp.jsp ->  -> myUpdate.jsp
-   @RequestMapping(value="/member/login.do") 
+   @PostMapping(value="/member/login.do") 
    // 1. 괄호 안에 HttpSession session 꼭 추가하기!
    public String login(String mem_id,String mem_pwd) { 
        
@@ -274,7 +274,7 @@ public class MemberController {
 	   
        session.invalidate();   // 전체 세션 제거
        
-       return "redirect:/";     // 메인 홈(재웅님)
+       return "redirect:/main.do";     // 메인 홈(재웅님)
    }
 
 
