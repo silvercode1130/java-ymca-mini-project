@@ -1,5 +1,7 @@
 package com.example.db.vo;
 
+import java.time.LocalDate;
+
 import org.apache.ibatis.type.Alias;
 
 import lombok.Data;
@@ -17,6 +19,6 @@ public class PetVo {
 	String			pet_gender;
 	String			pet_breed;
 	int				pet_age;
-	String			pet_bday;
+	LocalDate		pet_bday;
 }
 
