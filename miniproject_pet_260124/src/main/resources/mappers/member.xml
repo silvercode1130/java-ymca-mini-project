@@ -4,62 +4,218 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.db.dao.MemberDao">
 
-	<!-- 전체조회 -->
-	<select id="selectList" resultType="member">
-		select * from member
-	</select>
+<!-- 회원가입 처리 시키는 기능 -->
+<insert id="insertMember" parameterType="member">
+    INSERT INTO member
+    (mem_idx,mem_id, mem_pwd, mem_name, mem_tel, mem_email,
+    mem_role_idx, mem_grade_idx, mem_bday, mem_regdate)
+    VALUES
+    
+    (
+	 seq_mem_idx.nextVal,
+	 #{mem_id}, #{mem_pwd}, #{mem_name}, #{mem_tel}, #{mem_email},
+	 1,             <!--  role 		user == 1 / doctor == 2 / admin == 3 -->
+	 1,             <!-- grade 	-->
+	 #{mem_bday},    
+	 sysdate         <!-- 가입일 = 자동 -->
+	)
+    
+    <!-- (
+    seq_mem_idx.nextVal,
+     #{mem_id}, #{mem_pwd}, #{mem_name}, #{mem_tel}, #{mem_email},
+     #{ mem_role_idx }, #{ mem_grade_idx }, #{ mem_bday }, #{ mem_regdate }
+     ) -->
+</insert> 
 
-	<!-- mem_idx 이용해 MemberVo 객체 1개 얻기 -->
-	<select id="selectOneFromIdx" parameterType="int" resultType="member">
-		select * from member where mem_idx=#{ mem_idx }
-	</select>
 
-	<!-- mem_id 이용해 MemberVo 객체 1개 얻기 -->
+<!-- 아이디 중복 추가 기능 -->
+<!--  <select id="selectOneFromId"  parameterType="String"  resultType="member">
+    SELECT *
+    FROM member
+    WHERE mem_id = #{mem_id}
+</select>  -->
 
-	<select id="selectOneFromId" parameterType="String" resultType="member">
-		select * from member where mem_id=#{ mem_id }
-	</select>
 
-	<!-- 추가 -->
-	<insert id="insert" parameterType="member">
-		insert into member values(
-			seq_mem_idx.nextVal,
-			#{mem_id} ,
-			#{mem_pwd} ,
-			#{mem_name},
-			#{mem_tel} ,
-			#{mem_email} ,
-			#{mem_ip} ,
-			#{mem_role_idx} ,
-			#{mem_grade_idx} ,
-			#{mem_bday} ,
-			default ,
-			default ,
-			#{mem_deldate}
-		)
-	</insert>
+<!-- <select id="selectOneFromId" parameterType="String" resultType="member">
+    SELECT
+        m.mem_idx,
+        m.mem_id,
+        m.mem_pwd,
+        m.mem_tel,
+        m.mem_gmail AS mem_email,
+        m.mem_role_idx,
+        m.mem_grade_idx,
+        m.mem_bday,
+        m.mem_regdate,
 
-	<!-- 수정 -->
-	<update id="update" parameterType="member">
-		update member set
-			mem_id =#{mem_id},
-			mem_pwd =#{mem_pwd},
-			mem_name =#{mem_name},
-			mem_tel =#{mem_tel},
-			mem_email =#{mem_email},
-			mem_ip =#{mem_ip},
-			mem_role_idx =#{mem_role_idx},
-			mem_grade_idx =#{mem_grade_idx},
-			mem_bday =#{mem_bday},
-			mem_ip =#{mem_ip},
-			mem_role =#{mem_role}
-			where mem_idx=#{mem_idx}
-	</update>
+        r.role_name AS mem_role_name,
+        g.grade_name AS mem_grade_name,
+        g.grade_discount_rate AS discount_rate,
 
-	<!-- 삭제 -->
-	<delete id="delete" parameterType="int">
-		delete from member where mem_idx=#{ mem_idx }
-	</delete>
+        mp.mem_nickname,
+        mp.mem_intro,
+        mp.mem_img,
+
+        ma.mem_zipcode,
+        ma.mem_addr,
+        ma.mem_addr_detail AS mem_addrdetail
+    FROM member m
+    LEFT JOIN role r
+        ON m.mem_role_idx = r.role_idx
+    LEFT JOIN grade g
+        ON m.mem_grade_idx = g.grade_idx
+    LEFT JOIN member_profile mp
+        ON m.mem_idx = mp.mem_idx
+    LEFT JOIN member_addr ma
+        ON m.mem_idx = ma.mem_idx
+    WHERE m.mem_id = #{mem_id}
+</select> -->
+
+
+
+
+
+
+<!-- 로그인 -->
+<select id="login" parameterType="member"  resultType="member">
+   SELECT
+        m.mem_idx,
+        m.mem_id,
+        m.mem_pwd,
+        m.mem_name,
+        m.mem_tel,
+        m.mem_gmail AS mem_email,    m.mem_role_idx,
+        m.mem_grade_idx,
+        m.mem_bday,
+        m.mem_regdate,
+
+        r.role_name AS mem_role_name,
+        g.grade_name AS mem_grade_name,
+        g.grade_discount_rate AS discount_rate,
+
+        mp.mem_nickname,
+        mp.mem_intro,
+        mp.mem_img,
+
+        ma.mem_zipcode,
+        ma.mem_addr,
+        ma.mem_addr_detail
+
+    FROM member m
+    LEFT OUTER JOIN role r ON m.mem_role_idx = r.role_idx
+    LEFT OUTER JOIN grade g ON m.mem_grade_idx = g.grade_idx
+    LEFT OUTER JOIN member_profile mp ON m.mem_idx = mp.mem_idx
+    LEFT OUTER JOIN member_addr ma ON m.mem_idx = ma.mem_idx
+    
+    WHERE m.mem_id = #{mem_id}
+                AND 
+                m.mem_pwd = #{mem_pwd}
+   <!--  SELECT *
+    FROM member
+    WHERE mem_id = #{mem_id}
+    AND mem_pwd = #{mem_pwd} -->
+</select>
+
+
+
+<!-- 수정 후 정보 저장 기능 구현 -->
+<select id="selectOneFromId" parameterType="String"  resultType="member">
+    SELECT
+        m.mem_idx,
+        m.mem_id,
+        m.mem_pwd,
+        m.mem_name,
+        m.mem_tel,
+        m.mem_email AS mem_email,    m.mem_role_idx,
+        m.mem_grade_idx,
+        m.mem_bday,
+        m.mem_regdate,
+
+        r.role_name AS mem_role_name,
+        g.grade_name AS mem_grade_name,
+        g.grade_discount_rate AS discount_rate,
+
+        mp.mem_nickname,
+        mp.mem_intro,
+        mp.mem_img,
+
+        ma.mem_zipcode,
+        ma.mem_addr,
+        ma.mem_addr_detail
+
+    FROM member m
+    LEFT OUTER JOIN role r ON m.mem_role_idx = r.role_idx
+    LEFT OUTER JOIN grade g ON m.mem_grade_idx = g.grade_idx
+    LEFT OUTER JOIN member_profile mp ON m.mem_idx = mp.mem_idx
+    LEFT OUTER JOIN member_addr ma ON m.mem_idx = ma.mem_idx
+    
+    WHERE m.mem_id = #{mem_id}
+</select>
+
+<!-- <update id="update" parameterType="member">
+    UPDATE member
+    SET 
+        mem_id = #{mem_id},
+        mem_pwd = #{mem_pwd},
+        mem_name = #{mem_name},
+        mem_tel = #{mem_tel},
+        mem_email = #{mem_email},
+        mem_bday = #{mem_bday},
+        mem_role_idx = #{mem_role_idx},
+        mem_grade_idx = #{mem_grade_idx}
+
+    WHERE mem_idx = #{mem_idx}
+</update>
+
+
+<update id="updateProfile" parameterType="member">
+    UPDATE MEMBER_PROFILE
+    SET 
+        MEM_NICKNAME = #{mem_nickname},
+        MEM_INTRO = #{mem_intro},
+        MEM_IMG = #{mem_img, jdbcType=VARCHAR}
+        
+    WHERE MEM_IDX = #{mem_idx}
+</update>
+
+
+<update id="updateAddr" parameterType="member">
+    UPDATE MEMBER_ADDR
+    SET 
+        MEM_ZIPCODE = #{mem_zipcode},
+        MEM_ADDR = #{mem_addr},
+        MEM_ADDR_DETAIL = #{mem_addr_detail}
+        
+    WHERE MEM_IDX = #{mem_idx}
+</update> -->
+
+
+
+
+
+
+
+
+<!-- 닉네임 중복 체크 -->
+<!-- <select id="selectOneFromNicknameSafe" parameterType="String" resultType="member">
+    SELECT *
+    FROM MEMBER_PROFILE
+    WHERE MEM_NICKNAME = #{mem_nickname}
+</select> -->
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+
 </mapper>
 
 
