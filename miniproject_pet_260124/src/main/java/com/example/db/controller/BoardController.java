@@ -87,7 +87,7 @@ public class BoardController {
         
         return "board/free_list";
     }
-
+    
     // QnA 태그별 조회 (tag 필터)
     @GetMapping("/qna/list.do")
     public String qnaList(@RequestParam(defaultValue = "ALL") String tag,
@@ -100,7 +100,6 @@ public class BoardController {
         return "board/qna_list";
     }
 
-	
 //	===== 게시글 상세 =====
 	@RequestMapping("/view.do")
 	public String select_one(int board_idx, Model model) {
@@ -183,7 +182,7 @@ public class BoardController {
 	
 //	===== 게시글 삭제(soft delete) =====	
 	@PostMapping("delete.do")
-	public String delete(int board_idx, RedirectAttributes ra) {
+	public String delete(int board_idx, int page, RedirectAttributes ra) {
 
 	    MemberVo user = (MemberVo) session.getAttribute("user");
 	    if (user == null) {
@@ -197,8 +196,12 @@ public class BoardController {
 	        ra.addAttribute("reason", "no_permission");
 	        return "redirect:list.do";
 	    }
-
+	    
+	    // DB 값 변경(update) board_is_deleted 값 'y' 로 변경
 	    int res = boardDao.softDelete(board_idx);
+	    
+	    ra.addAttribute("page", page);
+	    
 	    return "redirect:list.do";
 	}
 

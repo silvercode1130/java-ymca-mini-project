@@ -46,7 +46,7 @@ public class OrdersController {
         
         int total = 0;
         for (CartItemVo c : cartList) {
-            total += c.getItem().getItem_price() * c.getCart_item_quantity();
+            total += c.getItem().getItem_now_price() * c.getCart_item_quantity();
         }
         
         model.addAttribute("total_price", total);
@@ -57,8 +57,10 @@ public class OrdersController {
     // 주문 생성
     @RequestMapping("/orders/create")
     @Transactional
-    public String createOrder(OrdersVo ordersVo, HttpSession session) {
+    public String createOrder(HttpSession session, @RequestParam("orders_total_price") int total_price, 
+            																	   @RequestParam(value="orders_grade_discount", defaultValue="0") double grade_discount) {
     	MemberVo user = (MemberVo) session.getAttribute("user");
+    	Integer mem_idx = user.getMem_idx();
     	
     	// 데스트용 더미
         if(user == null) {
@@ -67,25 +69,33 @@ public class OrdersController {
             session.setAttribute("user", user);
         }
         
-        Integer mem_idx = user.getMem_idx();
-        ordersVo.setMem_idx(mem_idx);
+        // 1. 주문 마스터 생성
+        OrdersVo vo = new OrdersVo();
+        vo.setMem_idx(mem_idx);
+        vo.setOrders_total_price(total_price);
+        
+        // [중요] BigDecimal 타입으로 등급 할인액 세팅!
+        vo.setOrders_grade_discount(java.math.BigDecimal.valueOf(grade_discount));
+        vo.setOrders_status_idx(1); // 결제대기 상태
 
-        // 주문 마스터 생성
-        ordersDao.createOrders(ordersVo); 
-
-        // 장바구니 리스트 가져와서 상세 품목 저장
+        ordersDao.createOrders(vo); // 여기서 orders_idx가 채워짐
+        int orders_idx = vo.getOrders_idx();
+        
+        // 2. 장바구니 아이템들을 주문 상세로 이동
         List<CartItemVo> cartList = cartDao.getCartList(mem_idx);
         for (CartItemVo cart : cartList) {
             OrdersItemVo item = new OrdersItemVo();
-            item.setOrders_idx(ordersVo.getOrders_idx());
-            item.setItem_idx(cart.getItem().getItem_idx()); 
+            item.setOrders_idx(orders_idx);
+            item.setItem_idx(cart.getItem_idx());
             item.setOrders_item_quantity(cart.getCart_item_quantity());
-            item.setOrders_price_at(cart.getItem().getItem_price());
+            item.setOrders_price_at(cart.getItem().getItem_now_price());
+            
             ordersDao.createOrdersItem(item);
         }
 
         // 장바구니 비우기
         cartDao.clearCart(mem_idx);
+        
         return "redirect:/orders/list";
     }
 
@@ -104,7 +114,7 @@ public class OrdersController {
 	    
 	    return "orders/orders_list";
     }
-
+    
     // 주문 상세
     @RequestMapping("/orders/detail/{orders_idx}")
     public String getOrdersDetail(@PathVariable("orders_idx") int orders_idx, Model model) {

@@ -20,7 +20,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			property : 자바 VO에 있는 변수 이름
 			column : DB에서 가져온 컬럼 이름
 		 -->
-	    <id property="cart_item_idx" column="cart_item_idx" />
+	   <id property="cart_item_idx" column="cart_item_idx" />
+	    <result property="cart_idx" column="cart_idx" />
+	    <result property="item_idx" column="item_idx" />
 	    <result property="cart_item_quantity" column="cart_item_quantity" />
 		
 		<!-- 
@@ -31,14 +33,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    <association property="item" javaType="item">
 	        <id property="item_idx" column="item_idx" />
 	        <result property="item_name" column="item_name" />
-	        <result property="item_price" column="item_price" />
+	        <result property="item_now_price" column="item_now_price" />
 	        <result property="item_thumbnail_img" column="item_thumbnail_img" />
 	    </association>
 	</resultMap>
 	
 	<!-- resultMap : 위에서 만든 설계도(id="CartMap")를 사용해서 결과를 포장하겠다는 뜻(resultType 대신 **resultMap**을 쓴다는 게 중요) -->
 	<select id="getCartList" resultMap="CartMap">
-	    SELECT ci.cart_item_idx, ci.cart_item_quantity, i.item_idx, i.item_name, i.item_price, i.item_thumbnail_img
+	    SELECT ci.cart_item_idx, ci.cart_item_quantity, i.item_idx, i.item_name, i.item_now_price, i.item_thumbnail_img
 	        FROM cart_item ci 
 		        JOIN item i ON ci.item_idx = i.item_idx 
 			        JOIN cart c ON ci.cart_idx = c.cart_idx

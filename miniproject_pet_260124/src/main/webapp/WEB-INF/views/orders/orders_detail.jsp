@@ -12,8 +12,10 @@
 	<div class="border p-3 mb-3">
 	    <p>주문일시: ${order.orders_regdate}</p>
 	    <p>주문상태: ${order.status.orders_status_name}</p>
+	    <p>등급 할인액: -${order.orders_grade_discount}원</p> 
+	    <p>최종 결제액: <strong>${order.orders_total_price}원</strong></p>
 	</div>
-	
+		
 	<table class="table">
 	    <thead>
 	        <tr>

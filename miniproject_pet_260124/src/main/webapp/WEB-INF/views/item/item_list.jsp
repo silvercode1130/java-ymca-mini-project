@@ -47,10 +47,16 @@
         
         <div class="category-menu" style="margin: 20px 0;">
 		    <a href="/item/item_list.do">전체</a> |
-		    <a href="/item/item_list.do?category=food">사료</a> |
-		    <a href="/item/item_list.do?category=snack">간식</a> |
-		    <a href="/item/item_list.do?category=toy">장난감</a> |
-		    <a href="/item/item_list.do?category=clothes">의류</a>
+		    <a href="/item/item_list.do?type_idx=1">일반</a> |
+		    <a href="/item/item_list.do?type_idx=2">사료</a> |
+		    <a href="/item/item_list.do?type_idx=3">간식</a> |
+		    <a href="/item/item_list.do?type_idx=4">장난감</a> |
+		    <a href="/item/item_list.do?type_idx=5">위생용품</a> |
+		    <a href="/item/item_list.do?type_idx=6">배변용품</a> |
+		    <a href="/item/item_list.do?type_idx=7">의류</a> |
+		    <a href="/item/item_list.do?type_idx=8">방석/쿠션</a> |
+		    <a href="/item/item_list.do?type_idx=9">야외활동</a> |
+		    <a href="/item/item_list.do?type_idx=10">하우스/이동장</a>
 		</div>
         
         <form action="/item/item_list.do" method="get">
@@ -69,14 +75,19 @@
 				<c:if test="${empty item.item_thumbnail_img}">
 				    <div style="background:#eee; height:150px; line-height:150px;">이미지 준비중</div>
 				</c:if>
-                <h3>${item.item_name}</h3>
-                <p>가격: <strong>${item.item_price}원</strong></p>
-                
-                <div class="item-card">
+				
+				<div class="item-info">
+				    <h5 class="item-title">${item.item_name}</h5>
+				    <p class="item-price">
+				        <c:if test="${item.item_origin_price > item.item_now_price}">
+				            <span style="text-decoration: line-through; color: #999; font-size: 0.9em;">${item.item_origin_price}원</span>
+				        </c:if>
+				        <strong style="color: #e44d26;">${item.item_now_price}원</strong>
+				    </p>
 				    <a href="/item/item_detail.do?item_idx=${item.item_idx}">상세보기</a>
-				    <br><br>
-				    <button type="button" onclick="addToCart(${item.item_idx})">장바구니 담기</button>
+				    <button type="button" class="btn-cart" onclick="addToCart(${item.item_idx})">담기 🛒</button>
 				</div>
+				
             </div>
         </c:forEach>
     </div>

@@ -1,3 +1,4 @@
+/*
 -- 0. 코드 테이블
 CREATE TABLE role (
     role_idx    NUMBER        PRIMARY KEY,
@@ -307,3 +308,5 @@ CREATE SEQUENCE seq_orders_item_idx START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_board_idx START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_board_file_idx START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE seq_reply_idx START WITH 1 INCREMENT BY 1;
+
+*/

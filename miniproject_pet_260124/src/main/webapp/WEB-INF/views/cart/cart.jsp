@@ -81,9 +81,15 @@
 	
 	<div class="card mt-4 shadow-sm">
 	    <div class="card-body text-end">
-	        <c:forEach var="cart" items="${cartList}">
-	            <c:set var="totalPrice" value="${totalPrice + (cart.item.item_price * cart.cart_item_quantity)}" />
-	        </c:forEach>
+            <c:set var="totalPrice" value="0" />
+				<c:forEach var="cart" items="${cartList}">
+				    <c:set var="totalPrice" value="${totalPrice + (cart.item.item_now_price * cart.cart_item_quantity)}" />
+				    <tr>
+				        <td><img src="${cart.item.item_thumbnail_img}" width="50"></td>
+				        <td>${cart.item.item_name}</td>
+				        <td>${cart.item.item_now_price}원</td>
+				    </tr>
+				</c:forEach>
 	        
 	        <h5 class="text-muted mb-2">주문 상품 총 <span class="text-primary">${cartList.size()}</span>건</h5>
 	        <h3 class="mb-4">최종 결제 예정 금액: 
