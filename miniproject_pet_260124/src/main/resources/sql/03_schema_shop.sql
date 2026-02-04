@@ -2,7 +2,7 @@
 -- 3. 상품 / 장바구니
 CREATE TABLE item_type (
     item_type_idx		NUMBER        PRIMARY KEY,
-    item_type_category	VARCHAR2(50)  NOT NULL		-- 사료, 간식, 장난감, 가구 등
+    item_type_category	VARCHAR2(50)  NOT NULL				-- 사료, 간식, 장난감, 가구 등
 );
 
 CREATE TABLE item (

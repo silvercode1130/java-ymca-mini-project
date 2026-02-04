@@ -23,7 +23,7 @@ CREATE TABLE orders (
 CREATE TABLE orders_item (
     orders_item_idx       NUMBER     PRIMARY KEY,
     orders_idx            NUMBER     NOT NULL,
-    item_idx             NUMBER     NOT NULL,
+    item_idx              NUMBER     NOT NULL,
     orders_item_quantity  NUMBER     DEFAULT 1,
     orders_price_at       NUMBER(10) NOT NULL,
     CONSTRAINT fk_orders_item_orders
