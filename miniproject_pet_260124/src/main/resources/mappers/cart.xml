@@ -63,8 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	                (SELECT cart_idx FROM cart WHERE mem_idx = #{mem_idx}), 
 	                #{item_idx}, 1)
 		<!-- 
-			(values(select))회원번호가 일치하는 장바구니의 장바구니번호와, 내가 고른 상품(번호), 그 상품의 수량 1을 
-				/ (insert)장바구니 상품 테이블에 추가
+			
 		 -->
     </insert>
 	

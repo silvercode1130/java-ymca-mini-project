@@ -44,7 +44,10 @@
                                 <img src="${cart.item.item_thumbnail_img}" alt="상품이미지" style="width: 80px; height: 80px; object-fit: cover;">
                             </td>
                             <td class="align-middle">${cart.item.item_name}</td>
-                            <td class="align-middle">${cart.item.item_price}원</td>
+                            <td class="align-middle">
+							    ${cart.item.item_price * cart.cart_item_quantity}원
+							    	<small class="text-muted">(단가: ${cart.item.item_price}원)</small>
+							</td>
                             <td class="align-middle">
 							    <div class="input-group" style="width: 120px;">
 							        <button class="btn btn-outline-secondary btn-sm" type="button" 
@@ -73,7 +76,23 @@
             </c:choose>
         </tbody>
     </table>
-
+	
+	<c:set var="totalPrice" value="0" />
+	
+	<div class="card mt-4 shadow-sm">
+	    <div class="card-body text-end">
+	        <c:forEach var="cart" items="${cartList}">
+	            <c:set var="totalPrice" value="${totalPrice + (cart.item.item_price * cart.cart_item_quantity)}" />
+	        </c:forEach>
+	        
+	        <h5 class="text-muted mb-2">주문 상품 총 <span class="text-primary">${cartList.size()}</span>건</h5>
+	        <h3 class="mb-4">최종 결제 예정 금액: 
+	            <span class="text-danger" id="total_sum">
+	                <strong>${totalPrice}원</strong>
+	            </span>
+	        </h3>
+		</div>
+	</div>
     <div class="text-end mt-3">
         <a href="/item/item_list.do" class="btn btn-secondary">계속 쇼핑하기</a>
         <a href="/orders/orders_checkout.do" class="btn btn-secondary">주문하기</a>

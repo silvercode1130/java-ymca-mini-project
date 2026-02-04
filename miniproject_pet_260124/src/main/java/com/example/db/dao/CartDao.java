@@ -15,8 +15,7 @@ public interface CartDao {
 
 	void removeFromCart(int cart_item_idx);  // 장바구니에 상품 제거 메서드
 	
-	// CartDao.java 인터페이스에 추가
-	void updateItemQty(@Param("idx") int cart_item_idx, @Param("qty") int qty);
+	void updateItemQty(@Param("idx") int cart_item_idx, @Param("qty") int qty);  // 장바구니에 있는 상품 수량 변경 메서드
 	
-	void clearCart(int mem_idx);
+	void clearCart(int mem_idx);  // 주문 완료 후 주문한 상품을 장바구니에서 비워주는 메서드 
 }

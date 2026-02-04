@@ -27,7 +27,7 @@ public class OrdersController {
     @Autowired 
     CartDao cartDao;
 
-    // A. 체크아웃 페이지 (장바구니 -> 주문서)
+    // 체크아웃 페이지 (장바구니 -> 주문서)
     @RequestMapping("/orders/orders_checkout.do")
     public String checkout(Model model, HttpSession session) {
     	 // 세션에서 user 가져오기 (CartController와 통일)
@@ -54,7 +54,7 @@ public class OrdersController {
         return "orders/orders_checkout";
     }
 
-    // B. 주문 생성 로직
+    // 주문 생성
     @RequestMapping("/orders/create")
     @Transactional
     public String createOrder(OrdersVo ordersVo, HttpSession session) {
@@ -70,26 +70,26 @@ public class OrdersController {
         Integer mem_idx = user.getMem_idx();
         ordersVo.setMem_idx(mem_idx);
 
-        // 1. 주문 마스터 생성
+        // 주문 마스터 생성
         ordersDao.createOrders(ordersVo); 
 
-        // 2. 장바구니 리스트 가져와서 상세 품목 저장
+        // 장바구니 리스트 가져와서 상세 품목 저장
         List<CartItemVo> cartList = cartDao.getCartList(mem_idx);
         for (CartItemVo cart : cartList) {
             OrdersItemVo item = new OrdersItemVo();
             item.setOrders_idx(ordersVo.getOrders_idx());
-            item.setItem_idx(cart.getItem().getItem_idx()); // <- 여기 주의!!
+            item.setItem_idx(cart.getItem().getItem_idx()); 
             item.setOrders_item_quantity(cart.getCart_item_quantity());
             item.setOrders_price_at(cart.getItem().getItem_price());
             ordersDao.createOrdersItem(item);
         }
 
-        // 3. 장바구니 비우기
+        // 장바구니 비우기
         cartDao.clearCart(mem_idx);
         return "redirect:/orders/list";
     }
 
-    // C. 주문 목록
+    // 주문 목록
     @RequestMapping("/orders/list")
     public String getOrdersList(Model model, HttpSession session, @RequestParam(value="searchKeyword", required=false) String searchKeyword) {
     	MemberVo user = (MemberVo) session.getAttribute("user");
@@ -97,14 +97,15 @@ public class OrdersController {
 	    if(user == null) return "redirect:/login";
 	    
 	    Integer mem_idx = user.getMem_idx();
-	    // 검색어를 포함해서 리스트를 가져옴!
+	    
+	    // 검색어를 포함해서 리스트를 가져오기
 	    model.addAttribute("list", ordersDao.getOrdersList(mem_idx, searchKeyword));
 	    model.addAttribute("searchKeyword", searchKeyword); // 검색창에 검색어 남겨두기용
 	    
 	    return "orders/orders_list";
     }
 
-    // D. 주문 상세
+    // 주문 상세
     @RequestMapping("/orders/detail/{orders_idx}")
     public String getOrdersDetail(@PathVariable("orders_idx") int orders_idx, Model model) {
     	model.addAttribute("order", ordersDao.getOrdersDetail(orders_idx));
@@ -113,13 +114,13 @@ public class OrdersController {
         return "orders/orders_detail";
     }
     
- // E. 주문 취소
+ // 주문 취소
     @RequestMapping("/orders/cancel/{orders_idx}")
     public String cancelOrder(@PathVariable("orders_idx") int orders_idx) {
-        // 1. DB에서 주문 상태를 취소로 변경하거나 삭제
+        // DB에서 주문 상태를 취소로 변경하거나 삭제
         ordersDao.cancelOrders(orders_idx);
         
-        // 2. 취소 후 다시 주문 목록으로 리다이렉트
+        // 취소 후 다시 주문 목록으로 리다이렉트
         return "redirect:/orders/list";
     }
 }
