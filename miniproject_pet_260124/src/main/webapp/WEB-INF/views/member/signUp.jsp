@@ -21,7 +21,12 @@
 		let mem_tel		= f.mem_tel.value.trim();
 		let mem_email  = f.mem_email.value.trim();
 		
-		f.action = "/member/signUp.do";		// 메인 홈(재웅님)
+		// 2. 유효성 체크 (생략된 부분 코코가 짠 대로 유지)
+	    if(mem_id == "") { alert("아이디를 입력하세요"); return; }
+
+	    // 3. 전송 설정
+	    f.method = "post"; // 확실하게 post 명시
+		f.action = "/member/signUp.do";		// 메인 홈(재웅님)으로 연결 x
 		f.submit();
 		
 	}
@@ -42,8 +47,8 @@
 	    document.querySelector("#mem_id").addEventListener("input", idCheck);
 
 	    // 비밀번호 동일한지 확인하는 메시지 (창 x)
-	    document.querySelector("#mem_pwd").addEventListener("input", mem_pwdMsg);
-	    document.querySelector("#mem_pwdCheck").addEventListener("input", mem_pwdMsg);
+	    document.querySelector("#mem_pwd").addEventListener("input", pwdMsg);
+	    document.querySelector("#mem_pwdCheck").addEventListener("input", pwdMsg);
 
 	    // 회원가입 버튼 활성 / 비활성
 	    document.querySelector("#mem_id").addEventListener("input", checkValid);
@@ -74,7 +79,7 @@
 	
 		    // 미입력 시 메시지 안뜨게
 		    if (mem_id === "") {
-		        msg.textContent = "";
+		        mem_msg.textContent = "";
 		        return;
 		    }
 			
@@ -83,11 +88,11 @@
 		        .then(r => r.json())
 		        .then(data => {
 		            if (data.result) {
-		                msg.style.color = "gray";
-		                msg.textContent = "✔ 사용 가능한 아이디입니다.";
+		                mem_msg.style.color = "gray";
+		                mem_msg.textContent = "✔ 사용 가능한 아이디입니다.";
 		            } else {
-		                msg.style.color = "red";
-		                msg.textContent = "✘ 이미 사용 중인 아이디입니다.";
+		                mem_msg.style.color = "red";
+		                mem_msg.textContent = "✘ 이미 사용 중인 아이디입니다.";
 		            }
 		        })
 		        .catch(err => console.log("에러 발생:", err));
@@ -113,7 +118,7 @@
 			mem_pwdMsg.style.color="gray";
 			mem_pwdMsg.textContent = "✔ 비밀번호가 일치합니다.";
 		}
-		else {
+		else {	
 			mem_pwdMsg.style.color="red";
 			mem_pwdMsg.textContent = "✘ 비밀번호가 일치하지 않습니다.";
 		}
@@ -169,7 +174,7 @@
 <body>	
 
 	<!-- <form class="signUp"  f.action="/member/signUp.do";  method="post">		 -->
-	<form class="signUp" action="/member/signUp.do" method="post">
+	<form class="signUp"  action="/member/signUp.do" method="post">
 		<!-- <img alt="(웹 로고)" src="/images/miniProject01_logo_practice.png"> -->
 		<div class="title">
 			<h2>회원가입</h2>
@@ -205,7 +210,7 @@
 		
 		<div class="pwdCheck">
 			<input name="pwdCheck"  id="mem_pwdCheck"  type="password"  placeholder="비밀번호 확인">
-			<span id="pwdMsg"  style="font-size:12px; margin-top:4px;"></span>
+			<span id="mem_pwdMsg"  style="font-size:12px; margin-top:4px;"></span>
 		</div>
 
 		<div class="name">
@@ -252,14 +257,7 @@
 		<div class="btn">
 			<input type="button" name="signUp" value="회원가입"  onclick="send(this.form);">
 		</div>	
-		
-	<%-- <c:if test="${param.error == '1'}">
-			<script>
-			    alert('❌ 회원가입에 실패했습니다.');
-			</script>
-		</c:if> --%>
-		
-		
+				
 	</form>
 </body>
 </html>

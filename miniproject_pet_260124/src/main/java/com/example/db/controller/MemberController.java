@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.db.dao.MemberDao;
+import com.example.db.vo.MemberProfileVo;
 import com.example.db.vo.MemberVo;
 
 import jakarta.servlet.http.HttpSession;
@@ -34,19 +35,36 @@ public class MemberController {
    
    // 회원가입 관련 ------------------------------------------------------------------------------------------
    
+   // 은정 - 이것만 추가 했따!
+   @RequestMapping("/member/signUpForm.do")
+   public String signUpForm(MemberVo vo) {
+	   
+	   return "/member/signUp";
+   }
+   
    // signUp.jsp - 회원가입 폼 띄우기 
    // signUp.jsp - 회원가입 처리 시키기
    // signUp.jsp -> myUpdate.jsp 로 데이터 이동(?)
-   @RequestMapping("/member/signUp.do")
+   @PostMapping("/member/signUp.do")
    public String signUpData(MemberVo vo) {
+	   
+	// 여기서 vo.getMem_id()를 찍어봐서 null이 나오는지 확인해보는 게 좋아.
+	    System.out.println("가입 시도 ID: " + vo.getMem_id());
+		/*
+		 * int result = memberDao.insertMember(vo);
+		 * 
+		 * if(result > 0) { return "redirect:/member/myUpdate.do?mem_id="; // #수정 - 회원가입
+		 * 성공 시 메인 홈(재웅님)으로 이동 } else { return "redirect:/member/signUpForm.do?error=1";
+		 * }
+		 */
+	    
+	    if(vo.getMem_id() == null || vo.getMem_id().isEmpty()) {
+	        return "redirect:/member/signUp.do?error=id_null";
+	    }
 
-       int result = memberDao.insertMember(vo);
-
-       if(result > 0) {
-           return "redirect:/member/myUpdate.do?mem_id=" + vo.getMem_id();   // #수정 - 회원가입 성공 시 메인 홈(재웅님)으로 이동
-       } else {
-           return "redirect:/member/signUpForm.do?error=1";
-       }
+	    memberDao.insertMember(vo);
+	    
+	    return "redirect:/main";
    }
 
 
@@ -92,7 +110,7 @@ public class MemberController {
    
    
     // signUp.jsp ->  -> myUpdate.jsp
-   @PostMapping(value="/member/login.do") 
+   @RequestMapping(value="/member/login.do") 
    // 1. 괄호 안에 HttpSession session 꼭 추가하기!
    public String login(String mem_id,String mem_pwd) { 
        
@@ -236,6 +254,8 @@ public class MemberController {
        String uploadPath = "C:/upload/profile/";
        File folder = new File(uploadPath);
        if (!folder.exists()) folder.mkdirs();
+       
+       MemberProfileVo profile  = memberDao.selectProfile(vo.getMem_id());
 
        // 2) 파일이 있을 때만 처리
        if (!file.isEmpty()) {
@@ -243,7 +263,7 @@ public class MemberController {
            File saveFile = new File(uploadPath, fileName);
            try {
                file.transferTo(saveFile);
-               vo.setMem_img(fileName);   // DB에는 파일명만 넣기
+               profile.setMem_img(fileName);   // DB에는 파일명만 넣기
            } catch (Exception e) {
                e.printStackTrace();
            }
@@ -284,7 +304,7 @@ public class MemberController {
    // myUpdate.jsp - 프로필 table
    @PostMapping("/member/updateProfileAjax.do")
    @ResponseBody
-   public String updateProfileAjax(MemberVo vo,
+   public String updateProfileAjax(MemberVo vo, MemberProfileVo profile,
            @RequestParam(required=false) MultipartFile mem_photo) {
 
        if (mem_photo != null && !mem_photo.isEmpty()) {
@@ -295,7 +315,7 @@ public class MemberController {
            String fileName = System.currentTimeMillis() + "_" + mem_photo.getOriginalFilename();
            try {
                mem_photo.transferTo(new File(uploadPath, fileName));
-               vo.setMem_img(fileName);
+               profile.setMem_img(fileName);
            } catch (Exception e) {
                e.printStackTrace();
            }

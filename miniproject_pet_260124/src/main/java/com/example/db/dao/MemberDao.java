@@ -2,6 +2,7 @@ package com.example.db.dao;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.example.db.vo.MemberProfileVo;
 import com.example.db.vo.MemberVo;
 
 @Mapper
@@ -17,7 +18,8 @@ public interface MemberDao {
 	 // 추가 - 지피티 (문제시 삭제)
 	// MemberDao.java (인터페이스)
 	 public MemberVo selectOneFromNickname(String mem_nickname);
-	 void updateAddr(MemberVo vo); 
+	 void updateAddr(MemberVo vo);
+	 MemberProfileVo selectProfile(String mem_id); 
 
 	 
 	 

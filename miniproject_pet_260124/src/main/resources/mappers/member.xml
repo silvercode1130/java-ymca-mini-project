@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <!-- 회원가입 처리 시키는 기능 -->
 <insert id="insertMember" parameterType="member">
     INSERT INTO member
-    (mem_idx,mem_id, mem_pwd, mem_name, mem_tel, mem_email,
+    (mem_idx, mem_id, mem_pwd, mem_name, mem_tel, mem_email,
     mem_role_idx, mem_grade_idx, mem_bday, mem_regdate)
     VALUES
     
@@ -20,7 +20,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	 #{mem_email, jdbcType=VARCHAR},
 	 1,             <!--  role 		user == 1 / doctor == 2 / admin == 3 -->
 	 1,             <!-- grade 	-->
-	 #{mem_bday, jdbcType=VARCHAR},    
+	 <!-- #{mem_bday, jdbcType=VARCHAR}, -->    
+	 #{mem_bday, jdbcType=VARCHAR}, 
 	 sysdate         <!-- 가입일 = 자동 -->
 	)
     
