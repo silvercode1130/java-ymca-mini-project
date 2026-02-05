@@ -17,7 +17,7 @@
         }
 
         // 서버로 아이디 조회 요청
-        fetch(`/member/check_id.do?mem_id=${encodeURIComponent(memId)}`)
+        fetch(`/member/check_id.do?mem_id=encodeURIComponent(${memId})`)
             .then(res => res.json()) // 컨트롤러에서 Map<String, Boolean> 반환
             .then(data => {
                 if(data.result === true) {

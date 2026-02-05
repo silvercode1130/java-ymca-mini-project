@@ -246,7 +246,7 @@ function saveAddr() {
        <input type="file" name="mem_photo" id="fileInput" onchange="previewImage(this)" style="display: none;">
        
        <img id="preview" alt="프로필 이미지" 
-            src="${empty user.mem_img ? '/resources/images/no_profile.png' : user.mem_img}" 
+            src="${empty profile..mem_img ? '/resources/images/no_profile.png' : profile.mem_img}" 
             style="width: 100%; height: 100%; object-fit: cover;">
        
        <div style="position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.5); color: #fff; font-size: 12px; text-align: center; padding: 5px 0;">

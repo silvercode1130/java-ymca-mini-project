@@ -20,6 +20,7 @@ public interface MemberDao {
 	 public MemberVo selectOneFromNickname(String mem_nickname);
 	 void updateAddr(MemberVo vo);
 	 MemberProfileVo selectProfile(String mem_id); 
+	 MemberProfileVo selectByMemIdx(int mem_idx); 
 
 	 
 	 

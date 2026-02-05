@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -125,14 +126,26 @@ public class MemberController {
           return "redirect:loginForm.do?reason=fail";
        }
        
+       // 1) MemberProfileVo 가져오기
+       MemberProfileVo profile = memberDao.selectByMemIdx(user.getMem_idx());
+       
+       // 2) MemberVo에 mem_img setter가 있어야 함
+       if(profile != null) {
+           profile.setMem_img(profile.getMem_img());  
+       }
+       
+       // 3) 세션에 저장
+       session.setAttribute("loginMember", user);
+       session.setAttribute("profile", profile);
+       
        // 3. 로그인이 성공했는지 확인 (데이터가 들어있으면 성공!)
        
            // 4. [이게 핵심!] 세션에 "vo"라는 이름으로 회원 정보를 통째로 저장해.
            // 그래야 나중에 ${vo.mem_id} 처럼 꺼내 쓸 수 있어.
-           session.setAttribute("user", user); 
+        //   session.setAttribute("user", user); 
      
      
-     return "redirect:myUpdate.do";
+     return "redirect:/main";
    }
    
 
@@ -143,6 +156,35 @@ public class MemberController {
       
       return "member/emailLogin";
    }
+   
+  
+	// ##또뎡이가 추가   
+	// 이메일 로그인 처리
+   @RequestMapping("/member/emailLoginProc.do")
+   public String emailLoginProc(String mem_id, String mem_pwd, HttpSession session) {
+       MemberVo user = memberDao.selectOneFromId(mem_id);
+       if(user == null || !user.getMem_pwd().equals(mem_pwd)) {
+           return "redirect:emailLogin.do?reason=fail";
+       }
+       
+       // 1) MemberProfileVo 가져오기
+       MemberProfileVo profile = memberDao.selectByMemIdx(user.getMem_idx());
+       
+       // 2) MemberVo에 mem_img setter가 있어야 함
+       if(profile != null) {
+           profile.setMem_img(profile.getMem_img());  
+       }
+       
+       // 3) 세션에 저장
+       session.setAttribute("user", user);
+       session.setAttribute("profile", profile);
+
+       return "redirect:/main";
+   }
+   
+
+
+
    
    
    // 비밀번호 관련 ------------------------------------------------------------------------------------------
@@ -289,12 +331,12 @@ public class MemberController {
    
    
    // myInfo.jsp - 로그아웃 기능 구현
-   @PostMapping("/logout.do")
-   public String logout(HttpSession session) {
+   @GetMapping ("/member/logout")
+   public String logout() {
 	   
        session.invalidate();   // 전체 세션 제거
        
-       return "redirect:/main.do";     // 메인 홈(재웅님)
+       return "redirect:/main";     // 메인 홈(재웅님)
    }
 
 

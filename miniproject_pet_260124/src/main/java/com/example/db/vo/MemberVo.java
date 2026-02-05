@@ -15,6 +15,7 @@ public class MemberVo {
    String         mem_id;         // unique
    String         mem_pwd;
    String         mem_name;
+   String		 mem_ip;
    String         mem_tel;
    String         mem_email;
    int            mem_role_idx;   // fk: role(role_idx)

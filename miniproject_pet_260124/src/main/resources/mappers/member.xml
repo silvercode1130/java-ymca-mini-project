@@ -121,7 +121,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     AND mem_pwd = #{mem_pwd} -->
 </select>
 
-
+<select id="selectByMemIdx"  parameterType="int" resultType="member_profile">
+    select * from member_profile where mem_idx=#{ mem_idx }
+</select>
 
 <!-- 수정 후 정보 저장 기능 구현 -->
 <select id="selectOneFromId" parameterType="String"  resultType="member">
