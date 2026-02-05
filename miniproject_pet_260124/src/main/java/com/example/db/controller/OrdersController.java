@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.db.dao.CartDao;
 import com.example.db.dao.OrdersDao;
 import com.example.db.vo.CartItemVo;
+import com.example.db.vo.GradeVo;
 import com.example.db.vo.MemberVo;
 import com.example.db.vo.OrdersItemVo;
 import com.example.db.vo.OrdersVo;
@@ -37,6 +38,7 @@ public class OrdersController {
         if (user == null) {
             user = new MemberVo();
             user.setMem_idx(1); // DB에 있는 회원번호
+            user.setMem_grade_idx(4); // 더미용 등급 번호 추가!
             session.setAttribute("user", user);
         }
         
@@ -49,7 +51,19 @@ public class OrdersController {
             total += c.getItem().getItem_now_price() * c.getCart_item_quantity();
         }
         
+        // 2. [추가] 등급 할인 정보 가져오기
+        // (ordersDao나 memberDao에 등급 정보를 가져오는 메서드가 있어야 해뎡!)
+        GradeVo grade = ordersDao.getGradeInfo(user.getMem_grade_idx());
+        
+        // 3. [추가] 할인 금액 및 최종 금액 계산
+        // 할인액 = 원금 * 할인율 (예: 10000 * 0.05 = 500)
+        double discountRate = grade.getGrade_discount_rate().doubleValue(); 
+        int discountAmount = (int)(total * discountRate);
+        int finalPrice = total - discountAmount;
+        
         model.addAttribute("total_price", total);
+        model.addAttribute("grade_discount_amount", discountAmount); // JSP의 ${grade_discount_amount}
+        model.addAttribute("final_price", finalPrice);               // JSP의 ${final_price}
         
         return "orders/orders_checkout";
     }
@@ -60,7 +74,6 @@ public class OrdersController {
     public String createOrder(HttpSession session, @RequestParam("orders_total_price") int total_price, 
             																	   @RequestParam(value="orders_grade_discount", defaultValue="0") double grade_discount) {
     	MemberVo user = (MemberVo) session.getAttribute("user");
-    	Integer mem_idx = user.getMem_idx();
     	
     	// 데스트용 더미
         if(user == null) {
@@ -68,6 +81,8 @@ public class OrdersController {
             user.setMem_idx(1);
             session.setAttribute("user", user);
         }
+        
+        Integer mem_idx = user.getMem_idx();
         
         // 1. 주문 마스터 생성
         OrdersVo vo = new OrdersVo();
@@ -104,7 +119,15 @@ public class OrdersController {
     public String getOrdersList(Model model, HttpSession session, @RequestParam(value="searchKeyword", required=false) String searchKeyword) {
     	MemberVo user = (MemberVo) session.getAttribute("user");
     	
-	    if(user == null) return "redirect:/login";
+    	// 2. [순서 변경] 더미 데이터 체크를 맨 위로!
+        if(user == null) {
+            user = new MemberVo();
+            user.setMem_idx(1); // 테스트용 1번 회원
+            user.setMem_grade_idx(1); // 등급도 1번으로!
+            session.setAttribute("user", user);
+        }
+    	
+	    // if(user == null) return "redirect:/login";
 	    
 	    Integer mem_idx = user.getMem_idx();
 	    
@@ -126,8 +149,16 @@ public class OrdersController {
     
  // 주문 취소
     @RequestMapping("/orders/cancel/{orders_idx}")
-    public String cancelOrder(@PathVariable("orders_idx") int orders_idx) {
-        // DB에서 주문 상태를 취소로 변경하거나 삭제
+    public String cancelOrder(@PathVariable("orders_idx") int orders_idx, HttpSession session) {
+    	// 취소할 때도 혹시 세션 끊길지 모르니까 더미 체크!
+        MemberVo user = (MemberVo) session.getAttribute("user");
+        if(user == null) {
+            user = new MemberVo();
+            user.setMem_idx(1);
+            session.setAttribute("user", user);
+        }
+    	
+    	// DB에서 주문 상태를 취소로 변경하거나 삭제
         ordersDao.cancelOrders(orders_idx);
         
         // 취소 후 다시 주문 목록으로 리다이렉트

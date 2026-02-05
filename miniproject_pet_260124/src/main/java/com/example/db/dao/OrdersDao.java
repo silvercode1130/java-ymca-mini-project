@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.example.db.vo.GradeVo;
 import com.example.db.vo.OrdersItemVo;
 import com.example.db.vo.OrdersVo;
 
@@ -26,4 +27,6 @@ public interface OrdersDao {
     
     // 5. 주문 취소
     void cancelOrders(int orders_idx);
+    
+    GradeVo getGradeInfo(int grade_idx);
 }

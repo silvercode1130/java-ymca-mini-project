@@ -70,6 +70,16 @@ public class CartController {
         	return "redirect:/loginForm";
         }
         
+        int mem_idx = user.getMem_idx();
+        // 3. 이 회원의 장바구니(cart_idx)가 DB에 있는지 확인해보기
+        // (cartDao에 getCartIdxByMemIdx 메서드가 있다고 가정할게!)
+        Integer cartIdx = cartDao.getCartIdxByMemIdx(mem_idx);
+        
+        // 4. 만약 없다면(null이라면)? 장바구니 방을 먼저 만들어주기!
+        if (cartIdx == null) {
+            cartDao.createCart(mem_idx); 
+        }
+        
         // 상품 번호와 회원정보를 DB 장바구니 목록에 저장(dao 메서드 호출)
         cartDao.addToCart(user.getMem_idx(), item_idx);
         

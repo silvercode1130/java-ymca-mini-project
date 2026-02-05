@@ -4,11 +4,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.apache.ibatis.type.Alias;
-
 import lombok.Data;
 
 @Data
-@Alias("member")
+@Alias("member")	// 별칭(as) 만듦 	  👉 패키지명.클래스명 == as
 public class MemberVo {
 	//=========== 회원정보 ============
 	int				mem_idx;		// pk
@@ -26,3 +25,4 @@ public class MemberVo {
 	String			mem_is_deleted;	// 탈퇴여부 (y/n)
 	LocalDateTime	mem_deldate;	// 탈퇴일
 }
+

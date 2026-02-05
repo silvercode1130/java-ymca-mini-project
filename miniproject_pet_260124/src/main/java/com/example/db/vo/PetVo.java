@@ -7,7 +7,7 @@ import org.apache.ibatis.type.Alias;
 import lombok.Data;
 
 @Data
-@Alias("pet")
+@Alias("pet")	// 별칭(as) 만듦 	  👉 패키지명.클래스명 == as
 public class PetVo {
 //=========== 반려동물정보 ============
 	int				pet_idx;		// pk
@@ -21,4 +21,3 @@ public class PetVo {
 	int				pet_age;
 	LocalDate		pet_bday;
 }
-

@@ -87,6 +87,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    WHERE cart_idx = (SELECT cart_idx FROM cart WHERE mem_idx = #{mem_idx})
 	</delete>
     
+    <select id="getCartIdxByMemIdx" resultType="Integer">
+	    SELECT cart_idx FROM cart WHERE mem_idx = #{mem_idx}
+	</select>
+	
+	<insert id="createCart">
+	    INSERT INTO cart (cart_idx, mem_idx) VALUES (seq_cart_idx.NEXTVAL, #{mem_idx})
+	</insert>
+    
 </mapper>
 
 

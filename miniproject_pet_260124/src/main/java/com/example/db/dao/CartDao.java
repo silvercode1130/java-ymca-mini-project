@@ -18,4 +18,8 @@ public interface CartDao {
 	void updateItemQty(@Param("idx") int cart_item_idx, @Param("qty") int qty);  // 장바구니에 있는 상품 수량 변경 메서드
 	
 	void clearCart(int mem_idx);  // 주문 완료 후 주문한 상품을 장바구니에서 비워주는 메서드 
+	
+	Integer getCartIdxByMemIdx(int mem_idx);
+	
+	void createCart(int mem_idx);
 }

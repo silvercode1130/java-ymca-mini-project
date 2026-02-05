@@ -45,8 +45,8 @@
                             </td>
                             <td class="align-middle">${cart.item.item_name}</td>
                             <td class="align-middle">
-							    ${cart.item.item_price * cart.cart_item_quantity}원
-							    	<small class="text-muted">(단가: ${cart.item.item_price}원)</small>
+							    ${cart.item.item_now_price * cart.cart_item_quantity}원
+							    	<small class="text-muted">(단가: ${cart.item.item_now_price}원)</small>
 							</td>
                             <td class="align-middle">
 							    <div class="input-group" style="width: 120px;">
