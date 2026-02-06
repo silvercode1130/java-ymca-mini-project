@@ -102,11 +102,13 @@ public class MemberController {
    // 로그인 관련 ------------------------------------------------------------------------------------------
    
 
-   // login.jsp - 로그인 폼 띄우기
    @RequestMapping("/member/loginForm.do")
-   public String loginForm() {
-      
-      return "member/login";
+   public String loginForm(HttpSession session) {
+
+       System.out.println("🔑 LOGIN FORM session id = " + session.getId());
+       System.out.println("🔑 LOGIN FORM user = " + session.getAttribute("user"));
+
+       return "member/login";
    }
    
    
@@ -142,19 +144,10 @@ public class MemberController {
        
            // 4. [이게 핵심!] 세션에 "vo"라는 이름으로 회원 정보를 통째로 저장해.
            // 그래야 나중에 ${vo.mem_id} 처럼 꺼내 쓸 수 있어.
-        //   session.setAttribute("user", user); 
+           session.setAttribute("user", user); 
      
      
      return "redirect:/main";
-   }
-   
-
-   // emailLogin.jsp - 이메일 로그인 폼 띄우기
-   @RequestMapping("/member/emailLogin.do")
-   public String emailLogin() {
-      
-      
-      return "member/emailLogin";
    }
    
   
@@ -162,6 +155,7 @@ public class MemberController {
 	// 이메일 로그인 처리
    @RequestMapping("/member/emailLoginProc.do")
    public String emailLoginProc(String mem_id, String mem_pwd, HttpSession session) {
+	   
        MemberVo user = memberDao.selectOneFromId(mem_id);
        if(user == null || !user.getMem_pwd().equals(mem_pwd)) {
            return "redirect:emailLogin.do?reason=fail";
@@ -331,7 +325,7 @@ public class MemberController {
    
    
    // myInfo.jsp - 로그아웃 기능 구현
-   @GetMapping ("/member/logout")
+   @RequestMapping ("/member/logout")
    public String logout() {
 	   
        session.invalidate();   // 전체 세션 제거

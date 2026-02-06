@@ -180,25 +180,6 @@
 			<h2>회원가입</h2>
 		</div>
 		
-		<span style="font-size: 12px; color: #888888">간편하게 회원가입</span>
-		<!-- 간편 회원가입 버튼 -->
-		<div class="api">	<!-- #추가 링크(API 필요?) + 로고 필요 -->
-			<input type="button" value="네이버로 회원가입" onclick="">
-		</div>
-		
-		<div class="api">
-			<input type="button" value="구글로 회원가입" onclick="">
-		</div>
-		
-		<div class="api">
-			<input type="button" value="애플로 회원가입" onclick="">
-		</div>
-		
-		<hr>
-		
-		<!-- 그냥 가입하기 -->
-		<h2>이메일로 회원가입</h2>
-		
 		<div class="id">     
 			<input name="mem_id"  id="mem_id"  type="text"  placeholder="아이디">
 			<span id="mem_idMsg" style="font-size:12px; margin-top:4px;"></span>

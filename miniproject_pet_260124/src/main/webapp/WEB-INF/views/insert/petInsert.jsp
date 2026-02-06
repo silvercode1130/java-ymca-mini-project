@@ -29,18 +29,29 @@
 <script type="text/javascript">
 
 // type="date"를 기준으로 pet_age 자동 계산
-document.getElementById("pet_bday").addEventListener("change", function () {
-		const bday = new Date(this.value);
-		const today = new Date();
-		
-		let age = today.getFullYear() - bday.getFullYear();
-		
-		const m = today.getMonth() - bday.getMonth();
-		if (m < 0 || (m === 0 && today.getDate() < bday.getDate())) {
-		    age--;
-		}
+document.addEventListener("DOMContentLoaded", function () {
+    const bdayInput = document.getElementById("pet_bday");
+    const ageSpan   = document.getElementById("pet_age");
 
-    document.getElementById("pet_age").innerText = age >= 0 ? age : 0;
+    if (!bdayInput || !ageSpan) return; // 혹시 모를 안전장치
+
+    bdayInput.addEventListener("change", function () {
+        const bday  = new Date(this.value);
+        if (isNaN(bday)) {
+            ageSpan.innerText = "-";
+            return;
+        }
+
+        const today = new Date();
+        let age = today.getFullYear() - bday.getFullYear();
+
+        const m = today.getMonth() - bday.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < bday.getDate())) {
+            age--;
+        }
+
+        ageSpan.innerText = age >= 0 ? age : 0;
+    });
 });
 
 
@@ -64,17 +75,9 @@ function showCat() {
 
 </head>
 <body>
-	<form class="petUpdate" action="">
+	<form class="petUpdate" action="/insert/petInsert_form.do" method="post">
 		<div class="title">
 			<h2>반려동물 등록</h2>
-		</div>
-		
-		<!-- #보류 - 펫프로필에 이미지라는 DB가 안생길지도 모름 -->
- 		<div class="petImgBtn">
-			<button name="pet_img"  id="pet_img"  type="button"  onclick="document.getElementById('fileInput').click();">
-				<img alt="(프로필 이미지)" src="">
-				<input type="file" id="fileInput" accept="image/*" style="display:none;">
-			</button>
 		</div>
 		
 		<div class="petName">
@@ -85,30 +88,23 @@ function showCat() {
 			<input type="date"  name="pet_bday"  id="pet_bday" >
 		</div>
 		
-		<div class="petAge"><!-- #확인 - 나이 자동 연산 되는지 체크
-						           지금은 pet_age로 등록된 DB값이 없어서 확인 불가 -->
+		<div class="petAge">
 			나이 : <span id="pet_age">-</span> 살
 		</div>
 		
 		<div class="isPrimary">
-			<input type="radio"  name="is_primary"  id="is_primary"  value="y">대표동물 o
-			<input type="radio"  name="is_primary"  id="is_primary"   value="n">대표동물 x
+			<input type="radio"  name="is_primary"  id="is_primary"  value="Y">대표동물 o
+			<input type="radio"  name="is_primary"  id="is_primary"   value="N">대표동물 x
 		</div>
 		
-		<!-- #추가 - css에 맞게 강아지 사진 추가 
-						   DB에 값 저장되게 하는 기능 추가 -->
-		<button class="dogBtn"  type="button"  onclick="showDog()">
-			<img alt="(강아지)" src="">
-		</button>
+		<input type="radio" name="pet_species" value="DOG"
+		       checked onclick="showDog()"> 강아지
 		
-		<!-- #추가 - css에 맞게 고양이 사진 추가 
-						   DB에 값 저장되게 하는 기능 추가 -->
-		<button class="catBtn"  type="button"  onclick="showCat()">
-			<img alt="(고양이)" src="">
-		</button>
-		
+		<input type="radio" name="pet_species" value="CAT"
+		       onclick="showCat()"> 고양이
+				
 		<div class="dog_breed"  id="dog_breed">
-		    <select>
+		    <select name="pet_breed">
 		        <option value="">품종 모름 / 없음</option>
 		        <option value="골든 리트리버">골든 리트리버</option>
 		        <option value="닥스훈트">닥스훈트</option>
@@ -127,7 +123,7 @@ function showCat() {
 		</div>
 
 		<div class="cat_breed"  id="cat_breed">
-		   <select>
+		   <select name="pet_breed">
 		        <option value="">품종 모름 / 없음</option>
 		        <option value="노르웨이 숲">노르웨이 숲</option>
 		        <option value="러시안블루">러시안블루</option>
@@ -145,18 +141,18 @@ function showCat() {
 		</div>
 		
 		<div>
-			<input type="radio"  name="petGender">남아
-			<input type="radio"  name="petGender">여아
+			<input type="radio" name="pet_gender" value="M">남아
+			<input type="radio" name="pet_gender" value="F">여아
 		</div>
 		
-		<div><!-- #보류 - DB에 있으면 추가 없으면 생략할 가능성 높음 -->
+		<div>
 			<input type="radio"  name="isNeutered">중성화 o
 			<input type="radio"  name="isNeutered">중성화 x
 		</div>
 		
-		<div><!-- #추가 - 등록시 값 등록  /  삭제시 값 삭제 기능 추가 -->
-			<input type="button"  value="등록"  onclick="location.href='/profile/petProfile.do'">
-			<input type="button"  value="취소"  onclick="location.href='/profile/petProfile.do'">
+		<div>
+			<input type="submit" value="등록">
+			<input type="button"  value="취소"  onclick="location.href='/profile/petProfile_form.do'">
 		</div>
 	
 	</form>
