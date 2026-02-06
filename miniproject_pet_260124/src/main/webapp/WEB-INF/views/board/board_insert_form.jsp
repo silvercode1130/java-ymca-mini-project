@@ -9,11 +9,12 @@
 </head>
 <body>
 
-<h2>글쓰기 (${type})</h2>
+<h2>글쓰기 (${b_type})</h2>
 
-<form action="insert.do" method="post">
-    <!-- 게시판 타입 코드 넘기기 -->
-    <input type="hidden" name="board_type_code" value="${type}"/>
+<form action="${pageContext.request.contextPath}/${b_type}/insert.do" method="post">
+    <!-- 목록 복귀용 상태값 -->
+    <input type="hidden" name="page" value="${page}">
+    <input type="hidden" name="tag" value="${tag}">
 
     <p>
         제목:
@@ -36,7 +37,7 @@
 
     <p>
         <button type="submit">등록</button>
-        <a href="list.do">목록</a>
+        <a href="${pageContext.request.contextPath}/${b_type}/list.do?page=${page}&tag=${tag}">목록</a>
     </p>
 </form>
 

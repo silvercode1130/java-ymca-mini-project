@@ -13,4 +13,5 @@ public class CartItemVo {
 	int				cart_idx;		// fk: cart(cart_idx)
 	int				item_idx;		// fk: item(item_idx)
 	int				cart_item_quantity;
+	
 }

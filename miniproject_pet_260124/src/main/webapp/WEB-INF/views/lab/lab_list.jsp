@@ -1,5 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -77,7 +78,7 @@
                 </div>
             </div>
 
-            <a href="${pageContext.request.contextPath}/lab/detail?labIdx=1"
+            <a href="${pageContext.request.contextPath}/lab/view.do?labIdx=1"
                class="lab-featured-card">
                 <div class="lab-featured-thumb">
                     <img src="https://images.unsplash.com/photo-1701513519108-b0a234f26161?ixlib=rb-4.1.0&q=80&w=1080"
@@ -111,123 +112,63 @@
 
     <!-- 연구 리스트 (지금은 목업 데이터 그대로 JSP에 하드코딩) -->
     <section class="section">
-        <div class="section-inner">
-            <div class="lab-grid">
-                <!-- 1 -->
+    <div class="section-inner">
+        <div class="lab-grid">
+
+            <c:forEach var="vo" items="${list}">
+             <a href="${pageContext.request.contextPath}/lab/view.do?board_idx=${vo.board_idx}"
+             	class="lab-card-link">
                 <article class="lab-card">
                     <div class="lab-card-thumb">
-                        <img src="https://source.unsplash.com/random/400x300?pet,dog"
-                             alt="강아지 분리불안, 3일 만에 개선하는 훈련법">
-                        <span class="lab-type-badge lab-type-dog">🐶 DOG</span>
+                        <!-- 썸네일: 일단은 더미 이미지 or 나중에 BoardFile 연동 -->
+                        <img src="${pageContext.request.contextPath}/img/noimage.png"
+     						alt="${vo.board_title}">
+
+                        <span class="lab-type-badge 
+                                   <c:choose>
+                                       <c:when test='${vo.board_tag == "DOG"}'>lab-type-dog</c:when>
+                                       <c:when test='${vo.board_tag == "CAT"}'>lab-type-cat</c:when>
+                                       <c:otherwise>lab-type-etc</c:otherwise>
+                                   </c:choose>">
+                            <c:choose>
+                                <c:when test='${vo.board_tag == "DOG"}'>🐶 DOG</c:when>
+                                <c:when test='${vo.board_tag == "CAT"}'>🐱 CAT</c:when>
+                                <c:otherwise>📌 ETC</c:otherwise>
+                            </c:choose>
+                        </span>
                     </div>
+
                     <div class="lab-card-body">
-                        <span class="lab-card-category">행동학 연구</span>
+                        <!-- 카테고리: 일단 고정 문구 or 나중에 태그/카테고리 컬럼 분리 -->
+                        <span class="lab-card-category">연구소</span>
+
+                        <!-- 제목 (상세로 이동) -->
                         <h4 class="lab-card-title">
-                            강아지 분리불안, 3일 만에 개선하는 훈련법
+                                <c:out value="${vo.board_title}" />
                         </h4>
+
                         <div class="lab-card-meta">
-                            <span class="lab-card-author">강형욱 소장</span>
-                            <span class="lab-card-views">조회 12,500</span>
+                            <!-- 작성자 -->
+                            <span class="lab-card-author">
+                                <c:out value="${vo.writer.mem_name}" />
+                            </span>
+
+                            <!-- 작성일 -->
+                            <span class="lab-card-date">
+                                <c:out value="${vo.boardRegdateFormatted}" />
+                            </span>
                         </div>
                     </div>
                 </article>
+              </a>
+            </c:forEach>
 
-                <!-- 2 -->
-                <article class="lab-card">
-                    <div class="lab-card-thumb">
-                        <img src="https://source.unsplash.com/random/400x300?pet,cat"
-                             alt="고양이 신장 질환 예방을 위한 음수량 늘리기">
-                        <span class="lab-type-badge lab-type-cat">🐱 CAT</span>
-                    </div>
-                    <div class="lab-card-body">
-                        <span class="lab-card-category">영양학 연구</span>
-                        <h4 class="lab-card-title">
-                            고양이 신장 질환 예방을 위한 음수량 늘리기
-                        </h4>
-                        <div class="lab-card-meta">
-                            <span class="lab-card-author">김명철 수의사</span>
-                            <span class="lab-card-views">조회 8,900</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- 3 -->
-                <article class="lab-card">
-                    <div class="lab-card-thumb">
-                        <img src="https://source.unsplash.com/random/400x300?pet,dog,health"
-                             alt="노령견 관절 관리, 영양제보다 중요한 산책 습관">
-                        <span class="lab-type-badge lab-type-dog">🐶 DOG</span>
-                    </div>
-                    <div class="lab-card-body">
-                        <span class="lab-card-category">건강 연구</span>
-                        <h4 class="lab-card-title">
-                            노령견 관절 관리, 영양제보다 중요한 산책 습관
-                        </h4>
-                        <div class="lab-card-meta">
-                            <span class="lab-card-author">설채현 수의사</span>
-                            <span class="lab-card-views">조회 15,400</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- 4 -->
-                <article class="lab-card">
-                    <div class="lab-card-thumb">
-                        <img src="https://source.unsplash.com/random/400x300?pet,cat,night"
-                             alt="고양이가 밤마다 우는 이유와 해결책">
-                        <span class="lab-type-badge lab-type-cat">🐱 CAT</span>
-                    </div>
-                    <div class="lab-card-body">
-                        <span class="lab-card-category">심리 연구</span>
-                        <h4 class="lab-card-title">
-                            고양이가 밤마다 우는 이유와 해결책
-                        </h4>
-                        <div class="lab-card-meta">
-                            <span class="lab-card-author">나응식 수의사</span>
-                            <span class="lab-card-views">조회 7,200</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- 5 -->
-                <article class="lab-card">
-                    <div class="lab-card-thumb">
-                        <img src="https://source.unsplash.com/random/400x300?pet,dog,food"
-                             alt="강아지가 먹으면 절대 안 되는 과일 5가지">
-                        <span class="lab-type-badge lab-type-dog">🐶 DOG</span>
-                    </div>
-                    <div class="lab-card-body">
-                        <span class="lab-card-category">식품 연구</span>
-                        <h4 class="lab-card-title">
-                            강아지가 먹으면 절대 안 되는 과일 5가지
-                        </h4>
-                        <div class="lab-card-meta">
-                            <span class="lab-card-author">펫푸드 연구소</span>
-                            <span class="lab-card-views">조회 22,000</span>
-                        </div>
-                    </div>
-                </article>
-
-                <!-- 6 -->
-                <article class="lab-card">
-                    <div class="lab-card-thumb">
-                        <img src="https://source.unsplash.com/random/400x300?pet,cat,scratch"
-                             alt="스크래쳐 위치만 바꿔도 가구 훼손이 줄어든다?">
-                        <span class="lab-type-badge lab-type-cat">🐱 CAT</span>
-                    </div>
-                    <div class="lab-card-body">
-                        <span class="lab-card-category">행동학 연구</span>
-                        <h4 class="lab-card-title">
-                            스크래쳐 위치만 바꿔도 가구 훼손이 줄어든다?
-                        </h4>
-                        <div class="lab-card-meta">
-                            <span class="lab-card-author">묘한 연구소</span>
-                            <span class="lab-card-views">조회 5,600</span>
-                        </div>
-                    </div>
-                </article>
-            </div>
-
+            <!-- 글이 없을 때 -->
+            <c:if test="${empty list}">
+                <p class="lab-empty">등록된 연구가 없습니다.</p>
+            </c:if>
+			</div>
+			
             <!-- 페이지네이션 (목업) -->
             <div class="lab-pagination">
                 <button type="button" class="lab-page is-active">1</button>
