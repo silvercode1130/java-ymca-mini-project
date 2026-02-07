@@ -244,7 +244,7 @@ public class MemberController {
    
    
    // 회원 정보 수정 처리
-   @RequestMapping("/member/myUpdate.do")
+   @GetMapping("/update/myUpdate.do")
    public String myUpdate(HttpSession session, Model model, String mem_id) {
 
        MemberVo user = null;
@@ -281,9 +281,10 @@ public class MemberController {
 //   }
    
    
-   @PostMapping("/member/myUpdate.do")
+   // 수정 기능
+   @PostMapping("update/myUpdate.do")
    public String myUpdateSubmit(MemberVo vo, 
-                                @RequestParam(value="mem_photo") MultipartFile file
+                                @RequestParam(value="mem_photo", required = false) MultipartFile file
                                ) {
 
        // 1) 파일이 저장될 경로 설정
@@ -294,7 +295,7 @@ public class MemberController {
        MemberProfileVo profile  = memberDao.selectProfile(vo.getMem_id());
 
        // 2) 파일이 있을 때만 처리
-       if (!file.isEmpty()) {
+       if (file != null && !file.isEmpty()) {
            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
            File saveFile = new File(uploadPath, fileName);
            try {
@@ -317,9 +318,23 @@ public class MemberController {
 
        return "redirect:/profile/myInfo.do";
    }
-
-
    
+   
+   	// 닉네임 체크 ------------------------------------------------------------------------------------------
+   
+   
+   @GetMapping("/member/check_nickname.do")
+   @ResponseBody
+   public Map<String, Boolean> checkNickname(@RequestParam String mem_nickname) {
+       Map<String, Boolean> map = new HashMap<>();
+
+       int count = memberDao.checkNickname(mem_nickname);
+       // count == 0 → 사용 가능
+       map.put("result", count == 0);
+
+       return map;
+   }
+
    
    // 로그아웃 관련 ------------------------------------------------------------------------------------------
    
@@ -331,6 +346,28 @@ public class MemberController {
        session.invalidate();   // 전체 세션 제거
        
        return "redirect:/main";     // 메인 홈(재웅님)
+   }
+   
+   
+   // 로그아웃 관련 ------------------------------------------------------------------------------------------
+   
+   
+   @PostMapping("/member/delete.do")
+   public String memberDelete(HttpSession session) {
+
+       MemberVo user = (MemberVo) session.getAttribute("user");
+       if (user == null) {
+           user = (MemberVo) session.getAttribute("loginMember");
+       }
+
+       if (user == null) {
+           return "redirect:/member/loginForm.do";
+       }
+
+       memberDao.delete(user.getMem_idx());
+
+       session.invalidate(); // 로그아웃 처리
+       return "redirect:/main";
    }
 
 

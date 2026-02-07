@@ -197,12 +197,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </update> -->
 
 
-
-
-
-
-
-
 <!-- 닉네임 중복 체크 -->
 <!-- <select id="selectOneFromNicknameSafe" parameterType="String" resultType="member">
     SELECT *
@@ -211,10 +205,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </select> -->
 
 
+<!-- myUpdate.jsp - 탈퇴처리 -->
+<delete id="delete" parameterType="int">
+    DELETE FROM member
+    WHERE mem_idx = #{mem_idx}
+</delete>
 
 
-
-
+<!-- myUpdate.jsp - 닉네임 중복 여부 -->
+<select id="checkNickname" resultType="int">
+    SELECT COUNT(*)
+    FROM member_profile
+    WHERE mem_nickname = #{mem_nickname}
+</select>
 
 
 

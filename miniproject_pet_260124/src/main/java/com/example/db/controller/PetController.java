@@ -118,8 +118,12 @@ public class PetController {
 
 
 	// petInsert.jsp - 반려동물  등록
-    @RequestMapping("/profile/petInsert.do")		// 혹시 몰라서 PostMapping을 RequestMapping으로 공주가 바꿈
+    @RequestMapping("/insert/petInsert.do")		// 혹시 몰라서 PostMapping을 RequestMapping으로 공주가 바꿈
     public String petInsert(PetVo vo, HttpSession session) {
+    	
+	System.out.println("--------------------------------------------------------------------------------");
+    	System.out.println("user = " + session.getAttribute("user"));
+    	System.out.println("loginMember = " + session.getAttribute("loginMember"));
 
     	 System.out.println("🐾 petInsert 컨트롤러 들어옴");
     	 System.out.println("🔑 PET session id = " + session.getId());
@@ -130,18 +134,24 @@ public class PetController {
     	 System.out.println("🐶 pet_name = " + vo.getPet_name());
     	 System.out.println("🐶 species = " + vo.getPet_species());
     	 System.out.println("🐶 gender = " + vo.getPet_gender());
+	 System.out.println("--------------------------------------------------------------------------------");
     	 
         // 1. 로그인 유저 가져오기
-        MemberVo user = (MemberVo) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/member/loginForm.do";
-        }
+		 MemberVo user = (MemberVo) session.getAttribute("user");
+		 if (user == null) {
+		     user = (MemberVo) session.getAttribute("loginMember");
+		 }
+		 if (user == null) {
+		     return "redirect:/member/loginForm.do";
+		 }
 
         // 2. mem_idx 세팅
         vo.setMem_idx(user.getMem_idx());
+   	 System.out.println("--------------------------------------------------------------------------------");
         System.out.println("🐾 mem_idx = " + user.getMem_idx());
         
         System.out.println("🐶 pet_breed = " + vo.getPet_breed());
+   	 System.out.println("--------------------------------------------------------------------------------");
         
         // 임시 - is_primary 강제 보정
         if (!"Y".equals(vo.getIs_primary()) && !"N".equals(vo.getIs_primary())) {
@@ -165,13 +175,16 @@ public class PetController {
 
         // 4. insert
         int res = petDao.insert(vo);
+        
+   	 System.out.println("--------------------------------------------------------------------------------");
         System.out.println("🐾 insert 결과 = " + res);
+   	 System.out.println("--------------------------------------------------------------------------------");
 
         // 5. 결과 처리
         if (res > 0) {
             return "redirect:/profile/petProfile_form.do";
         } else {
-            return "redirect:/profile/petInsertForm.do";
+            return "redirect:/insert/petinsertForm.do";
         }
     }
 

@@ -75,7 +75,7 @@ function showCat() {
 
 </head>
 <body>
-	<form class="petUpdate" action="/insert/petInsert_form.do" method="post">
+	<form class="petUpdate" action="/insert/petInsert.do" method="post">
 		<div class="title">
 			<h2>반려동물 등록</h2>
 		</div>
@@ -153,7 +153,7 @@ function showCat() {
 		<div>
 			<input type="submit" value="등록">
 			<input type="button"  value="취소"  onclick="location.href='/profile/petProfile_form.do'">
-		</div>
+		</div> 
 	
 	</form>
 </body>

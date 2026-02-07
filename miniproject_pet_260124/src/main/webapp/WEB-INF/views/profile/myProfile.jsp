@@ -9,15 +9,15 @@
 <body>
 	<form action="">
 		<div class="MyProfileImg">
-			<img alt="(프로필 이미지)" src="${mem_img}" >
+			<img alt="(프로필 이미지)" src="${ profile.mem_img }" >
 		</div>
 		
 		<div class="nickname">
-			닉네임 <span>${ mem_nickname }</span>
+			닉네임 <span style="color: gray;  font-size: 12px; ">${ profile.mem_nickname }</span>
 		</div>
 		
 		<div class="intro">
-			한줄 소개 <span>${ mem_intro }</span>
+			한줄 소개 <span style="color: gray;  font-size: 12px; ">${ profile.mem_intro }</span>
 		</div>
 		
 		<div class="btn">
@@ -26,14 +26,11 @@
 		</div>
 	</form>
 	
-	<!-- #연결 - 메인홈(재웅님)이랑 연결이 안되어 있어서 404 에러 뜸 -->
-<!-- 	<form action="/logout.do" method="post">Controller 리턴 타입 변경!!
-	    <button type="submit">로그아웃</button>
-	</form> -->
-	
-	<!-- #연결 - 메인홈(재웅님)이랑 연결이 안되어 있어서 404 에러 뜸 -->
-	<form action="/myDelete.do" method="post"><!-- Controller 리턴 타입 변경!! -->
-	    <button type="submit">탈퇴</button>
+	<form action="${pageContext.request.contextPath}/member/delete.do" method="post">
+	    <button type="submit"
+	            onclick="return confirm('탈퇴할꼬냥? 😿');">
+	        탈퇴
+	    </button>
 	</form>
 		
 </body>

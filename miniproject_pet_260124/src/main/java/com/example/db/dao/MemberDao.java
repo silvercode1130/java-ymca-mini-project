@@ -20,7 +20,13 @@ public interface MemberDao {
 	 public MemberVo selectOneFromNickname(String mem_nickname);
 	 void updateAddr(MemberVo vo);
 	 MemberProfileVo selectProfile(String mem_id); 
-	 MemberProfileVo selectByMemIdx(int mem_idx); 
+	 MemberProfileVo selectByMemIdx(int mem_idx);
+	 void delete(int mem_idx);
+	 
+		public int checkNickname(String mem_nickname); /*{
+		    String sql = "select count(*) from member_profile where mem_nickname = ?";
+		    return jdbcTemplate.queryForObject(sql, Integer.class, mem_nickname);
+		}*/
 
 	 
 	 

@@ -61,6 +61,8 @@ function findAddr() {
 
 
 //아이디/닉네임 중복 체크 (통합 및 에러 수정)
+const originalNickname = "${profile.mem_nickname}";
+
 document.addEventListener("DOMContentLoaded", function () {
     console.log("중복 체크 JS 로딩됨");
 
@@ -90,9 +92,16 @@ document.addEventListener("DOMContentLoaded", function () {
             msgElement.textContent = "";
             return;
         }
+        
+     // ⭐ 기존 닉네임이면 중복체크 안 함
+        if (type === "nickname" && value === originalNickname) {
+            nicknameMsg.style.color = "gray";
+            nicknameMsg.textContent = "현재 사용 중인 닉네임입니다.";
+            return;
+        }
 
      
-
+		// 95번째
         fetch(url + encodeURIComponent(value))
             .then(response => response.json())  // JSON으로 받기
             .then(data => {
@@ -138,7 +147,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (value === "") {
         msgElement.text("");
         return;
-    }
+    } */
 
 
 // 미리보기 기능
@@ -153,83 +162,12 @@ function previewImage(input) {
 }
 
 
-// 프로필 저장 버튼
-function saveProfile() {
-    const formData = new FormData();
-    formData.append("mem_idx", $("input[name=mem_idx]").val());
-    formData.append("mem_nickname", $("#nickname").val());
-    formData.append("mem_intro", $("textarea[name=mem_intro]").val());
-
-    const file = $("#fileInput")[0].files[0];
-    if (file) {
-        formData.append("mem_photo", file);
-    }
-
-    $.ajax({
-        url: "/member/updateProfileAjax.do",
-        type: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function () {
-            alert("프로필 저장 완료!");
-        },
-        error: function () {
-            alert("프로필 저장 실패 ㅠㅠ");
-        }
-    });
-}
-        
-
-// 생년월일 저장
-function saveBday() {
-    $.ajax({
-        url: "/member/updateBdayAjax.do",
-        type: "POST",
-        data: {
-            mem_idx: $("input[name=mem_idx]").val(),
-            mem_bday: $("#bday").val()
-        },
-        success: function () {
-            alert("생년월일 저장 완료!");
-        },
-        error: function () {
-            alert("생년월일 저장 실패 ㅠㅠ");
-        }
-    });
-}
-
-
-// 주소 저장
-function saveAddr() {
-    $.ajax({
-        url: "/member/updateAddrAjax.do",
-        type: "POST",
-        data: {
-            mem_idx: $("input[name=mem_idx]").val(),
-            mem_zipcode: $("#mem_zipcode").val(),
-            mem_addr: $("#mem_addr").val(),
-            mem_addr_detail: $("#mem_addr_detail").val()
-        },
-        success: function () {
-            alert("주소 저장 완료!");
-        },
-        error: function () {
-            alert("주소 저장 실패 ㅠㅠ");
-        }
-    });
-}
-
-
-
-
-
 
 </script>
 
 </head>
 <body>
-   <form class="myUpdate" action="/member/myUpdate.do"  method="post" enctype="multipart/form-data">
+   <form class="myUpdate" action="/update/myUpdate.do"  method="post" enctype="multipart/form-data">
       
       <div class="title">
          <h2>${ user.mem_name }님의 정보 수정</h2>
@@ -246,7 +184,7 @@ function saveAddr() {
        <input type="file" name="mem_photo" id="fileInput" onchange="previewImage(this)" style="display: none;">
        
        <img id="preview" alt="프로필 이미지" 
-            src="${empty profile..mem_img ? '/resources/images/no_profile.png' : profile.mem_img}" 
+            src="${empty profile.mem_img ? '/images/no_profile.png' : profile.mem_img}" 
             style="width: 100%; height: 100%; object-fit: cover;">
        
        <div style="position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.5); color: #fff; font-size: 12px; text-align: center; padding: 5px 0;">
@@ -258,28 +196,28 @@ function saveAddr() {
       
       <div><!-- #추가 - 중복방지 기능 추가 -->
          <label>닉네임</label>
-         <input type="text"  id="nickname" name="mem_nickname"  value="${ user.mem_nickname }">
+         <input type="text"  id="nickname" name="mem_nickname"  value="${ profile.mem_nickname }">
          <span id="nicknameMsg" class="msg-style"></span>
       </div>
       
       <div>
          <label>자기소개</label> <br>
-         <textarea name="mem_intro"  rows="5"  cols="30">${ user.mem_intro }</textarea>
+         <textarea name="mem_intro"  rows="5"  cols="30">${ profile.mem_intro }</textarea>
       </div>
       
-      <button type="button" onclick="saveProfile()">프로필 저장</button>
+      <!-- <button type="button" onclick="saveProfile()">프로필 저장</button> -->
            
       <hr>
       
       <div><!-- #해결 - 왜 안되지 -->
-         회원 종류 ${ user.mem_role_name } <br>
+         회원 종류 ${ role.role_name } <br>
          <!-- <input type="file"  name="doctor_file"> <br> -->
          <span style="font-size: 12px; color: gray;">수의사임을 증명하시면 커뮤니티에 전문적인 답변을 달 수 있습니다.</span>  
       </div> <br> 
       
       <div><!-- #해결 - 왜 안되지 -->
-         회원 등급 ${ user.mem_grade_name } <br>
-         등급별 할인율 ${ user.discount_rate } <br>
+         회원 등급 ${ grade.grade_name } <br>
+         등급별 할인율 ${ grade.grade_discount_rate } <br>
          <span style="font-size: 12px; color: gray;">회원 등급이 올라가면 할인율이 높아집니다.</span>
       </div>
       
@@ -304,7 +242,7 @@ function saveAddr() {
       <div>
          <label>생년월일</label>
          <input type="date"  id="bday"  name="mem_bday"  value="${ user.mem_bday }">
-         <button type="button" onclick="saveBday()">생년월일 저장</button>
+         <!-- <button type="button" onclick="saveBday()">생년월일 저장</button> -->
       </div>
       
       <div>
@@ -319,11 +257,11 @@ function saveAddr() {
       
       <div>
           <label>주소</label>
-          <input type="text" id="mem_zipcode" name="mem_zipcode" value="${ user.mem_zipcode }" placeholder="우편번호" readonly> <br>
-          <input type="text" id="mem_addr" name="mem_addr"  value="${ user.mem_addr }"  placeholder="기본 주소" readonly> <br>
-          <input type="text" id="mem_addr_detail" name="mem_addr_detail"  value="${ user.mem_addr_detail }"  placeholder="상세 주소"> <br>
+          <input type="text" id="mem_zipcode" name="mem_zipcode" value="${ member_addr.mem_zipcode }" placeholder="우편번호" readonly> <br>
+          <input type="text" id="mem_addr" name="mem_addr"  value="${ member_addr.mem_addr }"  placeholder="기본 주소" readonly> <br>
+          <input type="text" id="mem_addr_detail" name="mem_addr_detail"  value="${ member_addr.mem_addr_detail }"  placeholder="상세 주소"> <br>
           <button type="button" onclick="findAddr()">주소 검색</button>
-          <button type="button" onclick="saveAddr()">주소 저장</button>
+         <!--  <button type="button" onclick="saveAddr()">주소 저장</button> -->
       </div>
       
       <hr>

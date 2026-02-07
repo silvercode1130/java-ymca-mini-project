@@ -47,14 +47,14 @@ public class MemberProfileController {
 	// 수정 ------------------------------------------------------------------------------------------
 	
 	
-	// 
-	@RequestMapping("/update/myUpdate.do")
-	public String myUpdate(MemberVo vo, Model model) {
-		
-	       model.addAttribute("vo",vo);
-		
-	    return "update/myUpdate"; 
-	}
+//	// 
+//	@RequestMapping("/update/myUpdate.do")
+//	public String myUpdate(MemberVo vo, Model model) {
+//		
+//	       model.addAttribute("vo",vo);
+//		
+//	    return "update/myUpdate"; 
+//	}
 	
 	
 	// 탈퇴 관련 ------------------------------------------------------------------------------------------
