@@ -220,6 +220,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </select>
 
 
+<!-- Role 가져오기 -->
+<select id="selectDefaultRole" resultType="role">
+    SELECT *
+    FROM role
+    WHERE role_idx = 1
+</select>
+
+
+<!-- Grade 가져오기 -->
+<select id="selectDefaultGrade" resultType="grade">
+    SELECT *
+    FROM grade
+    WHERE grade_idx = 1
+</select>
+
 
 
   

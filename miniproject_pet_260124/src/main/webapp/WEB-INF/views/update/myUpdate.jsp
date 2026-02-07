@@ -100,8 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-     
-		// 95번째
         fetch(url + encodeURIComponent(value))
             .then(response => response.json())  // JSON으로 받기
             .then(data => {
@@ -183,8 +181,8 @@ function previewImage(input) {
     
        <input type="file" name="mem_photo" id="fileInput" onchange="previewImage(this)" style="display: none;">
        
-       <img id="preview" alt="프로필 이미지" 
-            src="${empty profile.mem_img ? '/images/no_profile.png' : profile.mem_img}" 
+       <img id="preview"  alt="(프로필 이미지)"
+     		src="${empty profile.mem_img ? '/resources/images/no_profile.png' : profile.mem_img}"
             style="width: 100%; height: 100%; object-fit: cover;">
        
        <div style="position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.5); color: #fff; font-size: 12px; text-align: center; padding: 5px 0;">
@@ -211,7 +209,6 @@ function previewImage(input) {
       
       <div><!-- #해결 - 왜 안되지 -->
          회원 종류 ${ role.role_name } <br>
-         <!-- <input type="file"  name="doctor_file"> <br> -->
          <span style="font-size: 12px; color: gray;">수의사임을 증명하시면 커뮤니티에 전문적인 답변을 달 수 있습니다.</span>  
       </div> <br> 
       

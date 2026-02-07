@@ -1,11 +1,8 @@
 package com.example.db.controller;
 
+import java.io.File;    // 저장할 때 필요함
 import java.util.HashMap;
 import java.util.Map;
-
-import org.springframework.web.multipart.MultipartFile;
-import java.io.File;    // 저장할 때 필요함
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.autoconfigure.ssl.SslProperties.Bundles.Watch.File;
@@ -20,8 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.db.dao.MemberDao;
+import com.example.db.vo.GradeVo;
 import com.example.db.vo.MemberProfileVo;
 import com.example.db.vo.MemberVo;
+import com.example.db.vo.RoleVo;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -33,6 +32,7 @@ public class MemberController {
    
    @Autowired
    HttpSession session;
+   
    
    // 회원가입 관련 ------------------------------------------------------------------------------------------
    
@@ -264,7 +264,13 @@ public class MemberController {
        System.out.println(user);
        System.out.println("------------------------------------------------------------");
        
+       RoleVo role = MemberDao.selectDefaultRole();
+       GradeVo grade = MemberDao.selectDefaultGrade();
+
+       model.addAttribute("role", role);
+       model.addAttribute("grade", grade);
        model.addAttribute("user", user);
+       
        return "update/myUpdate";
    }
 
@@ -283,7 +289,7 @@ public class MemberController {
    
    // 수정 기능
    @PostMapping("update/myUpdate.do")
-   public String myUpdateSubmit(MemberVo vo, 
+   public String myUpdateSubmit(MemberVo vo, Model model,
                                 @RequestParam(value="mem_photo", required = false) MultipartFile file
                                ) {
 
@@ -310,7 +316,6 @@ public class MemberController {
        memberDao.update(vo);
        memberDao.updateProfile(vo);
        memberDao.updateAddr(vo);
-
 
        // 4) 세션 값 갱신
        MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
