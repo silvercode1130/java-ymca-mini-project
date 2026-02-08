@@ -68,10 +68,10 @@ public class MemberController {
         int res = memberDao.insert(vo);
         
         if (res > 0) {
-            ra.addFlashAttribute("joinSuccess", "회원가입 성공! 로그인을 해주세요.");
+            ra.addFlashAttribute("joinSuccess", "가입되었습니다. 메인에서 로그인 해주세요.");
             return "redirect:login_form.do";
         } else {
-            ra.addFlashAttribute("joinError", "회원가입 실패. 다시 시도해주세요.");
+            ra.addFlashAttribute("joinError", "가입에 실패하였습니다. 다시 시도해주세요.");
             return "redirect:join_form.do";
         }
     }
