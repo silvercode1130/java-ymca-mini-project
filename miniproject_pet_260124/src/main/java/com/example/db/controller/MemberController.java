@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.db.dao.MemberDao;
 import com.example.db.vo.GradeVo;
+import com.example.db.vo.MemberAddrVo;
 import com.example.db.vo.MemberProfileVo;
 import com.example.db.vo.MemberVo;
 import com.example.db.vo.RoleVo;
@@ -230,19 +231,6 @@ public class MemberController {
    // 수정 관련 ------------------------------------------------------------------------------------------
    
    
-   // myUpdate.jsp - 회원정보수정 창 띄우기
-//   @RequestMapping("/member/myUpdate.do")
-//   public String myUpdate() {
-//
-//      /*
-//       * MemberVo vo = memberDao.selectOneFromId(mem_id); model.addAttribute("vo",
-//       * vo);
-//       */
-//
-//       return "update/myUpdate";
-//   }
-   
-   
    // 회원 정보 수정 처리
    @GetMapping("/update/myUpdate.do")
    public String myUpdate(HttpSession session, Model model, String mem_id) {
@@ -273,56 +261,118 @@ public class MemberController {
        
        return "update/myUpdate";
    }
-
-//   @PostMapping("/member/myUpdate.do")
-//   public String myUpdateSubmit(MemberVo vo, HttpSession session) {
-//
-//       // DB에 수정 저장
-//       memberDao.update(vo);
-//
-//       // 세션 값 갱신
-//       session.setAttribute("user", vo);
-//
-//       return "redirect:/profile/myInfo.do";
-//   }
    
    
-   // 수정 기능
-   @PostMapping("update/myUpdate.do")
-   public String myUpdateSubmit(MemberVo vo, Model model,
-                                @RequestParam(value="mem_photo", required = false) MultipartFile file
-                               ) {
+    // 수정 기능
+   @PostMapping("/update/myUpdate.do")
+   public String myUpdateSubmit(MemberVo vo) {
 
-       // 1) 파일이 저장될 경로 설정
-       String uploadPath = "C:/upload/profile/";
-       File folder = new File(uploadPath);
-       if (!folder.exists()) folder.mkdirs();
-       
-       MemberProfileVo profile  = memberDao.selectProfile(vo.getMem_id());
+       // ✅ 프로필 이미지 업데이트 (값 있을 때만)
+       MemberProfileVo profileVo = new MemberProfileVo();
+       profileVo.setMem_idx(vo.getMem_idx());
 
-       // 2) 파일이 있을 때만 처리
-       if (file != null && !file.isEmpty()) {
-           String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-           File saveFile = new File(uploadPath, fileName);
-           try {
-               file.transferTo(saveFile);
-               profile.setMem_img(fileName);   // DB에는 파일명만 넣기
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
+       if (profileVo.getMem_img() != null && !profileVo.getMem_img().isEmpty()) {
+           memberDao.updateProfile(profileVo);
        }
 
-       // 3) DB 수정
-       memberDao.update(vo);
-       memberDao.updateProfile(vo);
-       memberDao.updateAddr(vo);
+       // ✅ 주소 업데이트 (값 있을 때만)
+       MemberAddrVo addrVo = new MemberAddrVo();
+       addrVo.setMem_idx(vo.getMem_idx());
 
-       // 4) 세션 값 갱신
+       if (addrVo.getMem_addr() != null && !addrVo.getMem_addr().isEmpty()) {
+           memberDao.updateAddr(addrVo);
+       }
+
        MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
        session.setAttribute("user", updated);
 
        return "redirect:/profile/myInfo.do";
    }
+   
+//   @PostMapping("/update/myUpdate.do")
+//   public String myUpdateSubmit(MemberVo vo) {
+//
+//       // 프로필 VO
+//       MemberProfileVo profileVo = new MemberProfileVo();
+//       profileVo.setMem_idx(vo.getMem_idx());
+//       memberDao.updateProfile(profileVo);
+//       
+//       if (profileVo.getMem_img() != null && !profileVo.getMem_img().isEmpty()) {
+//    	    memberDao.updateProfile(profileVo);
+//    	}
+//
+//       // 주소 VO
+//       MemberAddrVo addrVo = new MemberAddrVo();
+//       addrVo.setMem_idx(vo.getMem_idx());
+//       memberDao.updateAddr(addrVo);
+//
+//       MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
+//       session.setAttribute("user", updated);
+//
+//       return "redirect:/profile/myInfo.do";
+//   }
+   
+//   @PostMapping("/update/myUpdate.do")
+//   public String myUpdateSubmit(MemberVo vo) {
+//
+//       memberDao.updateProfile(vo);
+//       memberDao.updateAddr(vo);
+//
+//       MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
+//       session.setAttribute("user", updated);
+//
+//       return "redirect:/profile/myInfo.do";
+//   }
+   
+//   @PostMapping("/update/myUpdate.do") - 에러 x
+//    
+//	public String myUpdateSubmit(MemberVo vo/*
+//											 * , Model model,
+//											 * 
+//											 * @RequestParam(value="mem_photo", required = false) MultipartFile file
+//											 */
+//                               ) {
+//	   
+////	   	// ⭐⭐⭐ 여기다 적어 ⭐⭐⭐
+////	    System.out.println("=== myUpdateSubmit 진입 ===");
+////	    System.out.println("file 객체 null 아님? " + (file != null));
+////	    if (file != null) {
+////	        System.out.println("file.isEmpty(): " + file.isEmpty());
+////	        System.out.println("원본 파일명: " + file.getOriginalFilename());
+////	        System.out.println("파일 사이즈: " + file.getSize());
+////	    }
+//
+////       // 1) 파일이 저장될 경로 설정
+////       String uploadPath = "C:/upload/profile/";
+////       File folder = new File(uploadPath);
+////       if (!folder.exists()) folder.mkdirs();
+////       
+////       MemberProfileVo profile  = memberDao.selectProfile(vo.getMem_id());
+////
+////       // 2) 파일이 있을 때만 처리
+////       if (file != null && !file.isEmpty()) {
+////           String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+////           File saveFile = new File(uploadPath, fileName);
+////           try {
+////               file.transferTo(saveFile);
+////               profile.setMem_img(fileName);   // DB에는 파일명만 넣기
+////           } catch (Exception e) {
+////               e.printStackTrace();
+////           }
+////       }
+//
+//       // 3) DB 수정
+////       memberDao.update(vo);
+////       memberDao.updateProfile(vo);
+////       memberDao.updateAddr(vo);
+//
+//       // 4) 세션 값 갱신
+//       MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
+//       session.setAttribute("user", updated);
+//       
+//
+//       return "redirect:/profile/myInfo.do";
+//   }
    
    
    	// 닉네임 체크 ------------------------------------------------------------------------------------------
@@ -379,44 +429,44 @@ public class MemberController {
    // aJax 관련 ------------------------------------------------------------------------------------------
    
    
-   // myUpdate.jsp - 프로필 table
-   @PostMapping("/member/updateProfileAjax.do")
-   @ResponseBody
-   public String updateProfileAjax(MemberVo vo, MemberProfileVo profile,
-           @RequestParam(required=false) MultipartFile mem_photo) {
-
-       if (mem_photo != null && !mem_photo.isEmpty()) {
-           String uploadPath = "C:/upload/profile/";
-           File folder = new File(uploadPath);
-           if (!folder.exists()) folder.mkdirs();
-
-           String fileName = System.currentTimeMillis() + "_" + mem_photo.getOriginalFilename();
-           try {
-               mem_photo.transferTo(new File(uploadPath, fileName));
-               profile.setMem_img(fileName);
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-       }
-
-       memberDao.updateProfile(vo);
-       return "ok";
-   }
-
-   
-   // myUpdate.jsp - 생년월일
-   @PostMapping("/member/updateBdayAjax.do")
-   @ResponseBody
-   public String updateBdayAjax(MemberVo vo) {
-       memberDao.update(vo);
-       return "ok";
-   }
+//   // myUpdate.jsp - 프로필 table
+//   @PostMapping("/member/updateProfileAjax.do")
+//   @ResponseBody
+//   public String updateProfileAjax(MemberVo vo, MemberProfileVo profile,
+//           @RequestParam(required=false) MultipartFile mem_photo) {
+//
+//       if (mem_photo != null && !mem_photo.isEmpty()) {
+//           String uploadPath = "C:/upload/profile/";
+//           File folder = new File(uploadPath);
+//           if (!folder.exists()) folder.mkdirs();
+//
+//           String fileName = System.currentTimeMillis() + "_" + mem_photo.getOriginalFilename();
+//           try {
+//               mem_photo.transferTo(new File(uploadPath, fileName));
+//               profile.setMem_img(fileName);
+//           } catch (Exception e) {
+//               e.printStackTrace();
+//           }
+//       }
+//
+//       memberDao.updateProfile(vo);
+//       return "ok";
+//   }
+//
+//   
+//   // myUpdate.jsp - 생년월일
+//   @PostMapping("/member/updateBdayAjax.do")
+//   @ResponseBody
+//   public String updateBdayAjax(MemberVo vo) {
+//       memberDao.update(vo);
+//       return "ok";
+//   }
 
    
    // myUpdate.jsp - 주소 관련 table
    @PostMapping("/member/updateAddrAjax.do")
    @ResponseBody
-   public String updateAddrAjax(MemberVo vo) {
+   public String updateAddrAjax(MemberAddrVo vo) {
        memberDao.updateAddr(vo);
        return "ok";
    }

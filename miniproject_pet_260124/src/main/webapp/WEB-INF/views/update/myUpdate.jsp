@@ -129,24 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-/* function checkDuplicate(type) {
-    let value, msgElement, url;
-
-    if (type === 'id') {
-        value = $("#id").val().trim();
-        msgElement = $("#idMsg");
-        url = "/member/check_id.do?mem_id=";
-    } else {
-        value = $("#nickname").val().trim();
-        msgElement = $("#nicknameMsg");
-        url = "/member/check_nickname.do?mem_nickname=";
-    }
-
-    if (value === "") {
-        msgElement.text("");
-        return;
-    } */
-
 
 // 미리보기 기능
 function previewImage(input) {
@@ -160,21 +142,45 @@ function previewImage(input) {
 }
 
 
+// 주소 저장 버튼
+function saveAddr() {
+    const memAddr = document.getElementById("mem_addr").value;
+    const memIdx  = document.getElementById("mem_idx").value;
+
+    fetch("/member/updateAddrAjax.do", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: "mem_addr=" + encodeURIComponent(memAddr)
+            + "&mem_idx=" + encodeURIComponent(memIdx)
+    })
+    .then(res => res.text())
+    .then(result => {
+        if (result === "ok") {
+            alert("주소 저장 완료!");
+            location.reload();
+        }
+    });
+}
+
+
 
 </script>
 
 </head>
 <body>
-   <form class="myUpdate" action="/update/myUpdate.do"  method="post" enctype="multipart/form-data">
+  <!--  <form class="myUpdate" action="/update/myUpdate.do"  method="post" enctype="multipart/form-data"> -->
+   <form class="myUpdate"  action="/update/myUpdate.do" method="post">
       
       <div class="title">
          <h2>${ user.mem_name }님의 정보 수정</h2>
       </div>
    
-      
-      <input type="hidden" name="mem_idx" value="${ user.mem_idx }">
-      <input type="hidden" name="mem_role_idx" value="${ user.mem_role_idx }">
-      <input type="hidden" name="mem_grade_idx" value="${ user.mem_grade_idx }">
+      <input type="hidden"   id="mem_idx"   name="mem_idx"  value="${user.mem_idx}">
+      <input type="hidden" id="mem_role_idx"   name="mem_role_idx"   value="${ user.mem_role_idx }">
+      <input type="hidden"  id="mem_grade_idx"   name="mem_grade_idx"   value="${ user.mem_grade_idx }">
+    <%--    <input type="hidden"   id="addr_idx"   name="addr_idx"  value="${profile.addr_idx}"> --%>
       
       
       <div class="myImgBtn" style="width: 150px; height: 150px; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer;" onclick="document.getElementById('fileInput').click();">
@@ -202,17 +208,15 @@ function previewImage(input) {
          <label>자기소개</label> <br>
          <textarea name="mem_intro"  rows="5"  cols="30">${ profile.mem_intro }</textarea>
       </div>
-      
-      <!-- <button type="button" onclick="saveProfile()">프로필 저장</button> -->
            
       <hr>
       
-      <div><!-- #해결 - 왜 안되지 -->
+      <div>
          회원 종류 ${ role.role_name } <br>
          <span style="font-size: 12px; color: gray;">수의사임을 증명하시면 커뮤니티에 전문적인 답변을 달 수 있습니다.</span>  
       </div> <br> 
       
-      <div><!-- #해결 - 왜 안되지 -->
+      <div>
          회원 등급 ${ grade.grade_name } <br>
          등급별 할인율 ${ grade.grade_discount_rate } <br>
          <span style="font-size: 12px; color: gray;">회원 등급이 올라가면 할인율이 높아집니다.</span>
@@ -220,7 +224,7 @@ function previewImage(input) {
       
       <hr>
       
-      <div><!-- #추가 - 값 입력 시 저장된 DB 값 수정 -->
+      <div>
          <label>아이디</label><!-- #추가 - 중복 ID 점검 + 버튼 비활성화 -->
          <input type="text"  id="id"  name="mem_id"  value="${ user.mem_id }">
           <span id="idMsg" class="msg-style"></span>
@@ -239,7 +243,6 @@ function previewImage(input) {
       <div>
          <label>생년월일</label>
          <input type="date"  id="bday"  name="mem_bday"  value="${ user.mem_bday }">
-         <!-- <button type="button" onclick="saveBday()">생년월일 저장</button> -->
       </div>
       
       <div>
@@ -258,13 +261,12 @@ function previewImage(input) {
           <input type="text" id="mem_addr" name="mem_addr"  value="${ member_addr.mem_addr }"  placeholder="기본 주소" readonly> <br>
           <input type="text" id="mem_addr_detail" name="mem_addr_detail"  value="${ member_addr.mem_addr_detail }"  placeholder="상세 주소"> <br>
           <button type="button" onclick="findAddr()">주소 검색</button>
-         <!--  <button type="button" onclick="saveAddr()">주소 저장</button> -->
+          <button type="button" onclick="saveAddr()">주소 저장</button>
       </div>
       
       <hr>
       
       <div><!-- #추가 - 저장 버튼 누르면 db가 저장되거나 수정됨 -->
-         <!-- <input  type="submit"  name="btn"  value="저장"  onclick="location.href='/profile/myInfo.do'"> -->
          <input type="submit" value="저장">
       </div> 
       

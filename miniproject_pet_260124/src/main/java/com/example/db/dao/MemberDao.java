@@ -3,6 +3,7 @@ package com.example.db.dao;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.db.vo.GradeVo;
+import com.example.db.vo.MemberAddrVo;
 import com.example.db.vo.MemberProfileVo;
 import com.example.db.vo.MemberVo;
 import com.example.db.vo.RoleVo;
@@ -18,10 +19,12 @@ public interface MemberDao {
 	 
      void update(MemberVo vo);
 	 
-     public void updateProfile(MemberVo vo);
+     void updateProfile(MemberVo vo); 
+     void updateAddr(MemberAddrVo vo);
 
 	 public MemberVo selectOneFromNickname(String mem_nickname);
 	 
+	 void updateAddrSimple(MemberVo vo);
 	 void updateAddr(MemberVo vo);
 	 
 	 MemberProfileVo selectProfile(String mem_id); 
@@ -41,6 +44,8 @@ public interface MemberDao {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	void updateProfile(MemberProfileVo profileVo); 
 
 		
 	 
