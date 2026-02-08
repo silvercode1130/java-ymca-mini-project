@@ -27,5 +27,8 @@ public class MemberVo {
 	LocalDateTime	mem_deldate;	// 탈퇴일
 	
 	//=========== 조인객체 ============
-	RoleVo			role;
+	RoleVo			roleVo;
+	GradeVo			gradeVo;
+	MemberProfileVo	profile;
+	MemberAddrVo	addr;
 }

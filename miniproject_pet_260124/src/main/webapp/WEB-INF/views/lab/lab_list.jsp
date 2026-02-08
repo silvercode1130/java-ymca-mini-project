@@ -110,7 +110,7 @@
         </div>
     </section>
 
-    <!-- 연구 리스트 (지금은 목업 데이터 그대로 JSP에 하드코딩) -->
+    <!-- 연구 리스트 -->
     <section class="section">
     <div class="section-inner">
         <div class="lab-grid">
@@ -120,7 +120,7 @@
              	class="lab-card-link">
                 <article class="lab-card">
                     <div class="lab-card-thumb">
-                        <!-- 썸네일: 일단은 더미 이미지 or 나중에 BoardFile 연동 -->
+                        <!-- 썸네일: 없으면 기본 이미지 -->
                         <img src="${pageContext.request.contextPath}/img/noimage.png"
      						alt="${vo.board_title}">
 

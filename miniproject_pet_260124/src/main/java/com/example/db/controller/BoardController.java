@@ -149,7 +149,7 @@ public class BoardController {
 		model.addAttribute("page", page);
 		model.addAttribute("tag", tag);
 		
-		return "board/board_insert_form";
+		return "community/board_insert_form";
 	}
 	
 	// ===== 글쓰기 =====

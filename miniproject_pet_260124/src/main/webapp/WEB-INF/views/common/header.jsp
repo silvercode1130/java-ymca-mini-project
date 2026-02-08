@@ -46,11 +46,11 @@
       <c:choose>
         <c:when test="${empty sessionScope.user}">
           <!-- 비로그인: 로그인 / 회원가입 -->
-          <a href="${pageContext.request.contextPath}/member/login_form.do"
+          <a href="${pageContext.request.contextPath}/member/loginForm.do"
              class="px-5 py-2 bg-amber-400 text-white font-bold rounded-full hover:bg-amber-500 shadow-md transition-all transform hover:-translate-y-0.5 text-sm">
             로그인
           </a>
-          <a href="${pageContext.request.contextPath}/member/join_form.do"
+          <a href="${pageContext.request.contextPath}/member/signUpForm.do"
              class="px-5 py-2 border-2 border-amber-400 text-amber-500 font-bold rounded-full hover:bg-amber-50 transition-colors text-sm">
             회원가입
           </a>
