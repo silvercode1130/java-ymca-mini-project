@@ -6,9 +6,35 @@
 <meta charset="UTF-8">
 
 <style type="text/css">
-	h1, h2 {
-		 font-weight: bold;
-	}
+h1, h2 {
+	 font-weight: bold;
+}
+
+/* ===== 이전으로 버튼 ===== */
+input[type="button"][value="이전으로"] {
+    height: 36px;
+    padding: 0 16px;
+
+    border-radius: 12px;
+    border: none;
+
+    background: #e0e0e0;
+    color: #777;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+}
+
+input[type="button"][value="이전으로"]:hover {
+    background: #d5d5d5;
+}
+
+input[type="button"][value="이전으로"]:active {
+    transform: scale(0.97);
+}
 	
 </style>
 <title>서비스 이용약관 동의</title>

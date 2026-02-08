@@ -9,6 +9,157 @@
 <title>회원가입</title>
 
 <style type="text/css">
+/* ===== 공통 ===== */
+* {
+    box-sizing: border-box;
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #fafafa;
+    color: #333;
+}
+
+/* ===== 회원가입 전체 카드 ===== */
+form {
+    width: 420px;
+    margin: 80px auto;
+    padding: 40px 32px;
+    background: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== 타이틀 ===== */
+.title h2 {
+    margin: 0 0 28px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    color: #222;
+}
+
+/* ===== input 공통 ===== */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="tel"],
+input[type="date"] {
+    width: 100%;
+    height: 46px;
+    margin-bottom: 10px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.2s ease;
+    background-color: #fff;
+}
+
+/* date 아이콘 위치 보정 */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+}
+
+input::placeholder {
+    color: #aaa;
+}
+
+input:focus {
+    border-color: #f4c430;
+    box-shadow: 0 0 0 3px rgba(244, 196, 48, 0.25);
+}
+
+/* ===== 메시지 영역 ===== */
+#mem_idMsg,
+#mem_pwdMsg {
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+/* ===== 약관 텍스트 줄 간격 조정 ===== */
+.agree {
+    line-height: 1.4;     		 /* 기본보다 살짝 타이트 */
+    margin-bottom: 6px;    /* 줄 사이 여백 줄이기 */
+}
+
+/* 체크박스 + 텍스트 정렬 보정 */
+.agree input[type="checkbox"] {
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+/* ===== 약관 내용보기 버튼 ===== */
+.agree button,
+.agree input[type="button"] {
+    height: 28px;
+    padding: 0 10px;
+    margin-left: 6px;
+    margin-bottom: 6px; 
+    
+    border-radius: 8px;
+    border: none;
+    
+    background: #ddd;
+    color: #888;
+    
+    font-size: 12px;
+    font-weight: 500;
+    
+    cursor: pointer;
+    vertical-align: middle;
+    transition: all 0.2s ease;
+}
+
+.agree button:hover,
+.agree input[type="button"]:hover {
+    background: #ffe08a;
+}
+
+/* ===== 회원가입 버튼 ===== */
+input[name="signUp"] {
+    width: 100%;
+    height: 52px;
+    margin-top: 24px;
+    background: linear-gradient(180deg, #ffd95a, #f4c430);
+    border: none;
+    border-radius: 16px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+input[name="signUp"]:hover:not(:disabled) {
+    background: #e5b800;
+    filter: brightness(1.05);
+}
+
+input[name="signUp"]:active:not(:disabled) {
+    transform: scale(0.98);
+}
+
+/* ===== 비활성화 버튼 ===== */
+input[name="signUp"]:disabled {
+    background: #ddd;
+    color: #888;
+}
+
+/* ===== 약관 링크 ===== */
+.agree-box a {
+    color: #f4c430;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.agree-box a:hover {
+    text-decoration: underline;
+}
 
 </style>
 
