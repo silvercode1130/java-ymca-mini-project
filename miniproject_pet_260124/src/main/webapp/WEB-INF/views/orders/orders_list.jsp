@@ -34,10 +34,15 @@
 	                <td>${vo.orders_total_price}원</td>
 	                <td><span class="badge bg-info">${vo.status.orders_status_name}</span></td>
 	                <td>
-	                    <button type="button" 
-	                    		onclick="location.href='/orders/detail/${vo.orders_idx}'">상세보기</button>
-            			<button type="button" 
-            					onclick="if(confirm('정말 취소하시겠습니까?')) { location.href='/orders/cancel/${vo.orders_idx}'; }">주문취소</button>
+	                    <button type="button" onclick="location.href='/orders/detail/${vo.orders_idx}'">상세보기</button>
+	                    
+	                    <c:if test="${vo.orders_status_idx == 1}">
+					        <button type="button" onclick="location.href='${pageContext.request.contextPath}/orders/pay/${vo.orders_idx}'">
+					            결제하기
+					        </button>
+					    </c:if>
+	                    
+            			<button type="button" onclick="if(confirm('정말 취소하시겠습니까?')) { location.href='/orders/cancel/${vo.orders_idx}'; }">주문취소</button>
 	                </td>
 	            </tr>
 	        </c:forEach>

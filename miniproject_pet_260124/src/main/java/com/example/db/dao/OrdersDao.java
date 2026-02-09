@@ -29,4 +29,6 @@ public interface OrdersDao {
     void cancelOrders(int orders_idx);
     
     GradeVo getGradeInfo(int grade_idx);
+
+	void updateOrderStatus(int orders_idx, int i);
 }

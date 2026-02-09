@@ -123,7 +123,7 @@ public class OrdersController {
         if(user == null) {
             user = new MemberVo();
             user.setMem_idx(1); // 테스트용 1번 회원
-            user.setMem_grade_idx(1); // 등급도 1번으로!
+            user.setMem_grade_idx(4); // 등급도 4번으로!
             session.setAttribute("user", user);
         }
     	
@@ -147,7 +147,7 @@ public class OrdersController {
         return "orders/orders_detail";
     }
     
- // 주문 취소
+    // 주문 취소
     @RequestMapping("/orders/cancel/{orders_idx}")
     public String cancelOrder(@PathVariable("orders_idx") int orders_idx, HttpSession session) {
     	// 취소할 때도 혹시 세션 끊길지 모르니까 더미 체크!
@@ -162,6 +162,17 @@ public class OrdersController {
         ordersDao.cancelOrders(orders_idx);
         
         // 취소 후 다시 주문 목록으로 리다이렉트
+        return "redirect:/orders/list";
+    }
+    
+    // 결제 처리 (상태 변경만!)
+    @RequestMapping("/orders/pay/{orders_idx}")
+    public String payOrder(@PathVariable("orders_idx") int orders_idx) {
+        
+        // orders_status_idx를 2(결제완료)로 업데이트하는 DAO 메서드 호출
+        ordersDao.updateOrderStatus(orders_idx, 2); 
+        
+        // 결제 완료 후 다시 목록으로
         return "redirect:/orders/list";
     }
 }
