@@ -50,7 +50,7 @@
     <h2>임시 비밀번호 발급</h2>
 
     <!-- 아이디 입력 -->
-    <input type="text" id="memIdInput" placeholder="아이디 입력">
+    <input type="text"  id="memIdInput"  placeholder="아이디 입력">
 
     <!-- 본인인증 버튼 --><!-- #보류 - 지금 로그인한 아이디만 인증 가능 기능 -->
     <button type="button" onclick="doAuthentication()">본인인증 하기</button>

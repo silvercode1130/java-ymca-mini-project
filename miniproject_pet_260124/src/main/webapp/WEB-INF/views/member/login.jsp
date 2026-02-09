@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>이메일로 로그인</title>
+<title>로그인</title>
 
 <style type="text/css">
 

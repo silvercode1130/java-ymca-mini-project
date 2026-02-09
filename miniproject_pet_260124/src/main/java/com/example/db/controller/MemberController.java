@@ -2,6 +2,7 @@ package com.example.db.controller;
 
 import java.io.File;    // 저장할 때 필요함
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -247,47 +248,96 @@ public class MemberController {
            user = memberDao.selectOneFromId(mem_id);
            session.setAttribute("user", user);
        }
+        
+       // 251번줄 에러
+       RoleVo role = memberDao.selectRoleByIdx(user.getMem_role_idx());
+       GradeVo grade = memberDao.selectGradeByIdx(user.getMem_grade_idx());
 
-       System.out.println("------------------------------------------------------------");
-       System.out.println(user);
-       System.out.println("------------------------------------------------------------");
+       //등록지 주소목록 읽어오기
+       List<MemberAddrVo> addr_list = memberDao.selectAddrList(user.getMem_idx());
        
-       RoleVo role = MemberDao.selectDefaultRole();
-       GradeVo grade = MemberDao.selectDefaultGrade();
-
+       
        model.addAttribute("role", role);
-       model.addAttribute("grade", grade);
-       model.addAttribute("user", user);
+       model.addAttribute("grade", grade);		
+       model.addAttribute("user", user);				
+       model.addAttribute("addr_list", addr_list);				
        
-       return "update/myUpdate";
+       System.out.println("------------------------------------------------------------");
+       System.out.println("user :   " + user);
+       System.out.println("role :  " + role);		
+       System.out.println("grade :  " + grade);		
+       System.out.println("------------------------------------------------------------");
+       
+       return "update/myUpdate"; 
    }
    
    
     // 수정 기능
    @PostMapping("/update/myUpdate.do")
-   public String myUpdateSubmit(MemberVo vo) {
+   public String myUpdateSubmit(MemberVo memberVo,
+													 MemberProfileVo profileVo,
+												     RoleVo roleVo,
+												     GradeVo gradeVo,
+												     HttpSession session
+		   											) {
+	   
+	   // 회원 기본 정보
+	   memberDao.updateMember(memberVo);
 
-       // ✅ 프로필 이미지 업데이트 (값 있을 때만)
-       MemberProfileVo profileVo = new MemberProfileVo();
-       profileVo.setMem_idx(vo.getMem_idx());
+	
+	   // 프로필
+	   profileVo.setMem_idx(memberVo.getMem_idx());
+	   memberDao.updateProfile(profileVo);
+	   
+	   // 유저 종류
+	   roleVo.setRole_idx(roleVo.getRole_idx());
+	   memberDao.updateRole(roleVo);
+	   
+	   // 유저 등급
+	   gradeVo.setGrade_idx(gradeVo.getGrade_idx());
+	   memberDao.updateGrade(gradeVo);
 
-       if (profileVo.getMem_img() != null && !profileVo.getMem_img().isEmpty()) {
-           memberDao.updateProfile(profileVo);
-       }
+	   // 세션 갱신
+	   MemberVo updated = memberDao.selectOneFromId(memberVo.getMem_id());
+	   session.setAttribute("user", updated);
+	   
 
-       // ✅ 주소 업데이트 (값 있을 때만)
-       MemberAddrVo addrVo = new MemberAddrVo();
-       addrVo.setMem_idx(vo.getMem_idx());
+   
+       System.out.println("------------------------------------------------------------");
 
-       if (addrVo.getMem_addr() != null && !addrVo.getMem_addr().isEmpty()) {
-           memberDao.updateAddr(addrVo);
-       }
-
-       MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
-       session.setAttribute("user", updated);
-
-       return "redirect:/profile/myInfo.do";
+	   return "redirect:/profile/myInfo.do";
    }
+
+//       // ✅ 프로필 이미지 업데이트 (값 있을 때만)
+//       MemberProfileVo profileVo = new MemberProfileVo();
+//       profileVo.setMem_idx(vo.getMem_idx());
+//       profileVo.setMem_nickname(profile.getMem_nickname());   // profile cannot be resolved
+//       profileVo.setMem_intro(profile.getMem_intro());
+//
+//       // memberDao.updateProfile(profileVo);
+//
+//       if (profileVo.getMem_img() != null && !profileVo.getMem_img().isEmpty()) {
+//           memberDao.updateProfile(profileVo);
+//       }
+//
+//       // ✅ 주소 업데이트 (값 있을 때만)
+//       MemberAddrVo addrVo = new MemberAddrVo();
+//       addrVo.setMem_idx(vo.getMem_idx());
+//       addrVo.setMem_zipcode(vo.getMem_zipcode());		// The method getMem_zipcode() is undefined for the type MemberVo
+//       addrVo.setMem_addr(vo.getMem_addr());
+//       addrVo.setMem_addr_detail(vo.getMem_addr_detail());
+//
+//       // memberDao.updateAddr(addrVo);
+//
+//       if (addrVo.getMem_addr() != null && !addrVo.getMem_addr().isEmpty()) {
+//           memberDao.updateAddr(addrVo);
+//       }
+//
+//       MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
+//       session.setAttribute("user", updated);
+//
+//       return "redirect:/profile/myInfo.do";
+//   }
    
 //   @PostMapping("/update/myUpdate.do")
 //   public String myUpdateSubmit(MemberVo vo) {
@@ -467,8 +517,10 @@ public class MemberController {
    @PostMapping("/member/updateAddrAjax.do")
    @ResponseBody
    public String updateAddrAjax(MemberAddrVo vo) {
-       memberDao.updateAddr(vo);
-       return "ok";
+       
+	   memberDao.insertAddr(vo);
+       
+	   return "ok";
    }
 
    

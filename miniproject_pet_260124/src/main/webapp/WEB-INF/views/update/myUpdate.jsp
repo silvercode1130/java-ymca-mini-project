@@ -2,6 +2,8 @@
     pageEncoding="UTF-8" isELIgnored="false"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 
 <!DOCTYPE html>
 <html>
@@ -144,7 +146,9 @@ function previewImage(input) {
 
 // 주소 저장 버튼
 function saveAddr() {
+    const memZip = document.getElementById("mem_zipcode").value;
     const memAddr = document.getElementById("mem_addr").value;
+    const memDetail = document.getElementById("mem_addr_detail").value;
     const memIdx  = document.getElementById("mem_idx").value;
 
     fetch("/member/updateAddrAjax.do", {
@@ -152,8 +156,11 @@ function saveAddr() {
         headers: {
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: "mem_addr=" + encodeURIComponent(memAddr)
-            + "&mem_idx=" + encodeURIComponent(memIdx)
+        body:
+            "mem_zipcode=" + encodeURIComponent(memZip)
+          + "&mem_addr=" + encodeURIComponent(memAddr)
+          + "&mem_addr_detail=" + encodeURIComponent(memDetail)
+          + "&mem_idx=" + encodeURIComponent(memIdx)
     })
     .then(res => res.text())
     .then(result => {
@@ -164,6 +171,30 @@ function saveAddr() {
     });
 }
 
+
+// 이미지 저장
+function saveImg() {
+    const fileInput = document.getElementById("mem_img");
+
+    if (!fileInput || fileInput.files.length === 0) {
+        alert("파일을 선택해주세요");
+        return;
+    }
+
+    const file = fileInput.files[0];
+
+    const formData = new FormData();
+    formData.append("mem_img", file);
+
+    fetch("/member/updateProfileImgAjax.do", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.text())
+    .then(result => {
+        console.log("업로드 결과:", result);
+    });
+}
 
 
 </script>
@@ -183,7 +214,7 @@ function saveAddr() {
     <%--    <input type="hidden"   id="addr_idx"   name="addr_idx"  value="${profile.addr_idx}"> --%>
       
       
-      <div class="myImgBtn" style="width: 150px; height: 150px; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer;" onclick="document.getElementById('fileInput').click();">
+<%--       <div class="myImgBtn" style="width: 150px; height: 150px; border: 1px solid #ddd; border-radius: 10px; overflow: hidden; position: relative; cursor: pointer;" onclick="document.getElementById('fileInput').click();">
     
        <input type="file" name="mem_photo" id="fileInput" onchange="previewImage(this)" style="display: none;">
        
@@ -193,10 +224,16 @@ function saveAddr() {
        
        <div style="position: absolute; bottom: 0; width: 100%; background: rgba(0,0,0,0.5); color: #fff; font-size: 12px; text-align: center; padding: 5px 0;">
            사진 변경
+            
        </div>
-   </div>
+   </div> --%>
+   		
+   	<div>
+   		<input type="file" id="mem_img"> <br>
+		<button type="button" onclick="saveImg()">이미지 저장</button>
+   	</div>	
       
-
+	<hr>
       
       <div><!-- #추가 - 중복방지 기능 추가 -->
          <label>닉네임</label>
@@ -242,7 +279,14 @@ function saveAddr() {
       
       <div>
          <label>생년월일</label>
-         <input type="date"  id="bday"  name="mem_bday"  value="${ user.mem_bday }">
+         <input type="date"  id="bday"  name="mem_bday"  value="${ fn:substring(user.mem_bday,0,10)}">
+         <%-- <span style="color: gray; font-size: 12px; ">
+         	<fmt:parseDate value="${user.mem_bday}"
+							               pattern="yyyy-MM-dd HH:mm:ss"
+							               var="bdayDate" />
+			<fmt:formatDate value="${bdayDate}" pattern="yyyy-MM-dd" />
+         </span>  --%>
+         
       </div>
       
       <div>
@@ -255,13 +299,25 @@ function saveAddr() {
          <input type="email"  id="email"  name="mem_email"  value="${ user.mem_email }">
       </div>
       
+      <hr>
+      
       <div>
-          <label>주소</label>
-          <input type="text" id="mem_zipcode" name="mem_zipcode" value="${ member_addr.mem_zipcode }" placeholder="우편번호" readonly> <br>
-          <input type="text" id="mem_addr" name="mem_addr"  value="${ member_addr.mem_addr }"  placeholder="기본 주소" readonly> <br>
-          <input type="text" id="mem_addr_detail" name="mem_addr_detail"  value="${ member_addr.mem_addr_detail }"  placeholder="상세 주소"> <br>
+            등록지 주소
+            <!-- for(MemberAddrVo addr : addr_list)  -->
+            <c:forEach var="addrVo"  items="${ addr_list }">
+                (${ addrVo.mem_zipcode }) ${ addrVo.mem_addr } - ${ addrVo.mem_addr_detail } <br>
+            </c:forEach>
+      </div>
+      
+      <hr>
+      
+      <div>
+          <label>주소등록 하기</label> <br>
+          <input type="text" id="mem_zipcode" name="mem_zipcode" placeholder="우편번호" readonly> <br>
+          <input type="text" id="mem_addr" name="mem_addr"   placeholder="기본 주소" readonly> <br>
+          <input type="text" id="mem_addr_detail" name="mem_addr_detail"   placeholder="상세 주소"> <br>
           <button type="button" onclick="findAddr()">주소 검색</button>
-          <button type="button" onclick="saveAddr()">주소 저장</button>
+          <button type="button" onclick="saveAddr()">주소 저장</button>     
       </div>
       
       <hr>

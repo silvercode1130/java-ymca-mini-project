@@ -1,5 +1,7 @@
 package com.example.db.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.db.vo.GradeVo;
@@ -24,6 +26,8 @@ public interface MemberDao {
 
 	 public MemberVo selectOneFromNickname(String mem_nickname);
 	 
+	 void insertAddr(MemberAddrVo vo);
+	 List<MemberAddrVo> selectAddrList(int mem_idx);
 	 void updateAddrSimple(MemberVo vo);
 	 void updateAddr(MemberVo vo);
 	 
@@ -45,10 +49,24 @@ public interface MemberDao {
 		return null;
 	}
 
-	void updateProfile(MemberProfileVo profileVo); 
+	void updateProfile(MemberProfileVo profileVo);
 
-		
-	 
+	void updateMember(MemberVo memberVo);
+
+	void updateRole(RoleVo roleVo);
+
+	void updateGrade(GradeVo gradeVo);
+
+	RoleVo selectRoleByIdx(int mem_role_idx);
+
+	GradeVo selectGradeByIdx(int mem_grade_idx);
+
+	
+
+	
+	
+
+	
 	 
 	 
 	 

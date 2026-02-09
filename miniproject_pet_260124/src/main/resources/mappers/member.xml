@@ -132,11 +132,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </select>
 
 
+<!-- 회원 기본 정보 업데이트 -->
+<update id="updateMember"
+        parameterType="com.example.db.vo.MemberVo">
+    UPDATE member
+    SET
+    	mem_id   = #{mem_id, jdbcType=VARCHAR},
+        mem_pwd   = #{mem_pwd, jdbcType=VARCHAR},
+        mem_name  = #{mem_name, jdbcType=VARCHAR},
+        mem_tel   = #{mem_tel, jdbcType=VARCHAR},
+        mem_email = #{mem_email, jdbcType=VARCHAR},
+        mem_bday  = #{mem_bday, jdbcType=VARCHAR},
+        mem_role_idx  = #{mem_role_idx, jdbcType=VARCHAR},
+        mem_grade_idx  = #{mem_grade_idx, jdbcType=VARCHAR},
+        mem_regdate  = SYSDATE
+    
+    WHERE mem_idx = #{mem_idx}
+</update>
+
+
 <!-- 회원정보 업데이트용 -->
 <update id="updateProfile"
         parameterType="com.example.db.vo.MemberProfileVo">
     UPDATE member_profile
-    SET mem_img = #{mem_img, jdbcType=VARCHAR}
+    SET 
+    	mem_img = #{mem_img, jdbcType=VARCHAR},
+    	 mem_intro = #{mem_intro, jdbcType=VARCHAR},
+    	  mem_nickname = #{mem_nickname, jdbcType=VARCHAR}
+    
     WHERE mem_idx = #{mem_idx}
 </update>
 
@@ -145,12 +168,28 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 <update id="updateAddrSimple"
         parameterType="com.example.db.vo.MemberAddrVo">
     UPDATE member_addr
-    SET mem_addr = #{mem_addr}
+    SET 
+    	addr_idx = #{addr_idx},
+    	mem_zipcode = #{mem_zipcode},
+    	mem_addr = #{mem_addr},
+    	mem_addr_detail = #{mem_addr_detail}
+    	
     WHERE mem_idx = #{mem_idx}
 </update>
 
 
-<!-- 주소 저장 -->
+<!-- 회원정보 업데이트용 -->
+<insert id="insertAddr" parameterType="member_addr">
+INSERT INTO member_addr
+VALUES (seq_mem_addr_idx.nextVal, #{mem_idx}, #{mem_zipcode}, #{mem_addr}, #{mem_addr_detail})
+
+</insert>
+
+<select id="selectAddrList"  parameterType="int"  resultType="member_addr">
+    select * from member_addr where mem_idx=#{mem_idx}
+</select>
+
+
 <update id="updateAddr"
         parameterType="com.example.db.vo.MemberAddrVo">
     UPDATE member_addr
@@ -160,6 +199,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         mem_addr_detail = #{mem_addr_detail}
     WHERE mem_idx = #{mem_idx}
 </update>  
+
+
+<!-- 회원정보 업데이트용 -->
+<update id="updateGrade"
+        parameterType="com.example.db.vo.GradeVo">
+    UPDATE grade
+    SET
+       grade_name = #{grade_name, jdbcType=VARCHAR},
+       grade_discount_rate = #{grade_discount_rate, jdbcType=VARCHAR}
+       
+    WHERE grade_idx = #{grade_idx}
+</update>  
+
+
+<!-- 주소 저장 -->
+<update id="updateRole"
+        parameterType="com.example.db.vo.RoleVo">
+    UPDATE role
+    SET
+        role_name = #{role_name, jdbcType=VARCHAR}
+        
+    WHERE role_idx = #{role_idx}
+</update>  
+
+
+<select id="selectRoleByIdx"
+        parameterType="int"
+        resultType="role">
+    SELECT *
+    FROM role
+    WHERE role_idx = #{role_idx}
+</select>
+
+
+<select id="selectGradeByIdx"
+        parameterType="int"
+        resultType="grade">
+    SELECT *
+    FROM grade
+    WHERE grade_idx = #{grade_idx}
+</select>
 
 
 
