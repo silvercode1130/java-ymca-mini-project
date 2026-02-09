@@ -3,6 +3,7 @@ package com.example.db.vo;
 import java.time.LocalDateTime;
 
 import org.apache.ibatis.type.Alias;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import lombok.Data;
 @Alias("board")
 public class BoardVo {
 	//=========== 게시판 ============
-	int				board_idx;			// pk
+	int				b_idx;			// pk
 
 	int				mem_idx;			// fk: member(mem_idx)
 	String			board_title;
@@ -23,9 +24,20 @@ public class BoardVo {
 	LocalDateTime	board_moddate;
 	String			board_is_deleted;	// 게시글 삭제여부 (y/n)
 	LocalDateTime	board_deldate;		// 삭제일
-
+	
 	// =========== 조인 객체 ============
 	MemberVo		writer;				// 조인된 참조테이블을 객체째로 담음
 	BoardTypeVo		boardType;			// vo.getWriter().getMem_id()
+	MultipartFile 	photo;
+	String			Filename;
+	int 			board_type_code;
 	
-}
+	}
+	
+	
+		
+
+		
+
+	
+

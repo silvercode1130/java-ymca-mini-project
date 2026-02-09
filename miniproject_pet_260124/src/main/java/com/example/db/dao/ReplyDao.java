@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.db.vo.replyVo;
+
 @Mapper
 public interface ReplyDao {
 
@@ -17,7 +18,8 @@ public interface ReplyDao {
 	 int			update(replyVo vo); 			
 	 int			delete(int r_idx);
 	 List <replyVo>	selectConditionList(Map<String, Object> map);
-	String			content(replyVo vo);
+	List <replyVo>	content();
+
 	 }
 		
 		

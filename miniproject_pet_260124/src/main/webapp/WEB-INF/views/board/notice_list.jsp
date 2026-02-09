@@ -1,17 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-<<<<<<< HEAD
-	pageEncoding="UTF-8"%>
-=======
-    pageEncoding="UTF-8"%>
->>>>>>> origin/je
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <title>공지사항</title>
-
-<<<<<<< HEAD
 <style>
 table {
 	border-collapse: collapse;
@@ -89,7 +82,6 @@ a {
 	</p>
 </body>
 </html>
-=======
     <style>
         table { border-collapse: collapse; width: 100%; }
         th, td { border: 1px solid #ddd; padding: 8px; }
@@ -156,4 +148,4 @@ a {
 
 </body>
 </html>
->>>>>>> origin/je
+

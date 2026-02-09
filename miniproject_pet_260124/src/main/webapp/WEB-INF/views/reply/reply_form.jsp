@@ -34,14 +34,12 @@
 </style>
 
 <script type="text/javascript">
+	// 답글 폼 이동
 	function reply_form() {
-
-		//alert(location.href); //현재 URL주소 =>location.href
-
-		//로그인 안된경우
+	//로그인 안된경우
 		if ("${ empty user}" == "true") {
 
-			if (confirm("글쓰기는 로그인후에 가능합니다\n로그인 하시겠습니다?") == false)
+			if (confirm("답글는 로그인후에 가능합니다\n로그인 하시겠습니까?")) == false)
 				return;
 
 			//로그인폼으로 이동
@@ -80,6 +78,7 @@
 		}
 	}//end:reply_form()
 
+	// 게시글 삭제
 	function board_delete() {
 
 		if (confirm("정말 삭제 하시겠습니까?") == false)
@@ -91,7 +90,12 @@
 		f.action = "delete.do";
 		f.submit();
 
-	}//endlboard_delete()
+	}
+	//endlboard_delete()
+	
+	//게시글 수정 폼 이동
+	
+	
 </script>
 
 </head>

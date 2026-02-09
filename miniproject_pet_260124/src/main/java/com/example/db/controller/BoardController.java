@@ -22,6 +22,8 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/board/")
 public class BoardController {
 
+	
+
 	@Autowired
 	BoardDao boardDao;
 
@@ -38,9 +40,6 @@ public class BoardController {
 
 		List<BoardVo> list = boardDao.selectList();
 
-		// 이전 게시물보기에서 설정한 show값을 세션에서 삭제
-		//session.removeAttribute("show");
-		// request binding
 		model.addAttribute("list", list);
 
 		return "board/board_list";
@@ -49,6 +48,7 @@ public class BoardController {
 	// 공지사항 조회
 	@GetMapping("/notice/list.do")
 	public String noticeList(Model model) {
+		
 		List<BoardVo> list = boardDao.selectListByTypeCode("NOTICE");
 		model.addAttribute("list",list);
 		
@@ -154,7 +154,7 @@ public class BoardController {
 		
 		// IP
 		String b_ip = request.getRemoteAddr();
-		vo.setB_ip(b_ip);
+		vo.setBoard_ip(b_ip);
 		
 		//3) 아이피 밴 체크
 		if("172.30.1.98".equals("board_ip")){
@@ -163,8 +163,8 @@ public class BoardController {
 		}
 
 		// 내용 : \n -> <br>변경
-		if(vo.getB_content() != null) {
-			vo.setB_content(vo.getB_content().replace("/n","<br>"));
+		if(vo.getBoard_content() != null) {
+			vo.setBoard_content(vo.getBoard_content().replace("/n","<br>"));
 		}
 
 
@@ -173,11 +173,13 @@ public class BoardController {
 
 	 
 		// 6) board_type_code → board_type_idx 조회 (이미 만든 메서드 사용)
-	//	int typeIdx = boardDao.selectTypeIdxByCode(code);
+		List<BoardVo> list = vo.getBoard_type_code(int board_type_idx);
+		
+		int board_type_idx = boardDao.selectTypeCodeByIdx(board_type_code);
 	 
 	    
 	    // 3.변환된 숫자 IDX를 VO에 세팅합니다.
-	 //   vo.setBoard_type_idx(typeIdx);
+		vo.board_type_idx( int board_type_idx);
 
 		// DB insert
 		int res = boardDao.insert(vo);
@@ -205,27 +207,24 @@ public class BoardController {
 	}
 	
 	// 내용 : /n -> <br>변경
-	String b_content = vo.getB_content().replaceAll("/n", "<br>");
-	vo.setB_content(b_content);
+	String b_content = vo.getBoard_content().replaceAll("/n", "<br>");
+	vo.setBoard_content(b_content);
 	
 	// IP
 	String b_ip = request.getRemoteAddr();
-	vo.setB_ip(b_ip);
+	vo.setBoard_ip(b_ip);
 	
 	// 회원정보 넣기
 	vo.setMem_idx(user.getMem_idx());
 	vo.setMem_name(user.getMem_name());
 	
 	// 기준글 정보를 구한다
-	BoardVo baseVo = boardDao.selectOne(vo.getB_idx());
+	BoardVo baseVo = boardDao.selectOne(vo.getBoard_idx());
 	
 	//기준글보다 b_step이 큰 게시물의 b_step을 1씩 증가 시켜야 한다
 	int res = boardDao.updateStep(baseVo);
 	
-	// b_ref b_step b_depth 계산 vo에 넣는다
-	vo.setB_ref(baseVo.getB_ref());
-	vo.setB_step(baseVo.getB_step()+1);
-	vo.setB_depth(baseVo.getB_depth()+1);
+
 	
 	// DB reply
 	res = boardDao.reply(vo);
@@ -238,8 +237,8 @@ public class BoardController {
 	public String modify(int b_idx, Model model ) {
 		BoardVo vo = (BoardVo) boardDao.selectbyMemIdx(b_idx);
 		// 수정을 위해 <br>을 다시 \n으로 변환 (textarea에 보여주기 위함)
-		if (vo.getB_content() != null) {
-			vo.setB_content(vo.getB_content().replaceAll("<br>", "\n"));
+		if (vo.getBoard_content() != null) {
+			vo.setBoard_content(vo.getBoard_content().replaceAll("<br>", "\n"));
 		}
 		model.addAttribute("vo", vo);
 

@@ -1,10 +1,14 @@
 package com.example.db.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.db.dao.BoardDao;
@@ -20,6 +24,8 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class ReplyController {
 
+   
+
     @Autowired
     BoardDao boardDao;
     
@@ -32,24 +38,29 @@ public class ReplyController {
     @Autowired
     HttpSession session;
 
-    // 1. 단순 댓글 추가 (수의사 답변 등)
-    @PostMapping("add.do")
-    public String addReply(replyVo vo, int b_idx, RedirectAttributes ra) {
+    
+
+    @PostMapping("insert.do")
+    public String addReply(replyVo vo, @RequestParam(name="b_idx") int board_idx, RedirectAttributes ra) {
+        // 1. 세션 확인 (로그인 여부)
         MemberVo user = (MemberVo) session.getAttribute("user");
         if (user == null) {
             ra.addAttribute("reason", "session_timeout");
             return "redirect:../member/login_form.do";
         }
         
-        // 데이터 세팅
+        // 2. 데이터 보정
+        vo.setBoard_idx(board_idx);
         vo.setMem_idx(user.getMem_idx());
+        // 만약 vo에 r_content(댓글내용)가 이미 파라미터로 들어왔다면 준비 끝!
 
-        // DB 저장 로직 (ReplyDao에 맞게 수정 필요)
-      //  replyDao.insert(b_idx, content, user.getMem_idx()); 
+        // 3. DAO 호출 (복잡한 step 계산 없이 바로 insert)
+        replyDao.insert(vo); 
         
-        return "redirect:/board/view.do?b_idx=" + b_idx;
+        // 4. 리다이렉트 (상세페이지로 이동)
+        return "redirect:/board/view.do?b_idx=" + board_idx;
     }
-
+    
     // 2. 댓글 수정
     @PostMapping("update.do")
     public String updateReply(replyVo vo, int b_idx) {
@@ -61,40 +72,46 @@ public class ReplyController {
 
     // 3. 댓글 삭제
     @PostMapping("delete.do")
-    public String deleteReply(int r_idx, int b_idx) {
+    @ResponseBody
+    public Map<String, Boolean> delete(int r_idx) {
         // Dao의 delete 메서드 호출
     	int res = replyDao.delete(r_idx);
-        
-        return "redirect:/board/view.do?b_idx=" + b_idx;
+        // JSONConverter에 의해서 map -> json을 변환되서 반환
+        Map<String, Boolean> map = new HashMap<String, Boolean>();
+    	map.put("result", (res==1)); //{"result" : true }
+    	return map;
     }
 
+ // 답글쓰기
+ 	// f.method = "POST"
+ 	// /board/reply.do?b_idx=23&b_subject=제목&b_content=내용&page=3
     // 4. 계층형 답글쓰기 (기존의 reply.do 로직)
     @PostMapping("reply.do")
     public String reply(BoardVo vo, int page, RedirectAttributes ra) {
-        MemberVo user = (MemberVo) session.getAttribute("user");
-        if (user == null) {
+       
+    	//login 상태유무 체크
+    	MemberVo user = (MemberVo) session.getAttribute("user");
+        
+    	//로그아웃상태면
+    	if (user == null) {
+    		
             ra.addAttribute("reason", "session_timeout");
+            // response.sendRedirect("../member/login_form.do?reason=session_timeout");
             return "redirect:../member/login_form.do";
         }
-
-        // 내용 줄바꿈 & IP 설정
-        vo.setB_content(vo.getB_content().replaceAll("\n", "<br>"));
-        vo.setB_ip(request.getRemoteAddr());
-        vo.setMem_idx(user.getMem_idx());
-        vo.setMem_name(user.getMem_name());
-
-        // 기준글(부모글) 정보 가져오기
-        BoardVo baseVo = boardDao.selectOne(vo.getB_idx());
-        
-        // 계층형 로직: step 증가 및 ref/step/depth 계산
-        boardDao.updateStep(baseVo);
-        vo.setB_ref(baseVo.getB_ref());
-        vo.setB_step(baseVo.getB_step() + 1);
-        vo.setB_depth(baseVo.getB_depth() + 1);
-        
-        boardDao.reply(vo);
-        
-        ra.addAttribute("page", page);
+    	
+    	// 내용 : \n -> <br> 변경
+    	String b_content = vo.getBoard_content().replaceAll("\n","<br>");
+    	vo.setBoard_content(b_content);
+    	
+    	//IP
+    	String board_ip = request.getRemoteAddr();
+    	vo.setBoard_ip(board_ip);
+    	
+    	//회원정보 넣기
+    	vo.setMem_idx(user.getMem_idx());
+    	
+    	ra.addAttribute("page", page);
         return "redirect:/board/list.do";
     }
 }

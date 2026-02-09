@@ -14,4 +14,7 @@ public class BoardTypeVo {
 	String			board_type_name;
 	String			board_can_comment;	// 댓글여부 (y/n)
 	int				board_min_role;		// 쓰기권한. role
+	int 			selectTypeIdxByCode;
+
+
 }

@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.db.dao.BoardDao;
+import com.example.db.vo.BoardTypeVo;
 import com.example.db.vo.BoardVo;
 import com.example.db.vo.MemberVo;
 import com.example.db.vo.replyVo;
@@ -114,7 +115,7 @@ public class CommunityController {
 	// f.method = "POST"
 	// /board/insert.do?b_subject=제목&b_content=내용
 		@PostMapping("insert.do")
-		public String insert(BoardVo vo, RedirectAttributes ra) throws Exception {
+		public String insert(BoardVo vo, RedirectAttributes ra, int board_type_code) throws Exception {
 
 		    // 1. 로그인 상태유무 체크
 		    MemberVo user = (MemberVo) session.getAttribute("user");
@@ -124,16 +125,16 @@ public class CommunityController {
 		    }
 
 		    // 2. IP 및 밴 체크
-		     vo.setB_ip(request.getRemoteAddr());
+		     vo.setBoard_ip(request.getRemoteAddr());
 		     vo.setMem_idx(user.getMem_idx());
 		     
 		    // 줄바꿈 처리 및 타입 인덱스 조회 로직 (기존 유지)
-		    if(vo.getB_content() != null) {
-		    	vo.setB_content(vo.getB_content().replace("/n", "<br>"));
+		    if(vo.getBoard_content() != null) {
+		    	vo.setBoard_content(vo.getBoard_content().replace("/n", "<br>"));
 		    }
 
 
-		    // 3. 파일 업로드 처리 (추가된 부분)
+		    // 3. 파일 업로드 처리 
 		    MultipartFile photo = ((BoardVo) vo).getPhoto(); // BoardVo에 MultipartFile photo 필드 필요
 		    String filename = "no_file";
 
@@ -155,18 +156,21 @@ public class CommunityController {
 		    vo.setFilename(filename);
 
 		    // 4. 내용 줄바꿈 처리
-		    if(vo.getB_content() != null) {
+		    if(vo.getBoard_content() != null) {
 		        // /n이 아니라 \n이 줄바꿈 기호입니다.
-		        vo.setB_content(vo.getB_content().replace("\n", "<br>"));
+		        vo.setBoard_content(vo.getBoard_content().replace("\n", "<br>"));
 		    }
 
 		    // 5. 회원정보 및 게시판 타입 설정
 		    vo.setMem_idx(user.getMem_idx());
 		    
-		    // board_type_code는 파라미터나 상황에 맞게 설정 (예: vo에서 가져오거나 직접 지정)
-		    int board_type_code = vo.getBoard_type(); 
-//		    int board_type_idx = boardDao.selectTypeIdxByCode(board_type_code);
-//		    vo.setBoard_type_idx(board_type_idx);
+		    // vo에 이미 board_type_code(String)가 담겨있다고 가정할 때:
+		    // 1. vo에서 코드명("DOG" 등)을 꺼내서 DAO에게 던져 번호(idx)를 알아옵니다.
+		    BoardVo vo = vo.getBoard_type_code(); 
+		    int typeIdx = boardDao.selectTypeIdxByCode(code); // boardDao를 사용해야 함!
+		 
+		    // 2. 찾아온 번호를 vo의 board_type_idx 필드에 넣습니다.
+		    vo.setBoard_type_idx(typeIdx);
 
 		    // 6. DB insert
 		    int res = boardDao.insert(vo);
@@ -192,30 +196,26 @@ public class CommunityController {
 	}
 	
 	// 내용 : /n -> <br>변경
-	String b_content = vo.getB_content().replaceAll("/n", "<br>");
-	vo.setB_content(b_content);
+	String b_content = vo.getBoard_content().replaceAll("/n", "<br>");
+	vo.setBoard_content(b_content);
 	
 	// IP
 	String b_ip = request.getRemoteAddr();
-	vo.setB_ip(b_ip);
+	vo.setBoard_ip(b_ip);
 	
 	// 회원정보 넣기
 	vo.setMem_idx(user.getMem_idx());
 	vo.setMem_name(user.getMem_name());
 	
 	// 기준글 정보를 구한다
-	BoardVo baseVo = boardDao.selectOne(vo.getB_idx());
+	BoardVo baseVo = boardDao.selectOne(vo.getBoard_idx());
 	
 	//기준글보다 b_step이 큰 게시물의 b_step을 1씩 증가 시켜야 한다
 	int res = boardDao.updateStep(baseVo);
 	
-	// b_ref b_step b_depth 계산 vo에 넣는다
-	vo.setB_ref(baseVo.getB_ref());
-	vo.setB_step(baseVo.getB_step()+1);
-	vo.setB_depth(baseVo.getB_depth()+1);
+
 	
-	// DB reply
-	res = boardDao.reply(vo);
+
 	
 	return "redirect:list.do";
 	}
@@ -226,8 +226,8 @@ public class CommunityController {
 	public String modify(int b_idx, Model model) {
 		BoardVo vo = (BoardVo) boardDao.selectbyMemIdx(b_idx);
 		// 수정을 위해 <br>을 다시 \n으로 변환 (textarea에 보여주기 위함)
-		if (vo.getB_content() != null) {
-			vo.setB_content(vo.getB_content().replaceAll("<br>", "\n"));
+		if (vo.getBoard_content() != null) {
+			vo.setBoard_content(vo.getBoard_content().replaceAll("<br>", "\n"));
 		}
 		model.addAttribute("vo", vo);
 

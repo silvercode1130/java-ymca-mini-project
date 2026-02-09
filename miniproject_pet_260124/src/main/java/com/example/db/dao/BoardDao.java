@@ -19,7 +19,9 @@ public interface BoardDao {
 		int 		  update(BoardVo vo); // 수정하기
 		int 		  softDelete(int board_idx); // 글 삭제(soft delete)
 		int			  updateReadhit(int board_idx); // 조회수 증가
-		int				Board_type_idx( int board_type_idx);
+		int			  Board_type_idx( int board_type_idx);
+		int 		  selectTypeIdxByCode(String board_type_code);
+
 		// 게시판 별 전체글조회(NOTICE, EVENT, LAB, QNA, FREE)
 		
 		List<BoardVo> selectListByTypeCode(String board_type_code);
@@ -36,7 +38,7 @@ public interface BoardDao {
 										  @Param("board_type_code") String board_type_code);
 		int reply(BoardVo vo);
 		int updateStep(BoardVo baseVo);
-		int selectTypeIdxByCode(String board_type_code);
+		
 }
 
 
