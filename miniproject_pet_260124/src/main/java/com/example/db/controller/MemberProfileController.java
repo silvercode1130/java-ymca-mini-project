@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.db.dao.MemberDao;
+import com.example.db.vo.MemberProfileVo;
 import com.example.db.vo.MemberVo;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -19,6 +21,12 @@ public class MemberProfileController {
 	
 	@Autowired
 	MemberDao memberDao;
+	
+	@Autowired
+    HttpServletRequest request;
+    
+    @Autowired
+    HttpSession session;
 	
 	// myInfo.jsp - 회원정보 창 띄우기
 	@RequestMapping("/profile/myInfo.do")
@@ -30,10 +38,39 @@ public class MemberProfileController {
 	
 	// myProfile.jsp - 내 프로필 창 띄우기
 	@RequestMapping("/profile/myProfile.do")
-	public String myProfile() {
-		
-		return "profile/myProfile";
+	public String myProfile(HttpSession session,
+	                        Model model,
+	                        HttpServletRequest request) {
+
+	    MemberVo user = (MemberVo) session.getAttribute("user");
+	    if (user == null) {
+	        return "redirect:/login.do";
+	    }
+
+	    // 프로필 정보 조회 (DAO 메서드 이름은 너 프로젝트에 맞게 변경)
+	    MemberProfileVo profile = memberDao.selectProfileByMemIdx(user.getMem_idx());
+
+	    String contextPath = request.getContextPath();
+	    // 프사 없을 때 기본 이미지 (static/img/noprofile.jpg)
+	    String defaultImg = contextPath + "/img/noprofile.jpg";
+
+	    String profileImgSrc;
+	    if (profile == null || profile.getMem_img() == null || profile.getMem_img().isEmpty()) {
+	        profileImgSrc = defaultImg;
+	    } else {
+	        
+	        profileImgSrc = profile.getMem_img();
+	    }
+
+	    model.addAttribute("user", user);
+	    model.addAttribute("profile", profile);
+	    model.addAttribute("profileImgSrc", profileImgSrc);
+
+	    return "profile/myProfile";
 	}
+
+
+
 	
 	
 //	// myUpdate.jsp - 회원 정보 수정 창 띄우기
@@ -47,7 +84,7 @@ public class MemberProfileController {
 	// 수정 ------------------------------------------------------------------------------------------
 	
 	
-//	// 
+//	// 멤버컨트롤러와 중복?
 //	@RequestMapping("/update/myUpdate.do")
 //	public String myUpdate(MemberVo vo, Model model) {
 //		

@@ -61,7 +61,7 @@
             <!-- 마이페이지 -->
             <button type="button"
                     class="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors"
-                    onclick="location.href='${pageContext.request.contextPath}/mypage/profile';">
+                    onclick="location.href='/mypage';">
               <span class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs">👤</span>
               <span class="font-bold text-sm">마이페이지</span>
             </button>
@@ -71,7 +71,7 @@
             <!-- 장바구니 -->
             <button type="button"
                     class="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors relative"
-                    onclick="location.href='${pageContext.request.contextPath}/cart/list.do';">
+                    onclick="location.href='/cart';">
               <span class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs">🛍</span>
               <span class="font-bold text-sm">장바구니</span>
               <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>

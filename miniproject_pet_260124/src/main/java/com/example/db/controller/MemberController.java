@@ -238,7 +238,7 @@ public class MemberController {
    
    
    // 회원 정보 수정 처리
-   @GetMapping("/update/myUpdate.do")
+   @GetMapping("/update/myUpdate_form.do")
    public String myUpdate(HttpSession session, Model model, String mem_id) {
 
        MemberVo user = null;
@@ -293,7 +293,7 @@ public class MemberController {
        MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
        session.setAttribute("user", updated);
 
-       return "redirect:/profile/myInfo.do";
+       return "redirect:/update/myUpdate_form.do";
    }
    
 //   @PostMapping("/update/myUpdate.do")

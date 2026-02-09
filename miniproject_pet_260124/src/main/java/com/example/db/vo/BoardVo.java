@@ -35,5 +35,4 @@ public class BoardVo {
         // 또는 원하는 패턴으로:
         // return board_regdate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
     }
-	
 }

@@ -5,10 +5,7 @@
 <html lang="ko">
 <head>
     <title>펫온 쇼핑몰 | PetOn Shop</title>
-   	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/global.css">
-
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+   	<%@ include file="/WEB-INF/views/common/head.jsp" %>
 </head>
 <body class="bg-gray-50">
 
@@ -56,14 +53,16 @@
                                 <div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>
                             </button>
                         </li>
+                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">일반</button></li>
                         <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">사료</button></li>
                         <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">간식</button></li>
                         <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">장난감</button></li>
-                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">하우스</button></li>
-                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">방석</button></li>
-                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">야외활동</button></li>
-                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">배변용품</button></li>
                         <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">위생용품</button></li>
+                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">배변용품</button></li>
+                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">의류</button></li>
+                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">방석/쿠션</button></li>
+                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">야외활동</button></li>
+                        <li><button class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">하우스/이동장</button></li>
                     </ul>
 
                     <!-- 사이드바 프로모션 배너 -->

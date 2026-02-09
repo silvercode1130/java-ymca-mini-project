@@ -17,22 +17,27 @@ public class HomeController {
 	
 	@GetMapping("/lab")
 	public String lab() {
-		return "redirect:/lab/list.do";   // /WEB-INF/views/main.jsp
+		return "redirect:/lab/list.do";
 	}
 	
 	@GetMapping("/shop")
 	public String shop() {
-		return "shop/shop_list";   // /WEB-INF/views/main.jsp
+		return "redirect:/item/item_list.do"; 
 	}
 	
 	@GetMapping("/community")
 	public String board() {
-		return "community/community_list";   // /WEB-INF/views/main.jsp
+		return "community/community_list";
 	}
 	
 	@GetMapping("/service")
 	public String service() {
-		return "service/service_list";   // /WEB-INF/views/main.jsp
+		return "service/service_list";
+	}
+	
+	@GetMapping("/mypage")
+	public String mypage() {
+		return "redirect:/profile/myProfile.do";
 	}
 	
 }

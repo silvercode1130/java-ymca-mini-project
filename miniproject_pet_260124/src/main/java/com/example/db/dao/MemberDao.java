@@ -60,4 +60,5 @@ public interface MemberDao {
     // 주소 전체 수정
     int updateAddr(MemberAddrVo vo);
 
+
 }

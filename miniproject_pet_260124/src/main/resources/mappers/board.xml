@@ -196,6 +196,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	WHERE board_idx = #{board_idx}
 </update>
 
+
+
 <!-- 게시판 타입명으로 게시판 코드 구하기 -->
 <select id="selectTypeIdxByCode" parameterType="string" resultType="int">
     SELECT board_type_idx 
