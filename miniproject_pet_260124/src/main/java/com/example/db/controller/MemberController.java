@@ -32,19 +32,36 @@ public class MemberController {
    
    // 회원가입 관련 ------------------------------------------------------------------------------------------
    
+   // 은정 - 이것만 추가 했따!
+   @RequestMapping("/member/signUpForm.do")
+   public String signUpForm(MemberVo vo) {
+	   
+	   return "/member/signUp";
+   }
+   
    // signUp.jsp - 회원가입 폼 띄우기 
    // signUp.jsp - 회원가입 처리 시키기
    // signUp.jsp -> myUpdate.jsp 로 데이터 이동(?)
-   @RequestMapping("/member/signUp.do")
+   @PostMapping("/member/signUp.do")
    public String signUpData(MemberVo vo) {
+	   
+	// 여기서 vo.getMem_id()를 찍어봐서 null이 나오는지 확인해보는 게 좋아.
+	    System.out.println("가입 시도 ID: " + vo.getMem_id());
+		/*
+		 * int result = memberDao.insertMember(vo);
+		 * 
+		 * if(result > 0) { return "redirect:/member/myUpdate.do?mem_id="; // #수정 - 회원가입
+		 * 성공 시 메인 홈(재웅님)으로 이동 } else { return "redirect:/member/signUpForm.do?error=1";
+		 * }
+		 */
+	    
+	    if(vo.getMem_id() == null || vo.getMem_id().isEmpty()) {
+	        return "redirect:/member/signUp.do?error=id_null";
+	    }
 
-       int result = memberDao.insertMember(vo);
-
-       if(result > 0) {
-           return "redirect:/member/myUpdate.do?mem_id=" + vo.getMem_id();   // #수정 - 회원가입 성공 시 메인 홈(재웅님)으로 이동
-       } else {
-           return "redirect:/member/signUpForm.do?error=1";
-       }
+	    memberDao.insertMember(vo);
+	    
+	    return "redirect:/main";
    }
 
    // 동의 관련 ------------------------------------------------------------------------------------------
@@ -213,6 +230,8 @@ public class MemberController {
        String uploadPath = "C:/upload/profile/";
        File folder = new File(uploadPath);
        if (!folder.exists()) folder.mkdirs();
+       
+       MemberProfileVo profile1  = memberDao.selectProfile(vo.getMem_id());
 
        // 2) 파일이 있을 때만 처리
        if (!file.isEmpty()) {
@@ -220,7 +239,7 @@ public class MemberController {
            File saveFile = new File(uploadPath, fileName);
            try {
                file.transferTo(saveFile);
-               profile.setMem_img(fileName);   // DB에는 파일명만 넣기
+               profile1.setMem_img(fileName);   // DB에는 파일명만 넣기
            } catch (Exception e) {
                e.printStackTrace();
            }
@@ -246,7 +265,7 @@ public class MemberController {
 	   
        session.invalidate();   // 전체 세션 제거
        
-       return "redirect:/";     // 메인 홈(재웅님)
+       return "redirect:/main.do";     // 메인 홈(재웅님)
    }
 
    // aJax 관련 ------------------------------------------------------------------------------------------

@@ -27,12 +27,12 @@
 	</form>
 	
 	<!-- #연결 - 메인홈(재웅님)이랑 연결이 안되어 있어서 404 에러 뜸 -->
-	<form action="/logout.do" method="post">
+	<form action="/logout.do" method="post"><!-- Controller 리턴 타입 변경!! -->
 	    <button type="submit">로그아웃</button>
 	</form>
 	
 	<!-- #연결 - 메인홈(재웅님)이랑 연결이 안되어 있어서 404 에러 뜸 -->
-	<form action="/myDelete.do" method="post">
+	<form action="/myDelete.do" method="post"><!-- Controller 리턴 타입 변경!! -->
 	    <button type="submit">탈퇴</button>
 	</form>
 		

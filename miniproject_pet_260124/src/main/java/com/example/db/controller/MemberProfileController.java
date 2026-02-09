@@ -64,7 +64,7 @@ public class MemberProfileController {
 	@PostMapping("/myDelete.do")
 	public String myDelete(HttpSession session) {
 	    session.invalidate();   // 전체 세션 제거
-	    return "redirect:/";     // 메인 홈(재웅님)
+	    return "redirect:/main.do";     // 메인 홈(재웅님)
 	}
 	
 	
