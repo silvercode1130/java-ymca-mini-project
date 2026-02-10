@@ -86,7 +86,7 @@
         <button type="button"
                 onclick="location.href='${pageContext.request.contextPath}/lab/insert_form.do?page=${page}&tag=${tag}'"
                 class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm">
-          ✏ 글쓰기
+          <span class="text-xs">✏️</span> 글쓰기
         </button>
       </div>
     </section>

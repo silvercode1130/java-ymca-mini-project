@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.db.dao.BoardDao;
+import com.example.db.dao.BoardFileDao;
+import com.example.db.vo.BoardFileVo;
 import com.example.db.vo.BoardVo;
 import com.example.db.vo.MemberVo;
 
@@ -24,6 +26,9 @@ public class BoardController {
 	
 	@Autowired
 	BoardDao boardDao;
+	
+	@Autowired
+	BoardFileDao boardFileDao;
 	
 	@Autowired
 	HttpServletRequest request;
@@ -47,11 +52,12 @@ public class BoardController {
 	                         Model model) {
 		
 		List<BoardVo> list = boardDao.selectListByTypeCode("NOTICE");
+		
 		model.addAttribute("list", list);
 		model.addAttribute("b_type", "notice");
 		model.addAttribute("page", page);
 		
-		return "board/notice_list";
+		return "home/notice_list";
 	}
 
 	// 이벤트 조회
@@ -64,12 +70,13 @@ public class BoardController {
 		model.addAttribute("b_type", "event");
 		model.addAttribute("page", page);
 		
-		return "board/event_list";
+		return "home/event_list";
 	}
 
 	// 연구소 내 태그별 조회 (tag 로 DOG/CAT/NONE 필터)
 	@GetMapping("/lab/list.do")
-	public String labList(@RequestParam(defaultValue = "ALL") String tag,
+	public String labList(BoardVo vo,
+						  @RequestParam(defaultValue = "ALL") String tag,
 	                      @RequestParam(defaultValue = "1") int page,
 	                      Model model) {
 		

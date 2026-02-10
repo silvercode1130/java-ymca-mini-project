@@ -27,6 +27,9 @@ public class OrdersController {
     
     @Autowired 
     CartDao cartDao;
+    
+    @Autowired
+    HttpSession session;
 
     // 체크아웃 페이지 (장바구니 -> 주문서)
     @RequestMapping("/orders/orders_checkout.do")
@@ -34,15 +37,15 @@ public class OrdersController {
     	 // 세션에서 user 가져오기 (CartController와 통일)
         MemberVo user = (MemberVo) session.getAttribute("user");
         
-        // 테스트용 더미
-        if (user == null) {
-            user = new MemberVo();
-            user.setMem_idx(1); // DB에 있는 회원번호
-            user.setMem_grade_idx(4); // 더미용 등급 번호 추가!
-            session.setAttribute("user", user);
-        }
+//        // 테스트용 더미
+//        if (user == null) {
+//            user = new MemberVo();
+//            user.setMem_idx(1); // DB에 있는 회원번호
+//            user.setMem_grade_idx(4); // 더미용 등급 번호 추가!
+//            session.setAttribute("user", user);
+//        }
         
-        Integer mem_idx = user.getMem_idx(); // 여기서 mem_idx 뽑아서 사용
+        int mem_idx = user.getMem_idx(); // 여기서 mem_idx 뽑아서 사용
 
         List<CartItemVo> cartList = cartDao.getCartList(mem_idx);
         
@@ -82,7 +85,7 @@ public class OrdersController {
             session.setAttribute("user", user);
         }
         
-        Integer mem_idx = user.getMem_idx();
+        int mem_idx = user.getMem_idx();
         
         // 1. 주문 마스터 생성
         OrdersVo vo = new OrdersVo();

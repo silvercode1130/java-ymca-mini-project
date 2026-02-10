@@ -23,7 +23,11 @@ public class BoardVo {
 	LocalDateTime	board_moddate;
 	String			board_is_deleted;	// 게시글 삭제여부 (y/n)
 	LocalDateTime	board_deldate;		// 삭제일
-
+	
+	// =========== 썸네일 변수 ============
+	
+	String			thumbnailPath;		// 썸네일 경로
+	
 	// =========== 조인 객체 ============
 	MemberVo		writer;				// 조인된 참조테이블을 객체째로 담음
 	BoardTypeVo		boardType;			// vo.getWriter().getMem_id()
