@@ -4,62 +4,192 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.db.dao.MemberDao">
 
-	<!-- 전체조회 -->
-	<select id="selectList" resultType="member">
-		select * from member
+<!-- resultMap 정의 -->
+
+<!-- 전체 회원정보 다 담을 resultMap 필요(로그인, myUpdate 공통) -->
+<resultMap id="memberAllInfoMap" type="member">
+
+     <!-- ===== member ===== -->
+    <id property="mem_idx" column="mem_idx" />
+    <result property="mem_id" column="mem_id" />
+    <result property="mem_pwd" column="mem_pwd" />
+    <result property="mem_name" column="mem_name" />
+    <result property="mem_tel" column="mem_tel" />
+    <result property="mem_email" column="mem_email" />
+    <result property="mem_ip" column="mem_ip" />
+    <result property="mem_role_idx" column="mem_role_idx" />
+    <result property="mem_grade_idx" column="mem_grade_idx" />
+    <result property="mem_bday" column="mem_bday" />
+    <result property="mem_regdate" column="mem_regdate" />
+    <result property="mem_is_deleted" column="mem_is_deleted" />
+    <result property="mem_deldate" column="mem_deldate" />
+
+    <!-- ===== role ===== -->
+    <association property="roleVo" javaType="role">
+        <id property="role_idx" column="mem_role_idx" />
+        <result property="role_name" column="role_name" />
+    </association>
+
+    <!-- ===== grade ===== -->
+    <association property="gradeVo" javaType="grade">
+        <id property="grade_idx" column="mem_grade_idx" />
+        <result property="grade_name" column="grade_name" />
+        <result property="grade_discount_rate" column="grade_discount_rate" />
+    </association>
+
+    <!-- ===== member_profile ===== -->
+    <association property="profile" javaType="member_profile">
+        <id property="mem_idx" column="mem_idx" />
+        <result property="mem_nickname" column="mem_nickname" />
+        <result property="mem_intro" column="mem_intro" />
+        <result property="mem_img" column="mem_img" />
+    </association>
+
+    <!-- ===== member_addr ===== -->
+    <association property="addr" javaType="member_addr">
+        <id property="addr_idx" column="addr_idx" />
+        <result property="mem_idx" column="mem_idx" />
+        <result property="mem_zipcode" column="mem_zipcode" />
+        <result property="mem_addr" column="mem_addr" />
+        <result property="mem_addr_detail" column="mem_addr_detail" />
+    </association>
+    
+</resultMap>
+	
+	
+	<!-- 조인테이블 변수 받아주는 곳이 없고 로그인에 많은 정보를 로딩할 필요 없어요. 정은 수정-->
+	<!-- 로그인 쿼리 : 메인에 표시할 role 까지만 받기 -->
+	<select id="login" parameterType="map" resultMap="memberAllInfoMap">
+		SELECT m.*, r.role_name
+		FROM member m
+		LEFT JOIN role r ON
+		m.mem_role_idx = r.role_idx
+		WHERE m.mem_id = #{mem_id} AND
+		m.mem_is_deleted = 'N'
 	</select>
 
-	<!-- mem_idx 이용해 MemberVo 객체 1개 얻기 -->
-	<select id="selectOneFromIdx" parameterType="int" resultType="member">
-		select * from member where mem_idx=#{ mem_idx }
-	</select>
-
-	<!-- mem_id 이용해 MemberVo 객체 1개 얻기 -->
-
-	<select id="selectOneFromId" parameterType="String" resultType="member">
-		select * from member where mem_id=#{ mem_id }
-	</select>
-
-	<!-- 추가 -->
-	<insert id="insert" parameterType="member">
-		insert into member values(
-			seq_mem_idx.nextVal,
-			#{mem_id} ,
-			#{mem_pwd} ,
-			#{mem_name},
-			#{mem_tel} ,
-			#{mem_email} ,
-			#{mem_ip} ,
-			#{mem_role_idx} ,
-			#{mem_grade_idx} ,
-			#{mem_bday} ,
-			default ,
-			default ,
-			#{mem_deldate}
-		)
+	<!-- 회원가입 -->
+	<insert id="insertMember" parameterType="member">
+	    INSERT INTO member (
+	        mem_idx, mem_id, mem_pwd, mem_name, mem_tel, mem_email,
+	        mem_ip, mem_role_idx, mem_grade_idx, mem_bday, mem_regdate
+	    ) VALUES (
+	        seq_mem_idx.NEXTVAL,
+	        #{mem_id},
+	        #{mem_pwd},
+	        #{mem_name},
+	        #{mem_tel},
+	        #{mem_email},
+	        #{mem_ip},      <!-- mem_ip 없어서 회원가입 오류남. 정은 수정 -->
+	        1,              
+	        1,              
+	        #{mem_bday},	<!-- varchar 아니고 date. MyBatis 알아서 연결하므로 type 설정 x -->
+	        SYSDATE
+	    )
 	</insert>
+
+	<!-- 회원 전체조회 -->
+	<select id="selectList" resultType="member">
+		SELECT * from member
+	</select>
+
+	<!-- 회원번호로 객체 1개 들고오기 / member 만 들고와서 빠름 -->
+	<select id="selectOneFromIdx" parameterType="int"
+		resultType="member">
+		SELECT * from member where mem_idx=#{ mem_idx }
+	</select>
 
 	<!-- 수정 -->
 	<update id="update" parameterType="member">
-		update member set
-			mem_id =#{mem_id},
-			mem_pwd =#{mem_pwd},
-			mem_name =#{mem_name},
-			mem_tel =#{mem_tel},
-			mem_email =#{mem_email},
-			mem_ip =#{mem_ip},
-			mem_role_idx =#{mem_role_idx},
-			mem_grade_idx =#{mem_grade_idx},
-			mem_bday =#{mem_bday},
-			mem_ip =#{mem_ip},
-			mem_role =#{mem_role}
-			where mem_idx=#{mem_idx}
+		UPDATE member SET
+			mem_id = #{mem_id},
+			mem_pwd = #{mem_pwd},
+			mem_name = #{mem_name},
+			mem_tel = #{mem_tel},
+			mem_email = #{mem_email},
+			mem_ip = #{mem_ip},
+			mem_role_idx = #{mem_role_idx},
+			mem_grade_idx = #{mem_grade_idx},
+			mem_bday = #{mem_bday},
+		WHERE mem_idx = #{mem_idx}
 	</update>
+			
+	<!-- 회원탈퇴(soft delete) -->
+	<update id="delete" parameterType="int">
+	    UPDATE member SET
+	    	mem_is_deleted='Y',
+	    	mem_deldate=SYSDATE 
+	    WHERE mem_idx=#{mem_idx}
+	</update>
+	
 
-	<!-- 삭제 -->
-	<delete id="delete" parameterType="int">
-		delete from member where mem_idx=#{ mem_idx }
-	</delete>
+	<!-- ========== 부가정보 ========== -->
+	<!-- 개인 프로필 조회 -->
+	<select id="selectProfileByMemIdx" parameterType="int" resultType="member_profile">
+	    SELECT * FROM member_profile WHERE mem_idx = #{mem_idx}
+	</select>
+	
+	<!-- 아이디로 모든 정보 조회 -->
+	<select id="selectOneFromId" parameterType="String" resultMap="memberAllInfoMap">
+	    SELECT
+	        m.*,
+	        r.role_name,
+	        g.grade_name, g.grade_discount_rate,
+	        mp.mem_nickname, mp.mem_intro, mp.mem_img,
+	        ma.addr_idx, ma.mem_zipcode, ma.mem_addr, ma.mem_addr_detail
+	
+	    FROM member m
+	    LEFT OUTER JOIN role r ON m.mem_role_idx = r.role_idx
+	    LEFT OUTER JOIN grade g ON m.mem_grade_idx = g.grade_idx
+	    LEFT OUTER JOIN member_profile mp ON m.mem_idx = mp.mem_idx
+	    LEFT OUTER JOIN member_addr ma ON m.mem_idx = ma.mem_idx
+	    
+	    WHERE m.mem_id = #{mem_id}
+	      AND (m.mem_is_deleted IS NULL OR m.mem_is_deleted = 'N')
+	</select>
+	
+	<!-- 닉네임 중복 체크 -->
+	<select id="checkNickname" resultType="int">
+	    SELECT COUNT(*) FROM member_profile WHERE mem_nickname = #{mem_nickname}
+	</select>
+	
+	<!-- 디폴트 권한 조회 -->
+	<select id="selectDefaultRole" resultType="role">
+	    SELECT * FROM role WHERE role_idx = 1
+	</select>
+	
+	<!-- 디폴트 등급 조회 -->
+	<select id="selectDefaultGrade" resultType="grade">
+	    SELECT * FROM grade WHERE grade_idx = 1
+	</select>
+	
+	
+	<!-- 프로필 수정 -->
+	<update id="updateProfile" parameterType="member_profile">
+	    UPDATE member_profile SET
+	    	mem_nickname = #{mem_nickname},
+		    mem_intro = #{mem_intro},
+		    mem_img = #{mem_img}
+	    WHERE mem_idx = #{mem_idx}
+	</update>
+	
+	<!-- updateAddrSimple: 이건 무슨 메서드인가요?? -->
+	<update id="updateAddrSimple" parameterType="member_addr">
+	    UPDATE member_addr SET
+	    	mem_addr = #{mem_addr}
+	    WHERE mem_idx = #{mem_idx}
+	</update>
+	
+	<!-- 주소 수정 -->
+	<update id="updateAddr" parameterType="member_addr">
+	    UPDATE member_addr SET
+	    	mem_zipcode = #{mem_zipcode},
+	        mem_addr = #{mem_addr},
+	        mem_addr_detail = #{mem_addr_detail}
+	    WHERE mem_idx = #{mem_idx}
+	</update>
+		
+
 </mapper>
 
 

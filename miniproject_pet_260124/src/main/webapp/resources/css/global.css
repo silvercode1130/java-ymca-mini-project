@@ -18,6 +18,11 @@ body.layout-body {
 }
 .layout-main { flex: 1 0 auto; }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 /* 공통 색상 */
 :root {
   --color-primary: #FFC94A;

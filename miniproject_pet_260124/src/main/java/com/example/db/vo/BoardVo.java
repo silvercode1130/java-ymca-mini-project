@@ -32,12 +32,11 @@ public class BoardVo {
 	String			Filename;
 	int 			board_type_code;
 	
-	}
-	
-	
-		
-
-		
-
-	
-
+	// =========== 날짜 표기 변환용 게터 ============
+    public String getBoardRegdateFormatted() {
+        if (board_regdate == null) return "";
+        return board_regdate.toLocalDate().toString(); // 2026-02-06 이런 형태
+        // 또는 원하는 패턴으로:
+        // return board_regdate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
+    }
+}

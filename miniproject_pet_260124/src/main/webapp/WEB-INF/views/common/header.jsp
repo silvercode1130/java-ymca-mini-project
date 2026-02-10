@@ -1,11 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<header class="site-header">
+<header class="site-header bg-white border-b border-gray-100 shadow-sm">
+
   <div class="header-inner">
 
     <!-- 로고 영역 -->
-    <div class="logo-area" onclick="location.href='${pageContext.request.contextPath}/';" style="cursor:pointer;">
+    <div class="logo-area cursor-pointer" onclick="location.href='${pageContext.request.contextPath}/';">
       <div class="logo-circle">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
              xmlns="http://www.w3.org/2000/svg">
@@ -40,29 +41,61 @@
       </ul>
     </nav>
 
-    <!-- 우측 로그인/회원가입 -->
-    <div class="header-user">
+    <!-- 우측 유저 영역 (Tailwind 스타일 이식) -->
+    <div class="header-user hidden md:flex items-center gap-2">
       <c:choose>
-        <c:when test="${empty sessionScope.loginMember}">
-          <a href="${pageContext.request.contextPath}/member/login" class="btn btn-login">로그인</a>
-          <a href="${pageContext.request.contextPath}/member/join" class="btn btn-join">회원가입</a>
+        <c:when test="${empty sessionScope.user}">
+          <!-- 비로그인: 로그인 / 회원가입 -->
+          <a href="${pageContext.request.contextPath}/member/loginForm.do"
+             class="px-5 py-2 bg-amber-400 text-white font-bold rounded-full hover:bg-amber-500 shadow-md transition-all transform hover:-translate-y-0.5 text-sm">
+            로그인
+          </a>
+          <a href="${pageContext.request.contextPath}/member/signUpForm.do"
+             class="px-5 py-2 border-2 border-amber-400 text-amber-500 font-bold rounded-full hover:bg-amber-50 transition-colors text-sm">
+            회원가입
+          </a>
         </c:when>
         <c:otherwise>
-          <span class="header-welcome">
-            <c:out value="${sessionScope.loginMember.mem_name}" />님
-          </span>
-          <a href="${pageContext.request.contextPath}/member/logout" class="btn btn-logout">로그아웃</a>
+          <!-- 로그인: 마이페이지 / 장바구니 / 로그아웃 -->
+          <div class="flex items-center gap-2">
+            <!-- 마이페이지 -->
+            <button type="button"
+                    class="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors"
+                    onclick="location.href='/mypage';">
+              <span class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs">👤</span>
+              <span class="font-bold text-sm">마이페이지</span>
+            </button>
+
+            <div class="w-px h-4 bg-gray-200"></div>
+
+            <!-- 장바구니 -->
+            <button type="button"
+                    class="flex items-center gap-2 px-3 py-2 text-gray-600 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition-colors relative"
+                    onclick="location.href='/cart';">
+              <span class="w-5 h-5 rounded-full bg-gray-200 flex items-center justify-center text-xs">🛍</span>
+              <span class="font-bold text-sm">장바구니</span>
+              <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+            </button>
+
+            <div class="w-px h-4 bg-gray-200"></div>
+
+            <!-- 로그아웃 -->
+            <a href="${pageContext.request.contextPath}/member/logout.do"
+               class="px-5 py-2 bg-amber-400 text-white font-bold rounded-full hover:bg-amber-500 shadow-md transition-all transform hover:-translate-y-0.5 text-sm">
+              로그아웃
+            </a>
+          </div>
         </c:otherwise>
       </c:choose>
     </div>
 
     <!-- 모바일 토글 -->
-    <button type="button" class="btn-gnb-toggle" id="btnGnbToggle" aria-label="메뉴 열기">
+    <button type="button" class="btn-gnb-toggle md:hidden" id="btnGnbToggle" aria-label="메뉴 열기">
       <span></span><span></span><span></span>
     </button>
   </div>
 
-  <!-- 메가메뉴 영역 -->
+  <!-- 메가메뉴 영역 (기존 구조 유지) -->
   <div class="mega-wrap" id="megaWrap">
     <div class="mega-inner">
       <div class="mega-intro">
@@ -78,11 +111,11 @@
             <span class="mega-item-title">기업소개</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/board?type=NOTICE" class="mega-item">
+          <a href="${pageContext.request.contextPath}/notice/list.do" class="mega-item">
             <span class="mega-item-title">공지사항</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/board?type=EVENT" class="mega-item">
+          <a href="${pageContext.request.contextPath}/event/list.do" class="mega-item">
             <span class="mega-item-title">이벤트</span>
             <span class="mega-item-bar"></span>
           </a>
@@ -90,19 +123,19 @@
 
         <!-- 연구소 -->
         <div class="mega-group" data-menu="lab">
-          <a href="${pageContext.request.contextPath}/lab/recommend" class="mega-item">
+          <a href="${pageContext.request.contextPath}/lab/list.do" class="mega-item">
             <span class="mega-item-title">추천 연구</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/lab/dog" class="mega-item">
+          <a href="${pageContext.request.contextPath}/lab/list.do?tag=DOG" class="mega-item">
             <span class="mega-item-title">강아지 연구소</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/lab/cat" class="mega-item">
+          <a href="${pageContext.request.contextPath}/lab/list.do?tag=CAT" class="mega-item">
             <span class="mega-item-title">고양이 연구소</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/lab/news" class="mega-item">
+          <a href="${pageContext.request.contextPath}/lab/list.do?tag=FREE" class="mega-item">
             <span class="mega-item-title">뉴스</span>
             <span class="mega-item-bar"></span>
           </a>

@@ -5,13 +5,39 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
+	@GetMapping("/")
+    public String root() {
+        return "redirect:/main";
+    }
+	
 	@GetMapping("/main")
     public String main() {
         return "main";   // /WEB-INF/views/main.jsp
     }
 	
-	// 공지사항
-	// 공지사항 세부
-	// 이벤트
-	// 이벤트 세부
+	@GetMapping("/lab")
+	public String lab() {
+		return "redirect:/lab/list.do";
+	}
+	
+	@GetMapping("/shop")
+	public String shop() {
+		return "redirect:/item/item_list.do"; 
+	}
+	
+	@GetMapping("/community")
+	public String board() {
+		return "community/community_list";
+	}
+	
+	@GetMapping("/service")
+	public String service() {
+		return "service/service_list";
+	}
+	
+	@GetMapping("/mypage")
+	public String mypage() {
+		return "redirect:/profile/myProfile.do";
+	}
+	
 }

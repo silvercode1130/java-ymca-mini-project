@@ -283,4 +283,454 @@ INSERT INTO item (
     TO_DATE('2025.02.21','YYYY.MM.DD'), TO_DATE('2026.01.15','YYYY.MM.DD')
 );
 
+-- 2차 추가데이터
+-- 가구 = 1(일반)
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'펫인 애견 울타리 세트 실내용 반려동물 펜스',
+    86800, 86800, 21,
+    1,'DOG','N','펫인',
+    'item_thumbnail/test21.jpg','item_detail/long21.jpg',
+    TO_DATE('2025.05.01','YYYY.MM.DD'),TO_DATE('2026.01.01','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'잉글랜더 오트 강아지집 고양이 숨숨집 겸용 협탁 600*400, 화이트, 1개',
+    59000, 29900, 234,
+    1,'DOG','Y','잉글랜더',
+    'item_thumbnail/test22.jpg','item_detail/long22.jpg',
+    TO_DATE('2025.06.08','YYYY.MM.DD'),TO_DATE('2026.01.06','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'딩동펫 반려동물 모바일 2단 트롤리 행거',
+    28000, 26600, 2,
+    1,'DOG','Y','딩동펫',
+    'item_thumbnail/test23.jpg','item_detail/long23.jpg',
+    TO_DATE('2025.05.13','YYYY.MM.DD'),TO_DATE('2026.01.12','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'친환경 원목 고양이 침대 해먹 강아지침대 + 시트세트',
+    35000, 23400, 63,
+    1,'DOG','Y','와이지글로벌',
+    'item_thumbnail/test24.jpg','item_detail/long24.jpg',
+    TO_DATE('2025.04.09','YYYY.MM.DD'),TO_DATE('2026.01.20','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'미니행거 강아지 옷장',
+    16060, 16060, 12,
+    1,'DOG','N','당감샵',
+    'item_thumbnail/test25.jpg','item_detail/long25.jpg',
+    TO_DATE('2025.02.11','YYYY.MM.DD'),TO_DATE('2026.01.21','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'레이원 강아지 울타리 반려동물 울타리 화장실 분리 울타리',
+    39900, 29900, 13,
+    1,'DOG','Y','레이원무역',
+    'item_thumbnail/test26.jpg','item_detail/long26.jpg',
+    TO_DATE('2025.05.21','YYYY.MM.DD'),TO_DATE('2026.01.13','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'시티캣 친환경 캣휠 원목 저소음 지름 100cm',
+    160550, 158940, 67,
+    1,'CAT','Y','망고',
+    'item_thumbnail/test27.jpg','item_detail/long27.png',
+    TO_DATE('2025.01.12','YYYY.MM.DD'),TO_DATE('2026.01.17','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'코멧 펫 고양이 쇼파 스크래쳐, 타원형, 1개',
+    4990, 4990, 99,
+    1,'CAT','N','코멧',
+    'item_thumbnail/test28.jpg','item_detail/long28.jpg',
+    TO_DATE('2025.03.20','YYYY.MM.DD'),TO_DATE('2026.01.12','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'펫인꼬 대형 캣폴 캣타워',
+    94450, 93500, 75,
+    1,'CAT','Y','펫인',
+    'item_thumbnail/test29.jpg','item_detail/long29.jpg',
+    TO_DATE('2025.11.10','YYYY.MM.DD'),TO_DATE('2026.01.07','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'딩동펫 고양이 스크래쳐 캣타워',
+    109000, 103550, 18,
+    1,'CAT','Y','딩동펫',
+    'item_thumbnail/test30.jpg','item_detail/long30.jpg',
+    TO_DATE('2025.07.15','YYYY.MM.DD'),TO_DATE('2026.01.14','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'북유럽풍 고양이 하우스 침대 협탁 사이드 테이블, 화이트 원목색, 1개',
+    59800, 39800, 99,
+    1,'CAT','Y','BYOU',
+    'item_thumbnail/test31.jpg','item_detail/long31.jpeg',
+    TO_DATE('2025.06.16','YYYY.MM.DD'),TO_DATE('2026.01.18','YYYY.MM.DD')
+);
+
+-- 배변용품 = 6
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'쎄니펫 고양이 강아지 배변 탈취 세정제 암모니아 요산 분해 제거 무향',
+    28800, 17940, 13,
+    6,'DOG','Y','쎄니펫',
+    'item_thumbnail/test32.jpg','item_detail/long32.png',
+    TO_DATE('2025.04.19','YYYY.MM.DD'),TO_DATE('2026.01.15','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'탐사 실속형 배변패드',
+    11990, 11990, 24,
+    6,'DOG','N','탐사',
+    'item_thumbnail/test33.jpg','item_detail/long33.jpg',
+    TO_DATE('2025.12.17','YYYY.MM.DD'),TO_DATE('2026.01.10','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'탐사 강아지 그물망 배변판',
+    10500, 5790, 27,
+    6,'DOG','Y','탐사',
+    'item_thumbnail/test34.jpg','item_detail/long34.jpg',
+    TO_DATE('2025.07.13','YYYY.MM.DD'),TO_DATE('2026.01.02','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'오늘 강아지 반려견 배변패드 20g',
+    26170, 25900, 62,
+    6,'DOG','Y','DOG창고',
+    'item_thumbnail/test35.jpg','item_detail/long35.jpg',
+    TO_DATE('2025.11.02','YYYY.MM.DD'),TO_DATE('2026.01.11','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'어반워키스 반려동물 휴대용 산화생분해 배변봉투, 1개, 324개입',
+    10050, 10050, 75,
+    6,'DOG','N','재주',
+    'item_thumbnail/test36.jpg','item_detail/long36.png',
+    TO_DATE('2025.01.17','YYYY.MM.DD'),TO_DATE('2026.01.09','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'삼육오일 응고형 365샌드 리얼 카사바 고양이 모래',
+    39800, 34900, 99,
+    6,'CAT','Y','유니커머스',
+    'item_thumbnail/test37.jpg','item_detail/long37.jpg',
+    TO_DATE('2025.07.18','YYYY.MM.DD'),TO_DATE('2026.01.16','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'탐사 베이직 대용량 고양이 화장실 + 모래삽 세트',
+    14270, 9990, 12,
+    6,'CAT','Y','탐사',
+    'item_thumbnail/test38.jpg','item_detail/long38.jpg',
+    TO_DATE('2025.02.16','YYYY.MM.DD'),TO_DATE('2026.01.03','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'티유 사막화방지 벌집구조 고양이 화장실 모래매트',
+    14800, 8750, 37,
+    6,'CAT','Y','티유',
+    'item_thumbnail/test39.jpg','item_detail/long39.jpg',
+    TO_DATE('2025.06.05','YYYY.MM.DD'),TO_DATE('2026.01.10','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'삼육오일 고양이 두부모래 2.0',
+    59600, 44500, 19,
+    6,'CAT','Y','유니커머스',
+    'item_thumbnail/test40.jpg','item_detail/long40.jpg',
+    TO_DATE('2025.08.15','YYYY.MM.DD'),TO_DATE('2026.01.17','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'바이엑스 vi-x 펫전용 500ml 고양이 반려동물 배변 냄새 제거 탈취제',
+    15500, 11400, 13,
+    6,'CAT','Y','반다비앤에이치',
+    'item_thumbnail/test41.jpg','item_detail/long41.jpg',
+    TO_DATE('2029.09.03','YYYY.MM.DD'),TO_DATE('2026.01.11','YYYY.MM.DD')
+);
+
+-- 쿠션 = 8
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'미마코 통세탁 사계절 애견 강아지 방석 대형 쿠션',
+    30000, 21600, 99,
+    8,'DOG','Y','온오퍼',
+    'item_thumbnail/test42.jpg','item_detail/long42.png',
+    TO_DATE('2025.12.14','YYYY.MM.DD'),TO_DATE('2026.01.18','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'펫루미 푹신푹신 반려동물 꿀잠 방석',
+    29900, 10900, 48,
+    8,'DOG','Y','아일루미',
+    'item_thumbnail/test43.jpg','item_detail/long43.jpg',
+    TO_DATE('2925.04.06','YYYY.MM.DD'),TO_DATE('2026.01.15','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'코멧 펫 강아지 쿠션',
+    19000, 7700, 78,
+    8,'DOG','Y','코멧',
+    'item_thumbnail/test44.jpg','item_detail/long44.jpg',
+    TO_DATE('2025.06.14','YYYY.MM.DD'),TO_DATE('2026.01.16','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'포미온 반려동물 사계절용 꿀잠유도 펫쿠션',
+    50000, 16100, 23,
+    8,'DOG','Y','포미온',
+    'item_thumbnail/test45.jpg','item_detail/long45.png',
+    TO_DATE('2025.08.04','YYYY.MM.DD'),TO_DATE('2026.01.05','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'K-STORE 포근한 쇼파용 강아지 방석',
+    36900, 21900, 11,
+    8,'DOG','Y','k스토어',
+    'item_thumbnail/test46.jpg','item_detail/long46.jpg',
+    TO_DATE('2025.01.07','YYYY.MM.DD'),TO_DATE('2026.01.09','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'푸푸앤코 대형 쿠션 고양이 침대 강아지 방석',
+    49900, 40000, 12,
+    8,'CAT','Y','제이에이치컴퍼니',
+    'item_thumbnail/test47.jpg','item_detail/long47.png',
+    TO_DATE('2025.09.11','YYYY.MM.DD'),TO_DATE('2026.01.08','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'데코원 원스 극세사 강아지 방석 솜포함',
+    24900, 24900, 95,
+    8,'CAT','N','데코원',
+    'item_thumbnail/test48.jpg','item_detail/long48.jpg',
+    TO_DATE('2025.03.12','YYYY.MM.DD'),TO_DATE('2026.01.04','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'런레이더 반려동물 강아지 마약 방석',
+    22900, 20690, 23,
+    8,'DOG','Y','펫앤마마',
+    'item_thumbnail/test49.jpg','item_detail/long49.png',
+    TO_DATE('2025.01.05','YYYY.MM.DD'),TO_DATE('2026.01.01','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'제이_ 푹신한 강아지방석 고양이방석 애견 쿠션 둥지 집. 2가지 색상',
+    34900, 19900, 87,
+    8,'CAT','Y','제이마켓',
+    'item_thumbnail/test50.jpg','item_detail/long50.jpg',
+    TO_DATE('2025.02.16','YYYY.MM.DD'),TO_DATE('2026.01.12','YYYY.MM.DD')
+);
+
+-- 장난감 = 4
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'해밀펫 블루투스 점핑볼 강아지 움직이는 장난감 노즈워크',
+    45900, 32800, 511,
+    4,'DOG','Y','유라보',
+    'item_thumbnail/test51.jpg','item_detail/long51.png',
+    TO_DATE('2025.07.23','YYYY.MM.DD'),TO_DATE('2026.01.07','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'BEST AWARDS 리스펫 리스펫 강아지 파스텔러버 터그놀이 로프 장난감',
+    8990, 8990, 41,
+    4,'DOG','N','리스펫',
+    'item_thumbnail/test52.jpg','item_detail/long52.jpg',
+    TO_DATE('2025.12.11','YYYY.MM.DD'),TO_DATE('2026.01.06','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'코멧 펫 당근 실타래 장난감',
+    3100, 1300, 990,
+    4,'DOG','Y','코멧',
+    'item_thumbnail/test53.jpg','item_detail/long53.jpg',
+    TO_DATE('2025.11.06','YYYY.MM.DD'),TO_DATE('2026.01.05','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'SC FMCG 강아지터그장난감 반려동물 신문지 장난감',
+    19000, 8800, 1110,
+    4,'DOG','Y','송천에프엠씨지',
+    'item_thumbnail/test54.jpg','item_detail/long54.jpg',
+    TO_DATE('2025.11.17','YYYY.MM.DD'),TO_DATE('2026.01.21','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'딩동펫 반려동물 베프인형장난감 2종 세트',
+    7000, 7000, 3280,
+    4,'DOG','N','딩동펫',
+    'item_thumbnail/test55.jpg','item_detail/long55.jpg',
+    TO_DATE('2025.02.18','YYYY.MM.DD'),TO_DATE('2026.01.02','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'딩동펫 반려동물 크림 실타래 장난감 8종 세트, 블루, 1세트',
+    9800, 9010, 124,
+    4,'DOG','Y','딩동펫',
+    'item_thumbnail/test56.jpg','item_detail/long56.jpg',
+    TO_DATE('2025.03.07','YYYY.MM.DD'),TO_DATE('2026.01.13','YYYY.MM.DD')
+);
+
+INSERT INTO item (
+    item_idx, item_name, item_origin_price, item_now_price, item_stock,
+    item_type_idx, item_for, item_is_sale, item_brand,
+    item_thumbnail_img, item_detail_img, item_regdate, item_moddate
+) VALUES (
+    seq_item_idx.NEXTVAL,'딩동펫 기린실타래인형 애견장난감',
+    4900, 3900, 191,
+    4,'DOG','Y','딩동펫',
+    'item_thumbnail/test57.jpg','item_detail/long57.jpg',
+    TO_DATE('2025.09.25','YYYY.MM.DD'),TO_DATE('2026.01.09','YYYY.MM.DD')
+);
+
+
 */

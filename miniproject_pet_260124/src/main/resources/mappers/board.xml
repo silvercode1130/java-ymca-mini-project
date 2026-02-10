@@ -356,6 +356,14 @@ update board set
 </update>
 
 
+
+<!-- 게시판 타입명으로 게시판 코드 구하기 -->
+<select id="selectTypeIdxByCode" parameterType="string" resultType="int">
+    SELECT board_type_idx 
+    FROM board_type 
+    WHERE UPPER(board_type_code) = UPPER(#{board_type_code})
+</select>
+
 <!-- 게시판 별 조회
 		예) 자유게시판 전체보기 / 공지사항 전체보기 -->
 <select id="selectListByTypeCode" resultMap="boardWithWriterAndTypeMap">
@@ -481,6 +489,7 @@ update board set
         AND b.board_is_deleted = 'N'
 </select>
 >>>>>>> origin/je
+
 
 </mapper>
 

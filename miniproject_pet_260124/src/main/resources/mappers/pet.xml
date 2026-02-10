@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.db.dao.PetDao">
+
+<!-- pet_insert_form.jsp - 동물 등록 -->
+<insert id="insert" parameterType="pet">
+   INSERT INTO pet (
+    pet_idx,
+    mem_idx,
+    pet_name,
+    pet_species,
+    pet_gender,
+    pet_breed,
+    pet_age,
+    pet_bday,
+    is_primary
+) VALUES (
+    seq_pet_idx.nextval,
+    #{mem_idx},
+    #{pet_name},
+    #{pet_species},
+    #{pet_gender},
+    #{pet_breed},
+    #{pet_age},
+    #{pet_bday},
+    #{is_primary}
+)
+</insert>
+
+
+<!-- petProfile.jsp - 유저의 반려동물 조회 -->
+<select id="selectByMemIdx" parameterType="int" resultType="pet">
+    SELECT * FROM pet
+    WHERE mem_idx = #{mem_idx}
+    ORDER BY is_primary DESC, pet_idx ASC
+</select>
+
+  
+<!-- 펫 1마리 조회 -->
+<select id="selectOneByPetIdx"
+        parameterType="int"
+        resultType="pet">
+    SELECT * FROM pet
+    WHERE pet_idx = #{pet_idx}
+</select>
+
+
+<!-- petUpdate.jsp - 펫 정보 수정 -->
+<update id="update" parameterType="pet">
+    UPDATE pet SET
+        pet_name = #{pet_name},
+        pet_species = #{pet_species},
+        pet_gender = #{pet_gender},
+        pet_breed = #{pet_breed},
+        pet_age = #{pet_age},
+        pet_bday = #{pet_bday},
+        is_primary = #{is_primary}
+    WHERE pet_idx = #{pet_idx}
+</update> 
+
+
+<!-- petUpdate.jsp - 펫정보 삭제-->
+<delete id="delete" parameterType="int">
+    DELETE FROM pet
+    WHERE pet_idx = #{pet_idx}
+</delete>
+
+
+<!-- ========== 부가기능 ========== -->
+<!-- 대표동물 설정 시 기존 Y → N 업데이트 -->
+<update id="updatePrimaryPet" parameterType="int">
+    <!-- 1. 기존 대표동물 N으로 -->
+    UPDATE pet SET is_primary = 'N' WHERE mem_idx = (SELECT mem_idx FROM pet WHERE pet_idx = #{pet_idx});
+    
+    <!-- 2. 새 대표동물 Y로 -->
+    UPDATE pet SET is_primary = 'Y' WHERE pet_idx = #{pet_idx}
+</update>
+
+<!-- 대표동물만 조회하기 -->
+<select id="selectPrimaryPet" parameterType="int" resultType="pet">
+    SELECT * FROM pet 
+    WHERE mem_idx = #{mem_idx} AND is_primary = 'Y' 
+    ORDER BY pet_idx DESC 
+    FETCH FIRST 1 ROW ONLY
+</select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

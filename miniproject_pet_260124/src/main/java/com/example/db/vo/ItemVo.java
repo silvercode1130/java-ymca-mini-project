@@ -24,4 +24,6 @@ public class ItemVo {
 	String			item_detail_img;
 	LocalDateTime	item_regdate;
 	LocalDateTime	item_moddate;
+	
+	private ItemTypeVo type;
 }

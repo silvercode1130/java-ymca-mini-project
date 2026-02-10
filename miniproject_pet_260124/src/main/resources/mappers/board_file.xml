@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.db.dao.BoardFileDao">
+
+<!-- 해당 글의 파일 조회 -->
+<select id="selectListByBoardIdx" parameterType="int" resultType="board_file">
+    SELECT
+        file_idx        AS fileidx,
+        board_idx       AS boardidx,
+        file_original_name  AS fileoriginalname,
+        file_saved_name     AS filesavedname,
+        file_path       AS filepath,
+        file_size       AS filesize,
+        file_type       AS filetype,
+        file_regdate    AS fileregdate
+    FROM
+        board_file
+    WHERE
+        board_idx = #{board_idx}
+    ORDER BY
+        file_idx ASC
+</select>
+
+<!-- 첫번째 사진을 썸네일로 -->
+<select id="selectThumbnailByBoardIdx" parameterType="int" resultType="board_file">
+    SELECT
+        file_idx        AS fileidx,
+        board_idx       AS boardidx,
+        file_original_name  AS fileoriginalname,
+        file_saved_name     AS filesavedname,
+        file_path       AS filepath,
+        file_size       AS filesize,
+        file_type       AS filetype,
+        file_regdate    AS fileregdate
+    FROM
+        board_file
+    WHERE
+        board_idx = #{board_idx}
+    ORDER BY
+        file_idx ASC
+    FETCH FIRST 1 ROWS ONLY
+</select>
+
+
+
+</mapper>
