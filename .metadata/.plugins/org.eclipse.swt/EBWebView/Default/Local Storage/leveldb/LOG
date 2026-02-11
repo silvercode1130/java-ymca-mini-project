@@ -1,3 +1,2 @@
-2026/01/29-16:11:36.118 34a8 Reusing MANIFEST C:\git\java-ymca-mini-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
-2026/01/29-16:11:36.133 34a8 Recovering log #3
-2026/01/29-16:11:36.135 34a8 Reusing old log C:\git\java-ymca-mini-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/000003.log 
+2026/02/11-16:37:43.844 6d90 Creating DB C:\git\java-ymca-mini-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb since it was missing.
+2026/02/11-16:37:43.867 6d90 Reusing MANIFEST C:\git\java-ymca-mini-project\.metadata\.plugins\org.eclipse.swt\EBWebView\Default\Local Storage\leveldb/MANIFEST-000001
