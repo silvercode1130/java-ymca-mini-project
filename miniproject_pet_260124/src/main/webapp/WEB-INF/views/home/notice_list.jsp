@@ -79,7 +79,7 @@
 
             <button
                 type="button"
-                onclick="location.href='${pageContext.request.contextPath}/notice/insert_form.do?page=${page}&tag=${tag}'"
+                onclick="location.href='${pageContext.request.contextPath}/notice/insert_form.do?page=${page}'"
                 class="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm"
             >
                 <span class="text-xs">✏️</span> 글쓰기
@@ -101,11 +101,11 @@
 
         <!-- 본문 리스트 -->
         <c:forEach var="b" items="${list}">
+         <a href="${pageContext.request.contextPath}/notice/view.do?board_idx=${b.board_idx}&page=${page}">
+         
             <div
                 class="grid grid-cols-12 gap-4 items-center px-4 py-4 border-b border-gray-100
-                       cursor-pointer hover:bg-gray-50 text-sm"
-                onclick="location.href='../view.do?board_idx=${b.board_idx}'"
-            >
+                       cursor-pointer hover:bg-gray-50 text-sm">
                 <!-- 번호 -->
                 <div class="col-span-2 md:col-span-1 text-xs md:text-sm text-gray-400 text-center">
                     ${b.board_idx}
@@ -153,9 +153,10 @@
 
                 <!-- 등록일 -->
                 <div class="col-span-2 md:col-span-1 text-right md:text-center text-gray-400 text-xs md:text-sm">
-                    ${b.board_regdate}
+                    ${b.boardRegdateFormatted}
                 </div>
             </div>
+            </a>
         </c:forEach>
 
         <c:if test="${empty list}">
@@ -178,5 +179,6 @@
 </div>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>
 </html>

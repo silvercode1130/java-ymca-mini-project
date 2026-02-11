@@ -53,34 +53,28 @@
                 <c:set var="status" value="end" />
             </c:if>
 
-            <div 
-                class="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all"
-                onclick="location.href='../view.do?board_idx=${b.board_idx}'"
-            >
-                <!-- 이미지 영역: 지금은 DB에 썸네일이 없으니, 태그/색으로만 처리 -->
+            <!-- 카드 전체를 링크로 감싸기 -->
+            <a href="${pageContext.request.contextPath}/event/view.do?board_idx=${b.board_idx}&page=${page}&tag=${tag}"
+               class="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all block">
+                
+                <!-- 이미지 영역 -->
                 <div class="relative aspect-video bg-gray-100 overflow-hidden">
-                    <!-- 나중에 썸네일 컬럼 생기면 여기 img 태그 하나로 교체 가능 -->
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <div class="px-4 text-center">
-                            <div class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold mb-3
-                                <c:choose>
-                                    <c:when test='${b.board_tag == "DOG"}'>bg-amber-100 text-amber-700</c:when>
-                                    <c:when test='${b.board_tag == "CAT"}'>bg-blue-100 text-blue-700</c:when>
-                                    <c:when test='${b.board_tag == "NONE"}'>bg-gray-100 text-gray-600</c:when>
-                                    <c:otherwise>bg-gray-100 text-gray-600</c:otherwise>
-                                </c:choose>">
-                                <c:choose>
-                                    <c:when test="${b.board_tag == 'DOG'}">강아지 이벤트</c:when>
-                                    <c:when test="${b.board_tag == 'CAT'}">고양이 이벤트</c:when>
-                                    <c:when test="${b.board_tag == 'NONE'}">공통 이벤트</c:when>
-                                    <c:otherwise>이벤트</c:otherwise>
-                                </c:choose>
-                            </div>
-                            <div class="text-xs text-gray-400">
-                                조회수 ${b.board_readhit}
-                            </div>
-                        </div>
-                    </div>
+                    <!-- 썸네일: 없으면 noimage -->
+                    <c:choose>
+                        <c:when test="${empty b.thumbnailPath}">
+                            <img 
+                                src="${pageContext.request.contextPath}/img/noimage.png"
+                                alt="이벤트 썸네일 없음"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        </c:when>
+                        <c:otherwise>
+                            <img 
+                                src="${b.thumbnailPath}"
+                                alt="${b.board_title}"
+                                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105
+                                       <c:out value='${status == "end" ? "grayscale opacity-70" : ""}'/>" />
+                        </c:otherwise>
+                    </c:choose>
 
                     <!-- 종료 상태 오버레이 -->
                     <c:if test="${status == 'end'}">
@@ -104,6 +98,7 @@
                     <h3 class="font-bold text-lg text-gray-900 mb-3 group-hover:text-amber-500 transition-colors line-clamp-2">
                         ${b.board_title}
                     </h3>
+
                     <div class="flex items-center justify-between text-xs text-gray-400 mb-1">
                         <span>
                             <c:choose>
@@ -113,15 +108,10 @@
                                 <c:otherwise>-</c:otherwise>
                             </c:choose>
                         </span>
-                        <span>${b.board_regdate}</span>
-                    </div>
-                    <!-- React 코드의 period 대신, 지금은 등록일을 간단히 보여줌 -->
-                    <div class="flex items-center gap-2 text-gray-500 text-sm mt-1">
-                        <span class="text-xs">📅</span>
-                        <span>이벤트 등록일 ${b.board_regdate}</span>
+                        <span>${b.boardRegdateFormatted}</span>
                     </div>
                 </div>
-            </div>
+            </a>
         </c:forEach>
 
         <c:if test="${empty list}">
@@ -131,8 +121,10 @@
         </c:if>
     </div>
 
+
 </div>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>
 </html>

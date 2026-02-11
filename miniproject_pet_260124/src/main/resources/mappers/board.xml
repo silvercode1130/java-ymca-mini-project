@@ -145,6 +145,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <!-- 글쓰기 -->
 <insert id="insert" parameterType="board">
+
+	<selectKey keyProperty="board_idx" resultType="int" order="BEFORE">
+		SELECT seq_board_idx.NEXTVAL
+		FROM dual
+	</selectKey>
+	
     INSERT INTO board (
         board_idx,
         mem_idx,
@@ -156,7 +162,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         board_type_idx,
         board_regdate
     ) VALUES (
-        seq_board_idx.NEXTVAL,
+        #{board_idx},
         #{mem_idx},
         #{board_title},
         #{board_content},

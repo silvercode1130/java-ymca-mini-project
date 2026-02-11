@@ -1,5 +1,6 @@
 package com.example.db.controller;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.db.dao.BoardDao;
@@ -157,7 +159,7 @@ public class BoardController {
 		model.addAttribute("tag", tag);
 		
 		return "community/board_insert_form";
-	}
+	} 
 	
 	// ===== 글쓰기 =====
 	@PostMapping("/{b_type}/insert.do")
@@ -165,6 +167,7 @@ public class BoardController {
 	                     @RequestParam(defaultValue = "1") int page,
 	                     @RequestParam(required = false, defaultValue = "ALL") String tag,
 	                     BoardVo vo,
+	                     @RequestParam(name = "thumbnail", required = false) MultipartFile thumbnail,
 	                     RedirectAttributes ra) {
 
 		// 1) 로그인 체크
@@ -193,7 +196,62 @@ public class BoardController {
 
 		// 7) insert
 		int res = boardDao.insert(vo);
+		
+		// 8) 썸네일 업로드 처리 (0개 또는 1개)
+		if (thumbnail != null && !thumbnail.isEmpty()) {
 
+		    // 저장 경로: 프로젝트 루트 기준 폴더
+		    String projectPath = System.getProperty("user.dir");
+		    String uploadPath = projectPath + "/src/main/resources/static/img/board_file/";
+
+		    File uploadDir = new File(uploadPath);
+		    if (!uploadDir.exists()) {
+		        uploadDir.mkdirs();
+		    }
+
+		    // 파일 정보
+		    String originalName = thumbnail.getOriginalFilename();
+		    long size = thumbnail.getSize();
+		    String contentType = thumbnail.getContentType();   // image/jpeg 등
+
+		    // 확장자 분리
+		    String ext = "";
+		    int dotIdx = originalName.lastIndexOf(".");
+		    if (dotIdx != -1) {
+		        ext = originalName.substring(dotIdx);          // ".jpg" 같은 문자열
+		    }
+
+		    // 시퀀스로 file_idx 뽑기(서버에 저장될 이름용)
+		    int fileIdx = boardFileDao.selectNextFileIdx();
+
+		    // 저장용 이름: fileIdx + 확장자
+		    String savedName = fileIdx + ext;                  // 예: "15.jpg"
+
+		    // 실제 파일 저장
+		    File dest = new File(uploadPath, savedName);
+		    try {
+		        thumbnail.transferTo(dest);                    // 디스크에 저장
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		        // 여기서 실패 처리 정책은 나중에 결정 (지금은 로그만)
+		    }
+		    
+		    System.out.println(vo.getBoard_idx());
+		    
+		    // board_file 행 생성
+		    BoardFileVo fileVo = new BoardFileVo();
+		    fileVo.setFile_idx(fileIdx);                 	   // VO가 int라 캐스팅
+		    fileVo.setBoard_idx(vo.getBoard_idx());            // boardDao.insert 후 PK 들어가 있어야 함
+		    fileVo.setFile_original_name(originalName);
+		    fileVo.setFile_saved_name(savedName);
+		    fileVo.setFile_path("/img/board_file/" + savedName);
+		    fileVo.setFile_size((int) size);
+		    fileVo.setFile_type(contentType);
+		    vo.setThumbnailPath(fileVo.getFile_path());
+
+		    boardFileDao.insert(fileVo);
+		}
+		
 		// 페이지/태그 복귀
 		ra.addAttribute("page", page);
 		ra.addAttribute("tag", tag);

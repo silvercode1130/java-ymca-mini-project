@@ -139,33 +139,44 @@
           <a href="${pageContext.request.contextPath}/lab/view.do?board_idx=${vo.board_idx}&page=${page}&tag=${tag}"
              class="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all group cursor-pointer">
             <article>
-              <!-- 썸네일 -->
-              <div class="h-48 bg-gray-100 relative overflow-hidden">
-                  <img
-					    src="${pageContext.request.contextPath}/img/noimage.png"
-					    alt="${vo.board_title}"
-					    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-					  />
-                <div class="absolute top-4 left-4">
-                  <c:choose>
-                    <c:when test="${vo.board_tag == 'DOG'}">
-                      <span class="bg-white/90 backdrop-blur-sm text-blue-600 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
-                        🐶 DOG
-                      </span>
-                    </c:when>
-                    <c:when test="${vo.board_tag == 'CAT'}">
-                      <span class="bg-white/90 backdrop-blur-sm text-pink-500 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
-                        🐱 CAT
-                      </span>
-                    </c:when>
-                    <c:otherwise>
-                      <span class="bg-white/90 backdrop-blur-sm text-gray-600 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
-                        📌 ETC
-                      </span>
-                    </c:otherwise>
-                  </c:choose>
-                </div>
-              </div>
+              <!-- 썸네일: 없으면 noimage -->
+			<div class="h-48 bg-gray-100 relative overflow-hidden">
+			  <c:choose>
+			    <c:when test="${empty vo.thumbnailPath}">
+			      <img
+			        src="${pageContext.request.contextPath}/img/noimage.png"
+			        alt="${vo.board_title}"
+			        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+			    </c:when>
+			    <c:otherwise>
+			      <img
+			        src="${vo.thumbnailPath}"
+			        alt="${vo.board_title}"
+			        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+			    </c:otherwise>
+			  </c:choose>
+			
+			  <div class="absolute top-4 left-4">
+			    <c:choose>
+			      <c:when test="${vo.board_tag == 'DOG'}">
+			        <span class="bg-white/90 backdrop-blur-sm text-blue-600 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
+			          🐶 DOG
+			        </span>
+			      </c:when>
+			      <c:when test="${vo.board_tag == 'CAT'}">
+			        <span class="bg-white/90 backdrop-blur-sm text-pink-500 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
+			          🐱 CAT
+			        </span>
+			      </c:when>
+			      <c:otherwise>
+			        <span class="bg-white/90 backdrop-blur-sm text-gray-600 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
+			          📌 ETC
+			        </span>
+			      </c:otherwise>
+			    </c:choose>
+			  </div>
+			</div>
+
 
               <!-- 카드 본문 -->
               <div class="p-6">

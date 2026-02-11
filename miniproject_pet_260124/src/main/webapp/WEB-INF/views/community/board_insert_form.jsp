@@ -106,26 +106,28 @@
                              placeholder:text-gray-400"></textarea>
           </div>
 
-          <!-- 첨부파일 -->
-          <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2">
-              첨부파일
-            </label>
-            <label class="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200
-                          text-gray-600 font-bold hover:bg-gray-50 transition-colors cursor-pointer">
-              📎
-              <span>파일 첨부</span>
-              <input type="file"
-                     name="files"
-                     id="files"
-                     multiple
-                     class="hidden"
-                     onchange="handleFileList(this);" />
-            </label>
+          <!-- 썸네일 -->
+			<div>
+			  <label class="block text-sm font-bold text-gray-700 mb-2">
+			    썸네일
+			  </label>
+			
+			  <label class="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200
+			                text-gray-600 font-bold hover:bg-gray-50 transition-colors cursor-pointer">
+			    📎
+			    <span>썸네일 선택</span>
+			    <input type="file"
+			           name="thumbnail"
+			           id="thumbnail"
+			           accept="image/*"
+			           class="hidden"
+			           onchange="handleThumbnailPreview(this)">
+			  </label>
+			
+			  <div id="thumbnailPreview" class="mt-4"></div>
+			</div>
+			
 
-            <div id="fileList" class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-          </div>
-        </div>
 
         <!-- 버튼 영역 -->
         <div class="flex justify-end items-center gap-3 mt-10 pt-6 border-t border-gray-100">
@@ -152,6 +154,7 @@
 </main>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 
 <script>
   // 태그 선택
