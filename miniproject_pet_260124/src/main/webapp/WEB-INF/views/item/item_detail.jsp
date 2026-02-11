@@ -8,7 +8,7 @@
 <script>
 	function addToCart(idx) {
 	    if(!idx) {
-	        alert("상품 번호를 찾을 수 없뎡! ㅠㅠ");
+	        alert("상품 번호를 찾을 수 없습니다!");
 	        return;
 	    }
 	    location.href = "/cart/add/" + idx;

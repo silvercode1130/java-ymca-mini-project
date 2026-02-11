@@ -55,7 +55,7 @@ public class CartController {
 	@RequestMapping("/cart/add/{item_idx}")
 	// @PathVariable : 주소창에 붙어온 번호({item_idx})를 받아서 자바 변수로 만듬
     public String addToCart(@PathVariable("item_idx") int item_idx, HttpSession session) {
-		// [추가] 로그인이 안 되어 있어도 1번 회원이 담는 것으로 처리
+		// 로그인이 안 되어 있어도 1번 회원이 담는 것으로 처리
 	    if (session.getAttribute("user") == null) {
 	        MemberVo dummy = new MemberVo();
 	        dummy.setMem_idx(1); 
@@ -71,11 +71,10 @@ public class CartController {
         }
         
         int mem_idx = user.getMem_idx();
-        // 3. 이 회원의 장바구니(cart_idx)가 DB에 있는지 확인해보기
-        // (cartDao에 getCartIdxByMemIdx 메서드가 있다고 가정할게!)
+        // 이 회원의 장바구니(cart_idx)가 DB에 있는지 확인해보기
         Integer cartIdx = cartDao.getCartIdxByMemIdx(mem_idx);
         
-        // 4. 만약 없다면(null이라면)? 장바구니 방을 먼저 만들어주기!
+        // 만약 없다면(null이라면)? 장바구니 방을 먼저 만들어주기
         if (cartIdx == null) {
             cartDao.createCart(mem_idx); 
         }
