@@ -32,6 +32,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT * FROM item ORDER BY item_idx DESC  <!-- item이라는 테이블을 내림차순(최신순)으로 조회 -->
     </select>
     
+    <select id="getItemListWithFilter" resultMap="ItemFullMap" parameterType="map">
+	    SELECT * FROM item
+	    <where>
+	        <if test="item_for != null and item_for != ''">
+	            AND LOWER(item_for) = LOWER(#{item_for})
+	        </if>
+	        
+	        <if test="type_idx != null">
+	            AND item_type_idx = #{type_idx}
+	        </if>
+	        
+	        <if test="searchKeyword != null and searchKeyword != ''">
+	            AND item_name LIKE '%' || #{searchKeyword} || '%'
+	        </if>
+	    </where>
+	    ORDER BY item_idx DESC
+	</select>
+    
     <!-- #{} -> 자바에서 받은 값을 sql에서 안전하게 사용할 수 있도록 도와줌(파라미터 바인딩이라고 함) -->
     <select id="getItemDetail" resultMap="ItemFullMap">
     	SELECT * FROM item WHERE item_idx = #{item_idx}  <!-- item이라는 테이블에서 요청받은 idx만 조회 -->
@@ -55,6 +73,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 															    WHERE i.item_type_idx = #{type_idx}  ORDER BY i.item_idx DESC
 	    <!-- item이라는 테이블에서 요청받은 값이 포함된 category를 앞, 뒤, 중간 공백(탭, 스페이스, 줄바꿈 등)을 제거 후 내림차순(최신순)으로 모두 조회-->
 	</select>
+	
+	<insert id="insertItem" parameterType="com.example.db.vo.ItemVo">
+	    INSERT INTO item (
+	        item_idx,
+	        item_name,
+	        item_origin_price,
+	        item_now_price,
+	        item_stock,
+	        item_type_idx,
+	        item_for,
+	        item_is_sale,
+	        item_brand,
+	        item_thumbnail_img,
+	        item_detail_img,
+	        item_regdate
+	    ) VALUES (
+	        seq_item_idx.NEXTVAL,
+	        #{item_name},
+	        #{item_origin_price},
+	        #{item_now_price},
+	        #{item_stock},
+	        #{item_type_idx},
+	        #{item_for},
+	        #{item_is_sale},
+	        #{item_brand},
+	        #{item_thumbnail_img},
+	        #{item_detail_img},
+	        SYSDATE
+	    )
+	</insert>
 </mapper>
 
 

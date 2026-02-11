@@ -27,9 +27,6 @@ public class OrdersController {
     
     @Autowired 
     CartDao cartDao;
-    
-    @Autowired
-    HttpSession session;
 
     // 체크아웃 페이지 (장바구니 -> 주문서)
     @RequestMapping("/orders/orders_checkout.do")
@@ -37,15 +34,15 @@ public class OrdersController {
     	 // 세션에서 user 가져오기 (CartController와 통일)
         MemberVo user = (MemberVo) session.getAttribute("user");
         
-//        // 테스트용 더미
+        // 테스트용 더미
 //        if (user == null) {
 //            user = new MemberVo();
 //            user.setMem_idx(1); // DB에 있는 회원번호
-//            user.setMem_grade_idx(4); // 더미용 등급 번호 추가!
+//            user.setMem_grade_idx(4); // 더미용 등급 번호 추가
 //            session.setAttribute("user", user);
 //        }
         
-        int mem_idx = user.getMem_idx(); // 여기서 mem_idx 뽑아서 사용
+        Integer mem_idx = user.getMem_idx(); // 여기서 mem_idx 뽑아서 사용
 
         List<CartItemVo> cartList = cartDao.getCartList(mem_idx);
         
@@ -54,11 +51,10 @@ public class OrdersController {
             total += c.getItem().getItem_now_price() * c.getCart_item_quantity();
         }
         
-        // 2. [추가] 등급 할인 정보 가져오기
-        // (ordersDao나 memberDao에 등급 정보를 가져오는 메서드가 있어야 해뎡!)
+        // 등급 할인 정보 가져오기
         GradeVo grade = ordersDao.getGradeInfo(user.getMem_grade_idx());
         
-        // 3. [추가] 할인 금액 및 최종 금액 계산
+        // 할인 금액 및 최종 금액 계산
         // 할인액 = 원금 * 할인율 (예: 10000 * 0.05 = 500)
         double discountRate = grade.getGrade_discount_rate().doubleValue(); 
         int discountAmount = (int)(total * discountRate);
@@ -85,21 +81,21 @@ public class OrdersController {
             session.setAttribute("user", user);
         }
         
-        int mem_idx = user.getMem_idx();
+        Integer mem_idx = user.getMem_idx();
         
-        // 1. 주문 마스터 생성
+        // 주문 마스터 생성
         OrdersVo vo = new OrdersVo();
         vo.setMem_idx(mem_idx);
         vo.setOrders_total_price(total_price);
         
-        // [중요] BigDecimal 타입으로 등급 할인액 세팅!
+        // BigDecimal 타입으로 등급 할인액 세팅
         vo.setOrders_grade_discount(java.math.BigDecimal.valueOf(grade_discount));
         vo.setOrders_status_idx(1); // 결제대기 상태
 
         ordersDao.createOrders(vo); // 여기서 orders_idx가 채워짐
         int orders_idx = vo.getOrders_idx();
         
-        // 2. 장바구니 아이템들을 주문 상세로 이동
+        // 장바구니 아이템들을 주문 상세로 이동
         List<CartItemVo> cartList = cartDao.getCartList(mem_idx);
         for (CartItemVo cart : cartList) {
             OrdersItemVo item = new OrdersItemVo();
@@ -122,11 +118,11 @@ public class OrdersController {
     public String getOrdersList(Model model, HttpSession session, @RequestParam(value="searchKeyword", required=false) String searchKeyword) {
     	MemberVo user = (MemberVo) session.getAttribute("user");
     	
-    	// 2. [순서 변경] 더미 데이터 체크를 맨 위로!
+    	// 더미 데이터 체크를 맨 위로
         if(user == null) {
             user = new MemberVo();
             user.setMem_idx(1); // 테스트용 1번 회원
-            user.setMem_grade_idx(4); // 등급도 4번으로!
+            user.setMem_grade_idx(4); // 등급도 4번
             session.setAttribute("user", user);
         }
     	
@@ -153,7 +149,7 @@ public class OrdersController {
     // 주문 취소
     @RequestMapping("/orders/cancel/{orders_idx}")
     public String cancelOrder(@PathVariable("orders_idx") int orders_idx, HttpSession session) {
-    	// 취소할 때도 혹시 세션 끊길지 모르니까 더미 체크!
+    	// 취소할 때도 혹시 세션 끊길지 모르니까 더미 체크
         MemberVo user = (MemberVo) session.getAttribute("user");
         if(user == null) {
             user = new MemberVo();
@@ -168,7 +164,7 @@ public class OrdersController {
         return "redirect:/orders/list";
     }
     
-    // 결제 처리 (상태 변경만!)
+    // 결제 처리 
     @RequestMapping("/orders/pay/{orders_idx}")
     public String payOrder(@PathVariable("orders_idx") int orders_idx) {
         

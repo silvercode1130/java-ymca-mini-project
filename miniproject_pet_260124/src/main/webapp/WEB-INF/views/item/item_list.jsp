@@ -1,21 +1,48 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib prefix="c"    uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-    <title>펫온 쇼핑몰 | PetOn Shop</title>
-    <%@ include file="/WEB-INF/views/common/head.jsp" %>
-    <script>
-        // 기존 기능: 장바구니 담기
-        function addToCart(idx) {
-            alert('장바구니에 담겼습니다! 확인하러 갈게요! ><');
-            location.href = "/cart/add/" + idx;
-        }
-    </script>
+<meta charset="UTF-8">
+<title>반려동물 쇼핑몰 - 상품 목록</title>
+<%@ include file="/WEB-INF/views/common/head.jsp" %>
+<script>
+	function addToCart(idx) {
+	    alert('장바구니에 담겼습니다! 확인하러 갈게요! ><');
+	    location.href = "/cart/add/" + idx;
+	}
+</script>
+<style>
+	.item-container { 
+		display: flex; 
+		flex-wrap: wrap; 
+		gap: 20px; 
+		padding: 20px; 
+	}
+	.item-card { 
+		border: 1px solid #ddd; 
+		padding: 15px; 
+		width: 200px; 
+		border-radius: 10px; 
+		text-align: center; 
+	}
+	.item-card img { 
+		width: 100%; 
+		height: 150px; 
+		object-fit: cover; 
+		border-radius: 5px; 
+	}
+	/* 검색창 위치 잡기용 스타일 */
+	.header-section { 
+		display: flex; 
+		justify-content: space-between; 
+		align-items: center; 
+		padding: 0 20px; 
+	}
+</style>
 </head>
-<body class="bg-gray-50">
+<body>
 
 <%@ include file="/WEB-INF/views/common/header.jsp" %>
 
@@ -33,12 +60,16 @@
         <div class="flex bg-gray-100 p-1.5 rounded-full">
             <button 
                 type="button"
-                class="flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all bg-white text-blue-600 shadow-sm">
+                onclick="location.href='/item/search.do?item_for=dog&type_idx=${curType}'"
+                class="flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all
+                			${curFor == 'dog' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-400'}">
                 🐶 강아지
             </button>
             <button 
                 type="button"
-                class="flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all text-gray-400 hover:text-gray-600">
+                onclick="location.href='/item/search.do?item_for=cat&type_idx=${curType}'"
+                class="flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all
+                			${curFor == 'cat' ? 'bg-white text-pink-600 shadow-sm' : 'text-gray-400'}">
                 🐱 고양이
             </button>
         </div>
@@ -61,36 +92,79 @@
                             <div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>
                         </a>
                     </li>
-                    <li><a href="/item/item_list.do?type_idx=1" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">일반</a></li>
-                    <li><a href="/item/item_list.do?type_idx=2" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">사료</a></li>
-                    <li><a href="/item/item_list.do?type_idx=3" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">간식</a></li>
-                    <li><a href="/item/item_list.do?type_idx=4" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">장난감</a></li>
-                    <li><a href="/item/item_list.do?type_idx=5" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">위생용품</a></li>
-                    <li><a href="/item/item_list.do?type_idx=6" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">배변용품</a></li>
-                    <li><a href="/item/item_list.do?type_idx=7" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">의류</a></li>
-                    <li><a href="/item/item_list.do?type_idx=8" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">방석/쿠션</a></li>
-                    <li><a href="/item/item_list.do?type_idx=9" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">야외활동</a></li>
-                    <li><a href="/item/item_list.do?type_idx=10" class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50">하우스/이동장</a></li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=1" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 1 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		일반
+                    	</a>
+                    </li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=2" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 2 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		사료
+                    	</a>
+                    </li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=3" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 3 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		간식
+                    	</a>
+                    </li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=4" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 4 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		장난감
+                    	</a>
+                    </li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=5" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 5 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		위생용품
+                    	</a>
+                    </li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=6" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 6 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		배변용품
+                    	</a>
+                    </li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=7" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 7 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		의류
+                    	</a>
+                    </li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=8" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 8 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		방석/쿠션
+                    	</a>
+                    </li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=9" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 9 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		야외활동
+                    	</a>
+                    </li>
+                    <li>
+                    	<a href="/item/search.do?item_for=${curFor}&type_idx=10" 
+                    		class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors text-gray-600 hover:bg-gray-50
+                    					${curType == 10 ? 'bg-amber-50 text-amber-600' : ''}">
+                    		하우스/이동장
+                    	</a>
+                    </li>
                 </ul>
 
-                <!-- 검색폼: 기존 기능 그대로 -->
-                <form action="/item/item_list.do" method="get" class="space-y-3">
-                    <label class="block text-sm font-semibold text-gray-700">상품 검색</label>
-                    <div class="flex gap-2">
-                        <input
-                            type="text"
-                            name="searchKeyword"
-                            value="${param.searchKeyword}"
-                            placeholder="검색어를 입력하세요!"
-                            class="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400"
-                        />
-                        <button
-                            type="submit"
-                            class="px-4 py-2 text-sm font-bold rounded-xl bg-amber-400 text-white hover:bg-amber-500">
-                            검색
-                        </button>
-                    </div>
-                </form>
+                
 
                 <!-- 사이드바 프로모션 배너 (UI만) -->
                 <div class="mt-8 bg-gradient-to-br from-amber-400 to-orange-400 rounded-xl p-6 text-white text-center">
@@ -107,22 +181,50 @@
         <section class="flex-1">
             <!-- 정렬/카운트 (기능은 안 건드리고, 숫자는 일단 itemList length로 표시해도 됨) -->
             <div class="flex justify-between items-center mb-6">
-                <span class="text-gray-500 font-bold text-sm">
-                    총 
-                    <span class="text-gray-900">
-                        <c:choose>
-                            <c:when test="${not empty itemList}">${fn:length(itemList)}</c:when>
-                            <c:otherwise>0</c:otherwise>
-                        </c:choose>
-                    </span>
-                    개의 상품
-                </span>
-                <select class="bg-transparent text-sm font-medium text-gray-600 focus:outline-none">
-                    <option>추천순</option>
-                    <option>인기순</option>
-                    <option>신상품순</option>
-                    <option>낮은가격순</option>
-                </select>
+            	<div>
+	            	<c:if test="${sessionScope.user.mem_role_idx == 3}">
+		                <button onclick="location.href='/item/insert_form.do'" 
+		                        class="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors">
+		                    + 상품 등록
+		                </button>
+		            </c:if>
+	                <span class="text-gray-500 font-bold text-sm">
+	                    총 
+	                    <span class="text-gray-900">
+	                        <c:choose>
+	                            <c:when test="${not empty itemList}">${fn:length(itemList)}</c:when>
+	                            <c:otherwise>0</c:otherwise>
+	                        </c:choose>
+	                    </span>
+	                    개의 상품
+	                </span>
+                </div>
+                
+                <!-- 검색폼: 기존 기능 그대로 -->
+                <form action="/item/item_list.do" method="get" class="space-y-3">
+                    <label class="block text-sm font-semibold text-gray-700">상품 검색</label>
+                    <div class="flex gap-2">
+                        <input
+                            type="text"
+                            name="searchKeyword"
+                            value="${param.searchKeyword}"
+                            placeholder="검색어를 입력하세요!"
+                            class="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400"
+                        />
+                        <button
+                            type="submit"
+                            class="px-4 py-2 text-sm font-bold rounded-xl bg-amber-400 text-white hover:bg-amber-500">
+                            검색
+                        </button>
+                        
+	                    <select class="bg-transparent text-sm font-medium text-gray-600 focus:outline-none">
+		                    <option>추천순</option>
+		                    <option>인기순</option>
+		                    <option>신상품순</option>
+		                    <option>낮은가격순</option>
+		                </select>
+                    </div>
+                </form>
             </div>
 
             <!-- 상품 카드 리스트: 여기서부터 기존 c:forEach 로직 그대로 이식 -->
@@ -194,9 +296,6 @@
             </div>
         </section>
     </div>
-</main>
-<!-- 메인 컨텐츠 끝 -->
-
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>
