@@ -17,16 +17,13 @@ public class BoardVo {
 	String			board_content;
 	String			board_ip;
 	String			board_tag;			// 글 주제 ('DOG', 'CAT', 'NONE')
+	String			board_thumbnail;
 	int				board_readhit;		// 조회수
 	int				board_type_idx;		// fk: board_type(board_type_idx)
 	LocalDateTime	board_regdate;
 	LocalDateTime	board_moddate;
 	String			board_is_deleted;	// 게시글 삭제여부 (y/n)
 	LocalDateTime	board_deldate;		// 삭제일
-	
-	// =========== 썸네일 변수 ============
-	
-	String			thumbnailPath;		// 썸네일 경로
 	
 	// =========== 조인 객체 ============
 	MemberVo		writer;				// 조인된 참조테이블을 객체째로 담음

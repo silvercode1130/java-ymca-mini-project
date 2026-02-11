@@ -7,6 +7,44 @@
 <meta charset="UTF-8">
 <%@ include file="/WEB-INF/views/common/head.jsp" %>
   <title>${vo.board_title} | PetOn 커뮤니티</title>
+  
+  <script>
+  function copyCurrentUrl() {
+    const url = window.location.href;
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url)
+        .then(function() {
+          alert('링크가 복사되었습니다.');
+        })
+        .catch(function() {
+          // 실패 시 fallback
+          fallbackCopy(url);
+        });
+    } else {
+      fallbackCopy(url);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.left = '-9999px';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      alert('링크가 복사되었습니다.');
+    } catch (e) {
+      alert('복사에 실패했습니다. 주소창을 직접 복사해주세요.');
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  }
+</script>
+  
+  
 </head>
 <body class="layout-body bg-gray-50">
 
@@ -23,6 +61,7 @@
                 <c:when test="${vo.boardType.board_type_code == 'NOTICE'}">공지사항</c:when>
                 <c:when test="${vo.boardType.board_type_code == 'EVENT'}">이벤트</c:when>
                 <c:when test="${vo.boardType.board_type_code == 'LAB'}">연구소</c:when>
+                <c:when test="${vo.boardType.board_type_code == 'QNA'}">QnA</c:when>
                 <c:when test="${vo.boardType.board_type_code == 'FREE'}">자유게시판</c:when>
                 <c:otherwise>게시판</c:otherwise>
             </c:choose>
@@ -154,11 +193,13 @@
 
             <div class="flex items-center gap-2">
 
-                <!-- 내 글일 때만 수정/삭제 -->
-                <c:if test="${not empty sessionScope.user and sessionScope.user.mem_idx == vo.mem_idx}">
+                <!-- 내 글이거나 관리자일때만 수정/삭제 -->
+                <c:if test="${not empty sessionScope.user and
+                			(sessionScope.user.mem_idx == vo.mem_idx or sessionScope.user.mem_role_idx == 3)}">
+
                     <button
                         type="button"
-                        onclick="location.href='update_form.do?board_idx=${vo.board_idx}'"
+                        onclick="location.href='modify_form.do?board_idx=${vo.board_idx}'"
                         class="px-4 py-2 bg-white border border-gray-300 rounded-xl text-sm font-bold text-gray-700 hover:bg-gray-50"
                     >
                         수정
@@ -176,11 +217,13 @@
                     </form>
                 </c:if>
 
-                <!-- 공유 버튼은 실제 기능 붙일 때 JS로 -->
+                <!-- 공유 버튼 -->
                 <button type="button"
-                        class="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 shadow-md transition-all">
-                    공유하기
-                </button>
+				        onclick="copyCurrentUrl()"
+				        class="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-xl text-sm font-bold hover:bg-gray-800 shadow-md transition-all">
+				    공유하기
+				</button>
+
             </div>
         </div>
 

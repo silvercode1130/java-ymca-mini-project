@@ -16,6 +16,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.db.dao.BoardDao;
 import com.example.db.dao.BoardFileDao;
+import com.example.db.service.BoardService;
 import com.example.db.vo.BoardFileVo;
 import com.example.db.vo.BoardVo;
 import com.example.db.vo.MemberVo;
@@ -30,13 +31,13 @@ public class BoardController {
 	BoardDao boardDao;
 	
 	@Autowired
-	BoardFileDao boardFileDao;
-	
-	@Autowired
 	HttpServletRequest request;
 	
 	@Autowired
 	HttpSession session;
+	
+	@Autowired
+	BoardService boardService;
 	
 	
 	// ===== 게시글 조회 =====
@@ -150,12 +151,10 @@ public class BoardController {
 	// ===== 글쓰기 폼 =====
 	@GetMapping("/{b_type}/insert_form.do")
 	public String insertForm(@PathVariable String b_type,
-	                         @RequestParam(defaultValue = "1") int page,
 	                         @RequestParam(required = false, defaultValue = "ALL") String tag,
 	                         Model model) {
 		
 		model.addAttribute("b_type", b_type);
-		model.addAttribute("page", page);
 		model.addAttribute("tag", tag);
 		
 		return "community/board_insert_form";
@@ -164,96 +163,32 @@ public class BoardController {
 	// ===== 글쓰기 =====
 	@PostMapping("/{b_type}/insert.do")
 	public String insert(@PathVariable String b_type,
-	                     @RequestParam(defaultValue = "1") int page,
 	                     @RequestParam(required = false, defaultValue = "ALL") String tag,
 	                     BoardVo vo,
-	                     @RequestParam(name = "thumbnail", required = false) MultipartFile thumbnail,
 	                     RedirectAttributes ra) {
 
-		// 1) 로그인 체크
+		// 로그인 체크
 		MemberVo user = (MemberVo) session.getAttribute("user");
 		if (user == null) {
 			ra.addAttribute("reason", "session_timeout");
 			return "redirect:../member/login_form.do";
 		}
 
-		// 2) ip 넣기
+		// ip 넣기
 		String board_ip = request.getRemoteAddr();
 		vo.setBoard_ip(board_ip);
 
-		// 4) 내용 줄바꿈 치환
-		if (vo.getBoard_content() != null) {
-			vo.setBoard_content(vo.getBoard_content().replace("\\n", "<br>"));
-		}
-
-		// 5) 회원정보 넣기
+		// 회원정보 넣기
 		vo.setMem_idx(user.getMem_idx());
 
-		// 6) b_type 사용해 board_type_idx 조회
+		// b_type 사용해 어느 게시판인지 조회
 		String typeCode = b_type.toUpperCase();
 		int board_type_idx = boardDao.selectTypeIdxByCode(typeCode);
 		vo.setBoard_type_idx(board_type_idx);
 
-		// 7) insert
-		int res = boardDao.insert(vo);
+		// DB insert + 썸네일 추출까지 서비스에 위임
+		int res = boardService.insertBoardWithThumbnail(vo);
 		
-		// 8) 썸네일 업로드 처리 (0개 또는 1개)
-		if (thumbnail != null && !thumbnail.isEmpty()) {
-
-		    // 저장 경로: 프로젝트 루트 기준 폴더
-		    String projectPath = System.getProperty("user.dir");
-		    String uploadPath = projectPath + "/src/main/resources/static/img/board_file/";
-
-		    File uploadDir = new File(uploadPath);
-		    if (!uploadDir.exists()) {
-		        uploadDir.mkdirs();
-		    }
-
-		    // 파일 정보
-		    String originalName = thumbnail.getOriginalFilename();
-		    long size = thumbnail.getSize();
-		    String contentType = thumbnail.getContentType();   // image/jpeg 등
-
-		    // 확장자 분리
-		    String ext = "";
-		    int dotIdx = originalName.lastIndexOf(".");
-		    if (dotIdx != -1) {
-		        ext = originalName.substring(dotIdx);          // ".jpg" 같은 문자열
-		    }
-
-		    // 시퀀스로 file_idx 뽑기(서버에 저장될 이름용)
-		    int fileIdx = boardFileDao.selectNextFileIdx();
-
-		    // 저장용 이름: fileIdx + 확장자
-		    String savedName = fileIdx + ext;                  // 예: "15.jpg"
-
-		    // 실제 파일 저장
-		    File dest = new File(uploadPath, savedName);
-		    try {
-		        thumbnail.transferTo(dest);                    // 디스크에 저장
-		    } catch (Exception e) {
-		        e.printStackTrace();
-		        // 여기서 실패 처리 정책은 나중에 결정 (지금은 로그만)
-		    }
-		    
-		    System.out.println(vo.getBoard_idx());
-		    
-		    // board_file 행 생성
-		    BoardFileVo fileVo = new BoardFileVo();
-		    fileVo.setFile_idx(fileIdx);                 	   // VO가 int라 캐스팅
-		    fileVo.setBoard_idx(vo.getBoard_idx());            // boardDao.insert 후 PK 들어가 있어야 함
-		    fileVo.setFile_original_name(originalName);
-		    fileVo.setFile_saved_name(savedName);
-		    fileVo.setFile_path("/img/board_file/" + savedName);
-		    fileVo.setFile_size((int) size);
-		    fileVo.setFile_type(contentType);
-		    vo.setThumbnailPath(fileVo.getFile_path());
-
-		    boardFileDao.insert(fileVo);
-		}
-		
-		// 페이지/태그 복귀
-		ra.addAttribute("page", page);
 		ra.addAttribute("tag", tag);
 		return "redirect:/" + b_type + "/list.do";
 	}
@@ -271,7 +206,7 @@ public class BoardController {
 		
 		// 본인 글 체크
 		MemberVo user = (MemberVo) session.getAttribute("user");
-		if (user == null || vo.getMem_idx() != user.getMem_idx()) {
+		if (vo == null || (vo.getMem_idx() != user.getMem_idx() && user.getMem_role_idx() != 3)) {
 			return "redirect:/" + b_type + "/list.do?page=" + page + "&tag=" + tag;
 		}
 		
@@ -289,36 +224,57 @@ public class BoardController {
 	                     @RequestParam int board_idx,
 	                     @RequestParam(defaultValue = "1") int page,
 	                     @RequestParam(required = false, defaultValue = "ALL") String tag,
-	                     BoardVo vo,
+	                     BoardVo formVo, // 폼에서 넘어온 데이터
 	                     RedirectAttributes ra) {
-		
-		// 로그인 체크
-		MemberVo user = (MemberVo) session.getAttribute("user");
-		if (user == null) {
-			ra.addAttribute("reason", "session_timeout");
-			ra.addAttribute("page", page);
-			ra.addAttribute("tag", tag);
-			return "redirect:../member/login_form.do";
-		}
-		
-		// 권한 체크
-		BoardVo originVo = boardDao.selectOne(board_idx);
-		if (originVo.getMem_idx() != user.getMem_idx()) {
-			ra.addAttribute("reason", "no_permission");
-			ra.addAttribute("page", page);
-			ra.addAttribute("tag", tag);
-			return "redirect:/" + b_type + "/list.do";
-		}
-		
-		// 수정 대상 세팅
-		vo.setBoard_idx(board_idx);
-		
-		int res = boardDao.update(vo);
-		
-		ra.addAttribute("page", page);
-		ra.addAttribute("tag", tag);
-		return "redirect:/" + b_type + "/list.do";
+
+	    // 로그인 체크
+	    MemberVo user = (MemberVo) session.getAttribute("user");
+	    if (user == null) {
+	        ra.addAttribute("reason", "session_timeout");
+	        ra.addAttribute("page", page);
+	        ra.addAttribute("tag", tag);
+	        return "redirect:../member/login_form.do";
+	    }
+
+	    // DB에서 원본 글 다시 조회
+	    String typeCode = b_type.toUpperCase();
+	    BoardVo originVo = boardDao.selectOneByIdxAndTypeCode(board_idx, typeCode);
+	    if (originVo == null) {
+	        ra.addAttribute("reason", "not_found");
+	        ra.addAttribute("page", page);
+	        ra.addAttribute("tag", tag);
+	        return "redirect:/" + b_type + "/list.do";
+	    }
+
+	    // 권한 체크 (작성자 또는 관리자)
+	    boolean isOwner = originVo.getMem_idx() == user.getMem_idx();
+	    boolean isAdmin = user.getMem_role_idx() == 3;
+	    if (!isOwner && !isAdmin) {
+	        ra.addAttribute("reason", "no_permission");
+	        ra.addAttribute("page", page);
+	        ra.addAttribute("tag", tag);
+	        return "redirect:/" + b_type + "/list.do";
+	    }
+
+	    // 여기까지 통과하면, 수정 가능
+	    String board_ip = request.getRemoteAddr();
+
+	    // 원본 VO에 수정값 덮어쓰기
+	    originVo.setBoard_title(formVo.getBoard_title());
+	    originVo.setBoard_content(formVo.getBoard_content());
+	    originVo.setBoard_tag(formVo.getBoard_tag());
+	    originVo.setBoard_ip(board_ip);
+
+	    // 썸네일까지 다시 추출하고 싶으면 서비스로 넘김
+	    int res = boardService.insertBoardWithThumbnail(originVo);
+	    System.out.println(">>> update res = " + res);
+
+	    ra.addAttribute("board_idx", board_idx);
+	    ra.addAttribute("page", page);
+	    ra.addAttribute("tag", tag);
+	    return "redirect:/" + b_type + "/view.do?board_idx=" + board_idx + "&page=" + page + "&tag=" + tag;
 	}
+
 
 	// ===== 게시글 삭제(soft delete) =====	
 	@PostMapping("/{b_type}/delete.do")
@@ -336,7 +292,7 @@ public class BoardController {
 		}
 		
 		BoardVo vo = boardDao.selectOne(board_idx);
-		if (vo == null || vo.getMem_idx() != user.getMem_idx()) {
+		if (vo == null || (vo.getMem_idx() != user.getMem_idx() && user.getMem_role_idx() != 3)) {
 			ra.addAttribute("reason", "no_permission");
 			ra.addAttribute("page", page);
 			ra.addAttribute("tag", tag);

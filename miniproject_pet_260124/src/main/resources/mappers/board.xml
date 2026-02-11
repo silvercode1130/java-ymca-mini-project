@@ -14,6 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <result property="board_content"   column="board_content"/>
     <result property="board_ip"        column="board_ip"/>
     <result property="board_tag"       column="board_tag"/>
+    <result property="board_thumbnail" column="board_thumbnail"/>
     <result property="board_readhit"   column="board_readhit"/>
     <result property="board_type_idx"  column="board_type_idx"/>
     <result property="board_regdate"   column="board_regdate"/>
@@ -50,6 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -84,6 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -119,6 +122,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -158,6 +162,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         board_content,
         board_ip,
         board_tag,
+        board_thumbnail,
         board_readhit,
         board_type_idx,
         board_regdate
@@ -168,6 +173,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         #{board_content},
         #{board_ip},
         #{board_tag},
+        #{board_thumbnail, jdbcType=VARCHAR},
         0,
         #{board_type_idx},
         SYSDATE
@@ -181,6 +187,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     SET board_title   = #{board_title},
         board_content = #{board_content},
         board_tag     = #{board_tag},
+        board_thumbnail     = #{board_thumbnail},
         board_moddate = SYSDATE
     WHERE board_idx = #{board_idx}
 </update>
@@ -222,6 +229,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -264,6 +272,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -307,6 +316,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		b.board_content,
 		b.board_ip,
 		b.board_tag,
+		b.board_thumbnail,
 		b.board_readhit,
 		b.board_type_idx,
 		b.board_regdate,

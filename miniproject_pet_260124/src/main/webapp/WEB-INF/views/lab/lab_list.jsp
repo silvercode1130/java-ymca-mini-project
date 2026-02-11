@@ -142,7 +142,7 @@
               <!-- 썸네일: 없으면 noimage -->
 			<div class="h-48 bg-gray-100 relative overflow-hidden">
 			  <c:choose>
-			    <c:when test="${empty vo.thumbnailPath}">
+			    <c:when test="${empty vo.board_thumbnail}">
 			      <img
 			        src="${pageContext.request.contextPath}/img/noimage.png"
 			        alt="${vo.board_title}"
@@ -150,12 +150,13 @@
 			    </c:when>
 			    <c:otherwise>
 			      <img
-			        src="${vo.thumbnailPath}"
+			        src="${vo.board_thumbnail}"
 			        alt="${vo.board_title}"
 			        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
 			    </c:otherwise>
 			  </c:choose>
-			
+
+  			<!-- 태그 뱃지 -->
 			  <div class="absolute top-4 left-4">
 			    <c:choose>
 			      <c:when test="${vo.board_tag == 'DOG'}">

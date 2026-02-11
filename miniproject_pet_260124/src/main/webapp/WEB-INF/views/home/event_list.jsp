@@ -61,7 +61,7 @@
                 <div class="relative aspect-video bg-gray-100 overflow-hidden">
                     <!-- 썸네일: 없으면 noimage -->
                     <c:choose>
-                        <c:when test="${empty b.thumbnailPath}">
+                        <c:when test="${empty b.board_thumbnail}">
                             <img 
                                 src="${pageContext.request.contextPath}/img/noimage.png"
                                 alt="이벤트 썸네일 없음"
@@ -69,7 +69,7 @@
                         </c:when>
                         <c:otherwise>
                             <img 
-                                src="${b.thumbnailPath}"
+                                src="${b.board_thumbnail}"
                                 alt="${b.board_title}"
                                 class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105
                                        <c:out value='${status == "end" ? "grayscale opacity-70" : ""}'/>" />
