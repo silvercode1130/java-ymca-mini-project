@@ -12,7 +12,7 @@ public interface ReplyDao {
 
 	//List<boardVo> selectList();
 	List <replyVo> selectList();
-	List <replyVo> selectOneFromIdx(int reply_idx); 
+	replyVo selectOneFromIdx(int reply_idx); 
 	replyVo			selectOneFromId(int mem_idx);//mem_id?
 	 int       		insert (replyVo vo);
 	 int			update(replyVo vo); 			

@@ -488,20 +488,19 @@ update board set
         AND bt.board_type_code = #{board_type_code}
         AND b.board_is_deleted = 'N'
 </select>
->>>>>>> origin/je
+
 
 
 </mapper>
 
 
-<<<<<<< HEAD
+
  
   
 
 
 
-=======
->>>>>>> origin/je
+
 
 
 
