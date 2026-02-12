@@ -36,7 +36,9 @@ public class ItemController {
 	        if (member != null) {
 	            String species = itemDao.getPrimaryPetSpecies(member.getMem_idx());
 	            if (species != null) {
-	                String auto_for = species.trim().equals("고양이") ? "cat" : (species.trim().equals("강아지") ? "dog" : null);
+	                String s = species.trim().toUpperCase();
+	                String auto_for = (s.contains("고양이") || s.equals("CAT")) ? "cat" : 
+	                                 ((s.contains("강아지") || s.contains("개") || s.equals("DOG")) ? "dog" : null);
 	                if (auto_for != null) {
 	                    Map<String, Object> map = new HashMap<>();
 	                    map.put("item_for", auto_for);
@@ -66,6 +68,52 @@ public class ItemController {
 	    else {
 	        list = itemDao.getItemList();  // 입력받은 값이 없음(전체조회라서)  
 	    }
+	    
+	    
+	    
+	    
+	    // 1. 세션에서 로그인한 유저 정보 가져오기 (변수 이름 member로 통일!)
+	    MemberVo member = (MemberVo) session.getAttribute("user"); 
+
+	    if (member != null) {
+	        // [로그 확인용] 로그인된 멤버 번호 찍어보기
+	        System.out.println("=== 현재 로그인된 멤버 IDX: " + member.getMem_idx() + " ===");
+	        
+	        String species = itemDao.getPrimaryPetSpecies(member.getMem_idx());
+	        
+	        // [로그 확인용] DB에서 가져온 값이 실제로 무엇인지 확인!
+	        System.out.println("=== DB에서 가져온 종(species) 값: [" + species + "] ===");
+
+	        if (species != null) {
+	            String auto_item_for = null;
+	            String trimmedSpecies = species.trim(); // 공백 제거
+
+	            if (trimmedSpecies.contains("고양이")) auto_item_for = "cat";
+	            else if (trimmedSpecies.contains("강아지")) auto_item_for = "dog";
+
+	            System.out.println("=== 판별된 auto_item_for: " + auto_item_for + " ===");
+
+	            if (auto_item_for != null) {
+	                Map<String, Object> map = new HashMap<>();
+	                map.put("item_for", auto_item_for);
+	                list = itemDao.getItemListWithFilter(map);
+	                
+	                if (list != null) {
+	                    System.out.println("=== 가져온 추천 상품 개수: " + list.size() + "개 ===");
+	                    model.addAttribute("curFor", auto_item_for);
+	                    model.addAttribute("itemList", list);
+	                    return "item/item_list"; 
+	                }
+	            }
+	        } else {
+	            System.out.println("=== [경고] 쿼리 결과가 null입니다. 대표 동물이 설정 안 됐을 수 있어요! ===");
+	        }
+	    } else {
+	        System.out.println("=== [알림] 로그인한 사용자가 없습니다. ===");
+	    }
+	    
+	    
+	    
 	    
 	    // list에 있는 값을 jsp로 보냄 -> jsp는 itemList라는 값으로 받고 사용
 	    model.addAttribute("itemList", list);
