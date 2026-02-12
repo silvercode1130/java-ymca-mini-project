@@ -86,7 +86,7 @@
                 </h3>
                 <ul class="space-y-2 mb-6">
                     <li>
-                        <a href="/item/item_list.do"
+                        <a href="/item/item_list.do?item_for=all"
                            class="block w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-colors flex justify-between items-center bg-amber-50 text-amber-600">
                             전체보기
                             <div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>

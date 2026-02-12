@@ -26,9 +26,31 @@ public class ItemController {
     private ItemDao itemDao;  // controller에 필요한 dao데이터를 넣어주는 객체 생성
 	
 	@RequestMapping("/item/item_list.do")  // 사용자가 이 주소의 브라우저로 접근하면 
-	public String itemList(String searchKeyword, String category, Model model, @RequestParam(value="type_idx", required=false) Integer type_idx) {  // 실행되는 메서드
+	public String itemList(HttpSession session, String searchKeyword, String category, Model model, @RequestParam(value="type_idx", required=false) Integer type_idx, @RequestParam(value="item_for", required=false) String item_for) {  // 실행되는 메서드
 		// 위 메서드의 매개값은 스프링이 브라우저에서 자동으로 값을 받아줌 
 	    List<ItemVo> list = null; // 결과로 가져올 상품 목록을 담을 변수
+	    
+	    // 1. [추천 로직] 오직 "처음" 들어왔을 때만 실행 (모든 파라미터가 null일 때)
+	    if (type_idx == null && searchKeyword == null && item_for == null) {
+	        MemberVo member = (MemberVo) session.getAttribute("user");
+	        if (member != null) {
+	            String species = itemDao.getPrimaryPetSpecies(member.getMem_idx());
+	            if (species != null) {
+	                String auto_for = species.trim().equals("고양이") ? "cat" : (species.trim().equals("강아지") ? "dog" : null);
+	                if (auto_for != null) {
+	                    Map<String, Object> map = new HashMap<>();
+	                    map.put("item_for", auto_for);
+	                    list = itemDao.getItemListWithFilter(map);
+	                    model.addAttribute("curFor", auto_for);
+	                    
+	                    if (list != null) {
+	                        model.addAttribute("itemList", list);
+	                        return "item/item_list"; // 추천 상품 보여주고 바로 종료!
+	                    }
+	                }
+	            }
+	        }
+	    }
 	    
 	    // 카테고리일 경우 (카테고리별 상품 조회)
 	    // .trim().isEmpty() => 공백 제거(trim) 후 문장의 길이가 0인지(isEmpty)
@@ -56,7 +78,6 @@ public class ItemController {
 	                         @RequestParam(value="type_idx", required=false) Integer type_idx,
 	                         @RequestParam(value="searchKeyword", required=false) String searchKeyword,
 	                         Model model) {
-		
 		Map<String, Object> map = new HashMap<>();
 	    
 	    // 값이 있을 때만 map에 들어가서 필터가 작동

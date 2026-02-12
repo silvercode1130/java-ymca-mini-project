@@ -27,4 +27,8 @@ public interface ItemDao {
     List<ItemVo> getItemByCategory(@Param("type_idx") int type_idx);  // 클릭한 카테고리에 맞는 상품 여러개(list) 조회
     
     void insertItem(ItemVo vo);
+    
+    
+	// 회원의 mem_idx를 넣으면 대표 동물의 종(고양이/강아지)을 한글로 반환!
+	public String getPrimaryPetSpecies(int mem_idx);
 }
