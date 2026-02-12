@@ -50,7 +50,7 @@
     <button class="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm"
     		onclick="location.href='${pageContext.request.contextPath}/free/insert_form.do?page=${page}&tag=${tag}'">
       <!-- 아이콘은 일단 텍스트로 대체 -->
-      ✏️ 글쓰기
+      <span class="text-xs">✏️</span> 글쓰기
     </button>
 	</a>
   </div>

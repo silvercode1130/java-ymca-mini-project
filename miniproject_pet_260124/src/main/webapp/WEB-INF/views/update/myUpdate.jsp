@@ -324,5 +324,6 @@ document.addEventListener("DOMContentLoaded", function () {
 </main>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>
 </html>

@@ -208,7 +208,7 @@ public class CommunityController {
 	vo.setMem_name(user.getMem_name());
 	
 	// 기준글 정보를 구한다
-	BoardVo baseVo = boardDao.selectOne(vo.getBoard_idx());
+	BoardVo baseVo = boardDao.selectOne(vo.getB_idx());
 	
 	//기준글보다 b_step이 큰 게시물의 b_step을 1씩 증가 시켜야 한다
 	int res = boardDao.updateStep(baseVo);

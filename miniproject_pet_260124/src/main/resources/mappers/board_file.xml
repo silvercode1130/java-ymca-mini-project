@@ -43,6 +43,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     FETCH FIRST 1 ROWS ONLY
 </select>
 
+<!-- 시퀀스 값 가져오기 -->
+<select id="selectNextFileIdx" resultType="int">
+    SELECT seq_board_file_idx.NEXTVAL
+    FROM dual
+</select>
+
+<!-- 파일 insert -->
+<insert id="insert" parameterType="board_file">
+
+    INSERT INTO board_file (
+        file_idx,
+        board_idx,
+        file_original_name,
+        file_saved_name,
+        file_path,
+        file_size,
+        file_type,
+        file_regdate
+    ) VALUES (
+        seq_board_file_idx.NEXTVAL,
+        #{board_idx},
+        #{file_original_name},
+        #{file_saved_name},
+        #{file_path},
+        #{file_size},
+        #{file_type},
+        SYSDATE
+    )
+</insert>
 
 
 </mapper>

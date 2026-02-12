@@ -1,0 +1,199 @@
+
+const domain = 'business.yingliangads.com';
+const ua = navigator.userAgent;
+
+let pid=P({k:'pid', f:'track_v3'});
+let u1=P({k:'u1', f:'track_v3'});
+let pt=P({k:'pt', f:'track_v3'});
+let id=P({k:'id', f:'track_v3'});
+
+let queryString = window.location.search;
+let urlParams = new URLSearchParams(queryString);
+let campaign = urlParams.get('c') || '';
+let adset = urlParams.get('af_adset') || '';
+let ad = urlParams.get('af_ad') || '';
+let cId = urlParams.get('af_c_id') || '';
+let sId = urlParams.get('af_adset_id') || '';
+let aId = urlParams.get('af_ad_id') || '';
+let channel = urlParams.get('af_channel') || '';
+let dp = encodeURIComponent(urlParams.get('af_dp') || '');
+let ttclid = urlParams.get('ttclid') || '';
+
+function P(obj){
+    let s=document.getElementsByTagName('script');
+    for(let i in s){
+        if(s[i].src.search(obj.f+'.js?')<0){
+            continue;
+        }
+        let q=s[i].src.split('?');
+        if(q.length<2) {
+            return {
+                p: null,
+                n: s[i]
+            };
+        }
+        return {
+            p:(("?"+q[1]).match(new RegExp("(?:^\\?|&)"+obj.k+"=(.*?)(?=&|$)"))||['',null])[1],
+            n: s[i]
+        };
+    }
+}
+
+function C(n){
+    let nm=n+"=";
+    let ck=document.cookie.split(';');
+    for(let i=0;i<ck.length;i++){
+        let c=ck[i].trim();
+        if(c.indexOf(nm)==0)
+            return c.substring(nm.length,c.length);
+    }
+    return "";
+}
+
+function CI(src, _id = 'id') {
+    let img = document.createElement('img');
+    img.src = src;
+    img.id = _id;
+    img.style.display = 'none';
+    document.body.appendChild(img);
+}
+
+if (`${pt.p}` != undefined && `${pt.p}` != null) {
+    if (`${pt.p}` == 'fb') {
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init',id.p);fbq('track','PageView');
+    }
+
+    if (`${pt.p}` === 'gg') {
+        let sc=document.createElement("script");
+        sc.async = true;
+        sc.src = 'https://www.googletagmanager.com/gtag/js?id=' + id.p;
+        document.head.appendChild(sc);
+
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+        gtag('config', id.p);
+    }
+
+    if (`${pt.p}` === 'tt') {
+        !function (w, d, t){w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"], ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++) ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++) ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=i,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};var o=document.createElement("script");o.type="text/javascript",o.async=!0,o.src=i+"?sdkid="+e+"&lib="+t;var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a);};ttq.load(id.p);ttq.page();}(window, document, 'ttq');
+    }
+}
+
+function LD() {
+
+    if (`${pt.p}` != undefined && `${pt.p}` != null && `${pt.p}` === 'gg') {
+        gtag('get', id.p, 'client_id', function(clientId) {
+            LD2(clientId);
+        });
+
+        return;
+    }
+
+    let src = 'https://' + domain + '/log/loading';
+    src += '?pid=' + `${pid.p}`;
+    src += '&u1=' + `${u1.p}`;
+    src += '&u2=' + campaign;
+    src += '&u3=' + adset;
+    src += '&u4=' + ad;
+    src += '&u5=' + cId;
+    src += '&u6=' + sId;
+    src += '&u7=' + aId;
+    src += '&u8=' + channel;
+    src += '&u9=' + dp;
+
+    if (`${pt.p}` != undefined && `${pt.p}` != null) {
+        if (`${pt.p}` == 'fb') {
+            let fbc = C('_fbc');
+            let fbp = C('_fbp');
+
+            src += '&fbc=' + fbc;
+            src += '&fbp=' + fbp;
+        }
+
+        if (`${pt.p}` === 'tt') {
+            let fbc = ttclid;
+            let fbp = C('_ttp');
+
+            src += '&fbc=' + fbc;
+            src += '&fbp=' + fbp;
+        }
+    }
+
+    src += '&ua=' + ua;
+
+    CI(src, 'yllpid');
+}
+
+function LD2(clientId) {
+    let src = 'https://' + domain + '/log/loading';
+    src += '?pid=' + `${pid.p}`;
+    src += '&u1=' + `${u1.p}`;
+    src += '&u2=' + campaign;
+    src += '&u3=' + adset;
+    src += '&u4=' + ad;
+    src += '&u5=' + cId;
+    src += '&u6=' + sId;
+    src += '&u7=' + aId;
+    src += '&u8=' + channel;
+    src += '&u9=' + dp;
+    src += '&fbc=';
+    src += '&fbp=' + clientId;
+    src += '&ua=' + ua;
+
+    CI(src, 'yllpid');
+}
+
+function ADINPUT(_id) {
+    let image = document.getElementById('yllpid');
+    let src = image.src;
+    src = src.split('?')[1];
+    src = src.replace(/&amp;/g, '&');
+
+    let hInput = document.createElement('input');
+    hInput.name = 'ylurl';
+    hInput.value = src;
+    hInput.type = 'hidden';
+
+    let form = document.getElementById(_id);
+    form.appendChild(hInput);
+}
+
+function waitForImage(callback) {
+    function checkAndCall() {
+        let image = document.getElementById('yllpid');
+        if (image !== null && image !== undefined) {
+            callback();
+        } else {
+            setTimeout(checkAndCall, 100);
+        }
+    }
+
+    checkAndCall();
+}
+
+function getUrlParams()
+{
+    let image = document.getElementById('yllpid');
+
+    if (image !== null && image !== undefined) {
+        let src = image.src;
+        src = src.split('?')[1];
+        src = src.replace(/&amp;/g, '&');
+
+        return src;
+    }
+
+    return '';
+}
+
+if(window.addEventListener){
+    window.addEventListener("load",LD,false);
+}else if(window.attachEvent){
+    window.attachEvent("onload", LD);
+}else{
+    window.onload=LD;
+}

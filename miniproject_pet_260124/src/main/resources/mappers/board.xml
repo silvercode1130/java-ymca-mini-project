@@ -57,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <result property="board_content"   column="board_content"/>
     <result property="board_ip"        column="board_ip"/>
     <result property="board_tag"       column="board_tag"/>
+    <result property="board_thumbnail" column="board_thumbnail"/>
     <result property="board_readhit"   column="board_readhit"/>
     <result property="board_type_idx"  column="board_type_idx"/>
     <result property="board_regdate"   column="board_regdate"/>
@@ -93,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -237,12 +239,14 @@ update board set
 <!-- 회원 idx로 글 목록 조회 -->
 <select id="selectListByMemIdx" parameterType="int" resultMap="boardWithWriterAndTypeMap">
     SELECT
+    	b.*
         b.board_idx,
         b.mem_idx,
         b.board_title,
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -278,6 +282,7 @@ update board set
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -304,6 +309,12 @@ update board set
 
 <!-- 글쓰기 -->
 <insert id="insert" parameterType="board">
+
+	<selectKey keyProperty="board_idx" resultType="int" order="BEFORE">
+		SELECT seq_board_idx.NEXTVAL
+		FROM dual
+	</selectKey>
+	
     INSERT INTO board (
         board_idx,
         mem_idx,
@@ -311,16 +322,18 @@ update board set
         board_content,
         board_ip,
         board_tag,
+        board_thumbnail,
         board_readhit,
         board_type_idx,
         board_regdate
     ) VALUES (
-        seq_board_idx.NEXTVAL,
+        #{board_idx},
         #{mem_idx},
         #{board_title},
         #{board_content},
         #{board_ip},
         #{board_tag},
+        #{board_thumbnail, jdbcType=VARCHAR},
         0,
         #{board_type_idx},
         SYSDATE
@@ -334,6 +347,7 @@ update board set
     SET board_title   = #{board_title},
         board_content = #{board_content},
         board_tag     = #{board_tag},
+        board_thumbnail     = #{board_thumbnail},
         board_moddate = SYSDATE
     WHERE board_idx = #{board_idx}
 </update>
@@ -375,6 +389,7 @@ update board set
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -417,6 +432,7 @@ update board set
         b.board_content,
         b.board_ip,
         b.board_tag,
+        b.board_thumbnail,
         b.board_readhit,
         b.board_type_idx,
         b.board_regdate,
@@ -460,6 +476,7 @@ update board set
 		b.board_content,
 		b.board_ip,
 		b.board_tag,
+		b.board_thumbnail,
 		b.board_readhit,
 		b.board_type_idx,
 		b.board_regdate,

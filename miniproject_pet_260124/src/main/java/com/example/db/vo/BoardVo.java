@@ -18,6 +18,7 @@ public class BoardVo {
 	String			board_content;
 	String			board_ip;
 	String			board_tag;			// 글 주제 ('DOG', 'CAT', 'NONE')
+	String			board_thumbnail;
 	int				board_readhit;		// 조회수
 	int				board_type_idx;		// fk: board_type(board_type_idx)
 	LocalDateTime	board_regdate;
@@ -39,4 +40,6 @@ public class BoardVo {
         // 또는 원하는 패턴으로:
         // return board_regdate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
     }
+
+    String mem_name;
 }

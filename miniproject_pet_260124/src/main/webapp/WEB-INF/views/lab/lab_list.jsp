@@ -86,7 +86,7 @@
         <button type="button"
                 onclick="location.href='${pageContext.request.contextPath}/lab/insert_form.do?page=${page}&tag=${tag}'"
                 class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm">
-          ✏ 글쓰기
+          <span class="text-xs">✏️</span> 글쓰기
         </button>
       </div>
     </section>
@@ -139,33 +139,45 @@
           <a href="${pageContext.request.contextPath}/lab/view.do?board_idx=${vo.board_idx}&page=${page}&tag=${tag}"
              class="bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all group cursor-pointer">
             <article>
-              <!-- 썸네일 -->
-              <div class="h-48 bg-gray-100 relative overflow-hidden">
-                  <img
-					    src="${pageContext.request.contextPath}/img/noimage.png"
-					    alt="${vo.board_title}"
-					    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-					  />
-                <div class="absolute top-4 left-4">
-                  <c:choose>
-                    <c:when test="${vo.board_tag == 'DOG'}">
-                      <span class="bg-white/90 backdrop-blur-sm text-blue-600 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
-                        🐶 DOG
-                      </span>
-                    </c:when>
-                    <c:when test="${vo.board_tag == 'CAT'}">
-                      <span class="bg-white/90 backdrop-blur-sm text-pink-500 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
-                        🐱 CAT
-                      </span>
-                    </c:when>
-                    <c:otherwise>
-                      <span class="bg-white/90 backdrop-blur-sm text-gray-600 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
-                        📌 ETC
-                      </span>
-                    </c:otherwise>
-                  </c:choose>
-                </div>
-              </div>
+              <!-- 썸네일: 없으면 noimage -->
+			<div class="h-48 bg-gray-100 relative overflow-hidden">
+			  <c:choose>
+			    <c:when test="${empty vo.board_thumbnail}">
+			      <img
+			        src="${pageContext.request.contextPath}/img/noimage.png"
+			        alt="${vo.board_title}"
+			        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+			    </c:when>
+			    <c:otherwise>
+			      <img
+			        src="${vo.board_thumbnail}"
+			        alt="${vo.board_title}"
+			        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+			    </c:otherwise>
+			  </c:choose>
+
+  			<!-- 태그 뱃지 -->
+			  <div class="absolute top-4 left-4">
+			    <c:choose>
+			      <c:when test="${vo.board_tag == 'DOG'}">
+			        <span class="bg-white/90 backdrop-blur-sm text-blue-600 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
+			          🐶 DOG
+			        </span>
+			      </c:when>
+			      <c:when test="${vo.board_tag == 'CAT'}">
+			        <span class="bg-white/90 backdrop-blur-sm text-pink-500 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
+			          🐱 CAT
+			        </span>
+			      </c:when>
+			      <c:otherwise>
+			        <span class="bg-white/90 backdrop-blur-sm text-gray-600 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1 shadow-sm">
+			          📌 ETC
+			        </span>
+			      </c:otherwise>
+			    </c:choose>
+			  </div>
+			</div>
+
 
               <!-- 카드 본문 -->
               <div class="p-6">

@@ -6,6 +6,10 @@
 <head>
   <%@ include file="/WEB-INF/views/common/head.jsp" %>
   <title>게시글 작성 | PetOn 커뮤니티</title>
+  
+<!-- CKEditor 4 -->
+  <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+  
 </head>
 <body class="layout-body bg-gray-50">
 
@@ -15,13 +19,20 @@
   <div class="max-w-4xl mx-auto px-4 py-8">
 
     <!-- Breadcrumb -->
-    <div class="flex items-center gap-2 text-sm text-gray-500 mb-6">
-      <a href="${pageContext.request.contextPath}/community"
-         class="hover:text-amber-500">
-        커뮤니티
-      </a>
-      <span class="text-gray-400">&gt;</span>
-      <span class="font-bold text-gray-900">게시글 작성</span>
+    <div class="flex items-center gap-2 text-sm text-gray-500 mb-8 font-medium">
+        <span class="cursor-pointer hover:text-amber-500"
+              onclick="location.href='list.do'">
+            <c:choose>
+                <c:when test="${vo.boardType.board_type_code == 'NOTICE'}">공지사항</c:when>
+                <c:when test="${vo.boardType.board_type_code == 'EVENT'}">이벤트</c:when>
+                <c:when test="${vo.boardType.board_type_code == 'LAB'}">연구소</c:when>
+                <c:when test="${vo.boardType.board_type_code == 'QNA'}">QnA</c:when>
+                <c:when test="${vo.boardType.board_type_code == 'FREE'}">자유게시판</c:when>
+                <c:otherwise>게시판</c:otherwise>
+            </c:choose>
+        </span>
+        <span>&gt;</span>
+        <span class="text-gray-900">게시글 작성</span>
     </div>
 
     <form action="${pageContext.request.contextPath}/${b_type}/insert.do"
@@ -104,26 +115,41 @@
                              focus:outline-none focus:ring-2 focus:ring-amber-400
                              font-medium text-gray-900 h-64 resize-none leading-relaxed
                              placeholder:text-gray-400"></textarea>
-          </div>
-
-          <!-- 첨부파일 -->
-          <div>
-            <label class="block text-sm font-bold text-gray-700 mb-2">
-              첨부파일
-            </label>
-            <label class="inline-flex items-center gap-2 px-4 py-3 rounded-xl border border-gray-200
-                          text-gray-600 font-bold hover:bg-gray-50 transition-colors cursor-pointer">
-              📎
-              <span>파일 첨부</span>
-              <input type="file"
-                     name="files"
-                     id="files"
-                     multiple
-                     class="hidden"
-                     onchange="handleFileList(this);" />
-            </label>
-
-            <div id="fileList" class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+             <script>
+			// Replace the <textarea id="editor1"> with a CKEditor
+			// instance, using default configuration.
+			CKEDITOR.replace( 'board_content', {
+			versionCheck: false,
+			filebrowserUploadUrl: '${pageContext.request.contextPath}/ckeditorImageUpload.do',
+			enterMode:CKEDITOR.ENTER_BR,
+			shiftEnterMode:CKEDITOR.ENTER_P,
+			toolbarGroups : [
+				{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+				{ name: 'links' },
+				{ name: 'insert' },
+				'/',
+				{ name: 'styles' },
+				{ name: 'colors' },
+				{ name: 'tools' },
+				{ name: 'others' },
+				{ name: 'about' }
+				]
+			});
+			
+			//이미지 업로드	
+			CKEDITOR.on('dialogDefinition', function( ev ){
+			   var dialogName = ev.data.name;
+			   var dialogDefinition = ev.data.definition;
+			 
+			   switch (dialogName) {
+			       case 'image': //Image Properties dialog
+				   //dialogDefinition.removeContents('info');
+				   dialogDefinition.removeContents('Link');
+				   dialogDefinition.removeContents('advanced');
+				   break;
+			   }
+			      });
+			</script>
           </div>
         </div>
 
@@ -133,10 +159,6 @@
                   onclick="history.back();"
                   class="px-6 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors">
             목록으로
-          </button>
-          <button type="button"
-                  class="px-6 py-3 rounded-xl text-amber-600 font-bold hover:bg-amber-50 transition-colors">
-            임시저장
           </button>
           <button type="submit"
                   id="btnSubmit"
@@ -152,6 +174,7 @@
 </main>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 
 <script>
   // 태그 선택
@@ -167,66 +190,98 @@
     document.getElementById('board_tag').value = btn.getAttribute('data-value');
   }
 
-  // 파일 리스트 표시 (프론트용, 실제 업로드는 input의 files 사용)
-  function handleFileList(input) {
-    const container = document.getElementById('fileList');
-    container.innerHTML = '';
-
-    const files = input.files;
-    if (!files || files.length === 0) return;
-
-    Array.from(files).forEach(function(file, idx) {
-      const item = document.createElement('div');
-      item.className = 'flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100';
-
-      const thumb = document.createElement('div');
-      thumb.className = 'w-10 h-10 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-400';
-      thumb.textContent = '🖼';
-
-      const info = document.createElement('div');
-      info.className = 'flex-1 min-w-0';
-      const name = document.createElement('p');
-      name.className = 'text-sm font-bold text-gray-700 truncate';
-      name.textContent = file.name;
-      const size = document.createElement('p');
-      size.className = 'text-xs text-gray-400';
-      size.textContent = (file.size / 1024 / 1024).toFixed(1) + ' MB';
-      info.appendChild(name);
-      info.appendChild(size);
-
-      const removeBtn = document.createElement('button');
-      removeBtn.type = 'button';
-      removeBtn.className = 'p-1 text-gray-400 hover:text-red-500 transition-colors';
-      removeBtn.textContent = '✕';
-      removeBtn.onclick = function() {
-        // 단순히 리스트에서만 제거 (input.files 는 그대로 유지)
-        item.remove();
-      };
-
-      item.appendChild(thumb);
-      item.appendChild(info);
-      item.appendChild(removeBtn);
-      container.appendChild(item);
-    });
-  }
-
-  // 제목/내용 필수 체크
+  //제목/내용 필수 체크
   function validatePostForm() {
     const title = document.getElementById('board_title').value.trim();
-    const content = document.getElementById('board_content').value.trim();
+
+    // CKEditor에서 HTML 내용 가져오기
+    let contentHtml = CKEDITOR.instances.board_content.getData();
+    // 태그 제거하고 텍스트만 남긴 뒤 공백 제거
+    let contentText = contentHtml
+      .replace(/<[^>]*>/g, '')   // 모든 HTML 태그 제거
+      .replace(/&nbsp;/g, ' ')   // nbsp 제거
+      .replace(/\s+/g, '')       // 공백 몰아주기
+      .trim();
 
     if (!title) {
       alert('제목을 입력해주세요.');
       document.getElementById('board_title').focus();
       return false;
     }
-    if (!content) {
+    if (!contentText) {
       alert('내용을 입력해주세요.');
-      document.getElementById('board_content').focus();
+      CKEDITOR.instances.board_content.focus();
       return false;
     }
+
     return true;
   }
+
 </script>
+<script type="text/javascript">
+   //CKEditor내에서 이미지 삭제시 이벤트 처리
+   let previousImageUrls = [];
+   
+   $(document).ready(function(){
+	   
+	   // CKEditor 내용을 작성하는 <textarea name="b_content">
+	   const editor = CKEDITOR.instances.b_content; 
+	   
+	   editor.on('change', function () {
+
+		    const currentHtml = editor.getData();
+		    const currentImageUrls = extractImageUrls(currentHtml);
+
+		    // 이전 이미지 중 현재 HTML에 없는 항목은 삭제 대상
+		    previousImageUrls.forEach(oldUrl => {
+		        if (!currentImageUrls.includes(oldUrl)) {
+		        	
+		        	//oldUrl =  http://localhost:8080/images/1763707289780_병아리.png
+		            //console.log("삭제할 기존 이미지:", oldUrl);
+		        	let lastIndex = oldUrl.lastIndexOf("/");
+		        	let filename  = oldUrl.substring(lastIndex+1);
+		        	filename      = decodeURIComponent(filename);
+		        	//console.log("삭제할 화일명:", filename);
+		            deleteImageOnServer(filename);
+		        }
+		    });
+		    
+		    // 현재 이미지 목록을 저장
+		    previousImageUrls = currentImageUrls;
+		  
+		});
+   });
+      
+   
+   function extractImageUrls(html) {
+	    const div = document.createElement('div');
+	    div.innerHTML = html;
+
+	    return Array.from(div.querySelectorAll('img')).map(img => img.src);
+	}
+
+	/**
+	 * 서버로 이미지 삭제 요청
+	 */
+	function deleteImageOnServer(filename) {
+		
+		$.ajax({
+			url			:	"${pageContext.request.contextPath}/ckeditorImageDelete.do",
+			data		:	{"filename": filename },
+			dataType	:	"json",
+			success		:	function(res_data){
+				
+				// res_data = { "result" : true}
+				console.log(res_data.result ? "삭제성공" : "삭제실패");
+				
+			},
+			error		:	function(err){
+				alert(err.responseText);
+			}
+		});
+	}
+</script>
+
+
 </body>
 </html>
