@@ -1,6 +1,23 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%-- header.jsp 하단이나 script 모음 부분에 추가해뎡! --%>
+<script>
+    window.addEventListener('load', function() {
+        // 1. 세션에 저장된 돌아갈 주소가 있는지 확인 (JSTL 사용)
+        <c:if test="${not empty sessionScope.redirectURL and not empty sessionScope.user}">
+            // 2. 로그인도 되어 있고, 가야 할 주소도 있다면?
+            const targetURL = "${sessionScope.redirectURL}";
+            
+            // 3. 기록을 지워줘뎡 (안 그러면 로그인할 때마다 계속 그리로 가뎡!)
+            <% session.removeAttribute("redirectURL"); %>
+            
+            // 4. 원래 가려던 장바구니 담기 주소로 슝!
+            location.href = targetURL;
+        </c:if>
+    });
+</script>
+
 <header class="site-header bg-white border-b border-gray-100 shadow-sm">
 
   <div class="header-inner">

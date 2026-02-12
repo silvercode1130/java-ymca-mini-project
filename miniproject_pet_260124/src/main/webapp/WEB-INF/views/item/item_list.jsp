@@ -7,10 +7,69 @@
 <meta charset="UTF-8">
 <title>반려동물 쇼핑몰 - 상품 목록</title>
 <%@ include file="/WEB-INF/views/common/head.jsp" %>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	function addToCart(idx) {
-	    alert('장바구니에 담겼습니다! 확인하러 갈게요! ><');
-	    location.href = "/cart/add/" + idx;
+		if (confirm('장바구니에 상품이 담겼습니다!\n지금 장바구니로 이동하시겠어요? ><')) {
+			// [핵심] 장바구니로 떠나기 직전의 스크롤 위치를 저장!
+	        sessionStorage.setItem("lastScrollPos", window.scrollY);
+			// 확인 누르면 이동
+	        location.href = "/cart/add/" + idx;
+	    } else {
+	        // 취소 누르면 그냥 현재 페이지에 머물기!
+	        // 여기서 이동 없이 DB에만 담고 싶다면 AJAX를 써야 하지만, 
+	        // 일단 이동 여부만 물어보는 거라면 이 로직이 가장 깔끔해뎡!
+	    }
+	}
+	
+	window.addEventListener('load', function() {
+	    const urlParams = new URLSearchParams(window.location.search);
+	    const isFromCart = urlParams.get('from') === 'cart';
+
+	    if (isFromCart) {
+	        var scrollPos = sessionStorage.getItem("lastScrollPos");
+	        if (scrollPos) {
+	            // 'smooth'를 빼면 스르륵 안 하고 '짠!' 하고 이동해뎡!
+	            // 하지만 리스트 페이지가 길면 브라우저가 높이를 계산할 시간이 필요해서
+	            // 조금 더 확실하게 0초, 0.1초 두 번 딱딱 찍어줄게뎡!
+	            
+	            window.scrollTo(0, parseInt(scrollPos)); // 1차 시도 (즉시)
+
+	            setTimeout(function() {
+	                window.scrollTo(0, parseInt(scrollPos)); // 2차 시도 (확인 사살!)
+	                sessionStorage.removeItem("lastScrollPos");
+	            }, 50); // 아주 짧은 찰나에 딱! 이동해뎡
+	        }
+	    } else {
+	        sessionStorage.removeItem("lastScrollPos");
+	    }
+	});
+</script>
+<script>
+	function receiveCoupon() {
+		$.ajax({
+	        url: "${pageContext.request.contextPath}/orders/get_coupon.do",
+	        type: "GET",
+	        success: function(res) {
+	            // 공백을 싹 제거한 진짜 값만 남겨뎡!
+	            var result = res.trim();
+	            
+	            if(result === "success") {
+	                alert("축하합니다! 30% 할인 쿠폰이 발급되었습니다! ><\n주문 결제 페이지에서 확인하세요!");
+	                location.reload(); // 세션 반영을 위해 새로고침해주는 게 좋아뎡!
+	                $("#coupon-banner").hide(); // 받은 즉시 배너 사라져랏!
+	            } else if(result === "already_used_permanently") {
+	                alert("이미 주문 이력이 있으셔서 첫 구매 쿠폰을 받으실 수 없어요! ㅠㅠ");
+	                $("#coupon-banner").hide();
+	            } else if(result === "login_required") {
+	                alert("로그인이 필요한 서비스입니다!");
+	                location.href = "${pageContext.request.contextPath}/member/loginForm.do";
+	            } else {
+	                // 혹시 모를 다른 예외 상황
+	                alert("쿠폰 발급 대상이 아니거나 오류가 발생했습니다!");
+	            }
+	        }
+	    });
 	}
 </script>
 <style>
@@ -165,15 +224,23 @@
                 </ul>
 
                 
-
-                <!-- 사이드바 프로모션 배너 (UI만) -->
-                <div class="mt-8 bg-gradient-to-br from-amber-400 to-orange-400 rounded-xl p-6 text-white text-center">
-                    <p class="font-bold text-lg mb-2">첫 구매 혜택</p>
-                    <p class="text-sm opacity-90 mb-4">30% 할인 쿠폰 즉시 지급!</p>
-                    <button class="bg-white text-amber-500 font-bold text-xs py-2 px-4 rounded-full" type="button">
-                        쿠폰 받기
-                    </button>
-                </div>
+				<%-- 1. 일단 쿠폰을 이미 받은 상태라면 아예 안 보여줘뎡! --%>
+				<c:if test="${empty sessionScope.hasFirstCoupon}">
+				    
+				    <%-- 2. 로그인을 안 했거나, 로그인을 했는데 주문 이력이 0인 사람만 보여줘뎡! --%>
+				    <%-- (orderCount가 null이거나 0일 때만 출력) --%>
+				    <c:if test="${empty orderCount || orderCount == 0}">
+				        <div id="coupon-banner" class="mt-8 bg-gradient-to-br from-amber-400 to-orange-400 rounded-xl p-6 text-white text-center">
+				            <p class="font-bold text-lg mb-2">첫 구매 혜택</p>
+				            <p class="text-sm opacity-90 mb-4">30% 할인 쿠폰 즉시 지급!</p>
+				            <button class="bg-white text-amber-500 font-bold text-xs py-2 px-4 rounded-full" type="button"
+				                    onclick="receiveCoupon()">
+				                쿠폰 받기
+				            </button>
+				        </div>
+				    </c:if>
+				    
+				</c:if>
             </div>
         </aside>
 
@@ -229,71 +296,64 @@
 
             <!-- 상품 카드 리스트: 여기서부터 기존 c:forEach 로직 그대로 이식 -->
             <div class="grid grid-cols-2 lg:grid-cols-3 gap-6">
-                <c:forEach var="item" items="${itemList}">
-                    <div class="group bg-white rounded-2xl border border-gray-100/50 hover:border-amber-200 hover:shadow-lg transition-all overflow-hidden">
-
-                        <!-- 이미지 영역 -->
-                        <div class="relative aspect-square bg-gray-100 overflow-hidden">
-                            <c:if test="${not empty item.item_thumbnail_img}">
-                                <img 
-                                    src="${pageContext.request.contextPath}/img/${item.item_thumbnail_img}" 
-                                    alt="상품이미지"
-                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                                />
-                            </c:if>
-
-                            <c:if test="${empty item.item_thumbnail_img}">
-                                <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">
-                                    이미지 준비중
-                                </div>
-                            </c:if>
-
-                            <!-- 우측 상단: 좋아요/장바구니 아이콘 (장바구니는 기존 addToCart 연결) -->
-                            <div class="absolute top-3 right-3 flex gap-2">
-                                <button type="button"
-                                        class="p-2 bg-white/80 rounded-full hover:bg-red-50 hover:text-red-500 text-gray-400 transition-colors shadow-sm">
-                                    ❤️
-                                </button>
-                                <button type="button"
-                                        class="p-2 bg-white/80 rounded-full hover:bg-amber-50 hover:text-amber-500 text-gray-400 transition-colors shadow-sm"
-                                        onclick="addToCart(${item.item_idx})">
-                                    🛒
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- 텍스트/가격 영역 -->
-                        <div class="p-5">
-                            <h5 class="text-base font-bold text-gray-900 mb-2 line-clamp-2 h-11">
-                                ${item.item_name}
-                            </h5>
-
-                            <p class="mb-3">
-                                <c:if test="${item.item_origin_price > item.item_now_price}">
-                                    <span class="block text-xs text-gray-400 line-through mb-1">
-                                        ${item.item_origin_price}원
-                                    </span>
-                                </c:if>
-                                <span class="text-xl font-extrabold text-[#e44d26]">
-                                    ${item.item_now_price}원
-                                </span>
-                            </p>
-
-                            <div class="flex items-center justify-between border-t border-gray-50 pt-3">
-                                <a href="/item/item_detail.do?item_idx=${item.item_idx}"
-                                   class="text-xs font-bold text-amber-500 hover:text-amber-600">
-                                    상세보기 →
-                                </a>
-                                <button type="button"
-                                        class="text-xs font-bold text-gray-500 hover:text-gray-700"
-                                        onclick="addToCart(${item.item_idx})">
-                                    담기 🛒
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </c:forEach>
-            </div>
+			    <c:forEach var="item" items="${itemList}">
+			        <div class="group bg-white rounded-2xl border border-gray-100/50 hover:border-amber-200 hover:shadow-lg transition-all overflow-hidden cursor-pointer"
+			             onclick="location.href='/item/item_detail.do?item_idx=${item.item_idx}'">
+			
+			            <div class="relative aspect-square bg-gray-100 overflow-hidden">
+			                <c:if test="${not empty item.item_thumbnail_img}">
+			                    <img 
+			                        src="${pageContext.request.contextPath}/img/${item.item_thumbnail_img}" 
+			                        alt="상품이미지"
+			                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+			                    />
+			                </c:if>
+			                <c:if test="${empty item.item_thumbnail_img}">
+			                    <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">
+			                        이미지 준비중
+			                    </div>
+			                </c:if>
+			
+			                <div class="absolute top-3 right-3 flex gap-2">
+			                    <button type="button"
+			                            onclick="event.stopPropagation();" <%-- 하트 눌러도 상세페이지 안 가게! --%>
+			                            class="p-2 bg-white/80 rounded-full hover:bg-red-50 hover:text-red-500 text-gray-400 transition-colors shadow-sm">
+			                        ❤️
+			                    </button>
+			                </div>
+			            </div>
+			
+			            <div class="p-5">
+			                <h5 class="text-base font-bold text-gray-900 mb-2 line-clamp-2 h-11">
+			                    ${item.item_name}
+			                </h5>
+			
+			                <p class="mb-3">
+			                    <c:if test="${item.item_origin_price > item.item_now_price}">
+			                        <span class="block text-xs text-gray-400 line-through mb-1">
+			                            ${item.item_now_price}원 <%-- 원본 가격 표시 --%>
+			                        </span>
+			                    </c:if>
+			                    <span class="text-xl font-extrabold text-[#e44d26]">
+			                        ${item.item_now_price}원
+			                    </span>
+			                </p>
+			
+			                <div class="flex items-center justify-between border-t border-gray-50 pt-3">
+			                    <span class="text-xs font-bold text-amber-500 hover:text-amber-600">
+			                        상세보기 →
+			                    </span>
+			                    
+			                    <button type="button"
+			                            class="text-xs font-bold text-gray-500 hover:text-gray-700"
+			                            onclick="event.stopPropagation(); addToCart(${item.item_idx})">
+			                        담기 🛒
+			                    </button>
+			                </div>
+			            </div>
+			        </div>
+			    </c:forEach>
+			</div>
         </section>
     </div>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>

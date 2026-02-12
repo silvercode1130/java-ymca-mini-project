@@ -37,7 +37,7 @@ public class CartController {
         
         //  만약 회원정보가 없다면 로그인 페이지로 이동
         if (user == null) {
-            return "redirect:/loginForm"; 
+            return "redirect:/member/loginForm.do"; 
         }
 
         // 로그인 한 회원의 회원 번호로 장바구니 목록을 조회(dao 메서드 호출) 후 그 값을 list로 받음
@@ -66,7 +66,12 @@ public class CartController {
         
         //  만약 회원정보가 없다면 로그인 페이지로 이동
         if (user == null) {
-        	return "redirect:/loginForm";
+        	// [중요!] 로그인 성공 후 돌아올 주소를 세션에 저장해뎡!
+            session.setAttribute("redirectURL", "/cart/add/" + item_idx);
+            // [핵심!] 이 사람은 비로그인 상태에서 전체 리스트를 보다 왔다는 증거를 남겨뎡!
+            session.setAttribute("forceAllList", true);
+            
+        	return "redirect:/member/loginForm.do";
         }
         
         int mem_idx = user.getMem_idx();

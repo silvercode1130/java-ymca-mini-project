@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.db.dao.ItemDao;
+import com.example.db.dao.OrdersDao;
 import com.example.db.vo.ItemVo;
 import com.example.db.vo.MemberVo;
 
@@ -25,10 +26,24 @@ public class ItemController {
 	@Autowired  // new 해서 객체를 생성했던 부분을 단축 시켜주는 어노테이션(주석, 설명문 느낌)
     private ItemDao itemDao;  // controller에 필요한 dao데이터를 넣어주는 객체 생성
 	
+	@Autowired
+	private OrdersDao ordersDao;
+	
 	@RequestMapping("/item/item_list.do")  // 사용자가 이 주소의 브라우저로 접근하면 
 	public String itemList(HttpSession session, String searchKeyword, String category, Model model, @RequestParam(value="type_idx", required=false) Integer type_idx, @RequestParam(value="item_for", required=false) String item_for) {  // 실행되는 메서드
 		// 위 메서드의 매개값은 스프링이 브라우저에서 자동으로 값을 받아줌 
 	    List<ItemVo> list = null; // 결과로 가져올 상품 목록을 담을 변수
+	    
+	    // [1번으로 이동!] 먼저 로그인 확인하고 orderCount부터 챙겨뎡!
+	    MemberVo user = (MemberVo) session.getAttribute("user");
+	    int orderCount = 0; 
+	    if (user != null) {
+	        orderCount = ordersDao.checkCouponUsed(user.getMem_idx());
+	    }
+	    // 어떤 리턴을 만나더라도 이 값은 들고 가게 미리 넣어둬뎡!
+	    model.addAttribute("orderCount", orderCount);
+	    
+	    // ===============================================================================
 	    
 	    // 1. [추천 로직] 오직 "처음" 들어왔을 때만 실행 (모든 파라미터가 null일 때)
 	    if (type_idx == null && searchKeyword == null && item_for == null) {
@@ -135,5 +150,4 @@ public class ItemController {
         
         return "redirect:/shop"; // 등록 후 쇼핑몰 리스트로 이동
     }
-    
 }

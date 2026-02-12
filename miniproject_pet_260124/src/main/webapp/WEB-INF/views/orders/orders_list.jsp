@@ -180,11 +180,21 @@
                       </button>
                     </c:if>
 
-                    <button type="button"
-                            onclick="if(confirm('정말 취소하시겠습니까?')) { location.href='${pageContext.request.contextPath}/orders/cancel/${vo.orders_idx}'; }"
-                            class="px-4 py-2 border border-red-200 rounded-lg text-sm font-bold text-red-500 hover:bg-red-50">
-                      주문취소
-                    </button>
+                    <%-- 오직 '결제대기(1)' 상태일 때만 취소 버튼이 보여뎡! --%>
+					<c:if test="${vo.orders_status_idx < 3}">
+					    <button type="button"
+					            onclick="if(confirm('정말 취소하시겠습니까?')) { location.href='${pageContext.request.contextPath}/orders/cancel/${vo.orders_idx}'; }"
+					            class="px-4 py-2 border border-red-200 rounded-lg text-sm font-bold text-red-500 hover:bg-red-50">
+					        주문취소
+					    </button>
+					</c:if>
+					
+					<%-- 결제완료(2) 이상이거나 취소(5)된 경우에는 상태만 보여줘뎡! --%>
+					<c:if test="${vo.orders_status_idx >= 3}">
+					    <span class="px-4 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-500">
+					        취소 불가
+					    </span>
+					</c:if>
                   </div>
                 </div>
               </div>

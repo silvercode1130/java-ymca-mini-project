@@ -112,9 +112,6 @@ public class MemberController {
    @RequestMapping("/member/loginForm.do")
    public String loginForm(HttpSession session) {
 
-       System.out.println("🔑 LOGIN FORM session id = " + session.getId());
-       System.out.println("🔑 LOGIN FORM user = " + session.getAttribute("user"));
-
        return "member/member_login_form";
    }
    
