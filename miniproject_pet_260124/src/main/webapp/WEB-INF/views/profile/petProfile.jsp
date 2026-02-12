@@ -13,24 +13,28 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-    // 모든 펫 리스트 아이템을 찾아서 나이를 계산해줄게!
     const today = new Date();
-    
-    // 생일 정보가 담긴 요소들을 모두 가져와 (반복문 대응)
-    const petItems = document.querySelectorAll(".pet-info-item"); // 아래 HTML 수정을 먼저 해줘야해!
+    // 1. 위에서 추가한 .pet-info-item 클래스로 요소들을 가져와
+    const petItems = document.querySelectorAll(".pet-info-item"); 
 
     petItems.forEach(item => {
         const bdayValue = item.getAttribute("data-bday");
         const ageTarget = item.querySelector(".age-display");
 
         if (bdayValue && ageTarget) {
+            // 날짜 형식이 yyyy-mm-dd 인지 확인하고 Date 객체 생성
             const bday = new Date(bdayValue);
+            
             if (!isNaN(bday)) {
                 let age = today.getFullYear() - bday.getFullYear();
                 const m = today.getMonth() - bday.getMonth();
+                
+                // 생일이 아직 안 지났으면 한 살 빼기
                 if (m < 0 || (m === 0 && today.getDate() < bday.getDate())) {
                     age--;
                 }
+                
+                // 계산된 나이 입력 (음수 방지)
                 ageTarget.innerText = age >= 0 ? age : 0;
             }
         }
@@ -94,8 +98,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
               <div class="flex flex-col gap-4">
 				  <c:forEach var="pet" items="${petList}">
-				    <div class="pet-item flex items-center justify-between p-4 border border-gray-100 rounded-2xl hover:border-amber-300 hover:bg-amber-50/40 transition-colors" 
-				         data-bday="${pet.pet_bday}">
+				    <div class="pet-item pet-info-item flex items-center justify-between p-4 border border-gray-100 rounded-2xl hover:border-amber-300 hover:bg-amber-50/40 transition-colors" 
+     				data-bday="${pet.pet_bday}">
 				      <div>
 				        <div class="flex items-center gap-2">
 				          <span class="text-lg font-bold text-gray-900">${pet.pet_name}</span>
