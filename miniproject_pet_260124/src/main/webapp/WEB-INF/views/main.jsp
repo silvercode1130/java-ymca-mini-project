@@ -173,7 +173,7 @@
 <!-- 오른쪽 플로팅 툴박스 -->
 <aside class="floating-toolbox">
     <button type="button" class="toolbox-btn" title="내 정보">
-        <span class="toolbox-icon">👤</span>
+        <span class="toolbox-icon" onclick="location.href='/profile/myProfile.do'">👤</span>
     </button>
     <button type="button" class="toolbox-btn" title="알림">
         <span class="toolbox-icon">🔔</span>

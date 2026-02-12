@@ -137,7 +137,7 @@ function previewImage(input) {
     <section class="flex-1 min-w-0 flex justify-center">
       <div class="w-full max-w-4xl">
         <form class="myUpdate bg-white rounded-3xl shadow-sm border border-gray-100 p-8"
-              action="${pageContext.request.contextPath}/update/myUpdate.do"
+              action="${pageContext.request.contextPath}/profile/updateProfile.do"
               method="post"
               enctype="multipart/form-data">
 
@@ -156,7 +156,7 @@ function previewImage(input) {
                 <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-amber-50 shadow-inner">
                   <img 
                     id="preview"
-                    src="${profileImgSrc}"
+                    img src="${profileImgSrc}"
                     alt="Profile"
                     class="w-full h-full object-cover"
                   />
@@ -171,9 +171,9 @@ function previewImage(input) {
                       onclick="document.getElementById('fileInput').click();"
                       class="text-sm font-bold text-gray-500 hover:text-amber-500 underline decoration-gray-300 hover:decoration-amber-500 underline-offset-4 transition-all">
                 이미지 변경
-              </button>
+              </button> 
               <input type="file"
-                     name="mem_photo"
+                     name="mem_photo"   
                      id="fileInput"
                      onchange="previewImage(this)"
                      style="display:none;">
@@ -227,7 +227,8 @@ function previewImage(input) {
           <div class="flex justify-end items-center gap-3 mt-12 pt-6 border-t border-gray-100">
             <button type="button"
                     id="btn-cancel"
-                    class="px-6 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors">
+                    class="px-6 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors"
+                    onclick="location.href='${pageContext.request.contextPath}/main'">
               취소
             </button>
             <button type="submit"

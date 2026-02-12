@@ -50,6 +50,22 @@ function saveAddr() {
     });
 }
 
+/* function saveAddr() {    버튼 작동 x -> 버릴 코드
+$.ajax({
+url: "/member/updateAddrAjax.do",
+type: "POST",
+data: {
+  mem_idx: $("input[name=mem_idx]").val(),
+  mem_zipcode: $("#mem_zipcode").val(),
+  mem_addr: $("#mem_addr").val(),
+  mem_addr_detail: $("#mem_addr_detail").val()
+},
+success: function(res) {
+  alert("주소 저장 완료!");
+}
+});
+} */
+
 // 비밀번호 변경 토글 (아코디언)
 document.addEventListener("DOMContentLoaded", function () {
     const pwSection = document.getElementById("password-section");
@@ -115,7 +131,7 @@ document.addEventListener("DOMContentLoaded", function () {
         </h2>
 
         <!-- 숨겨진 값들 -->
-        <input type="hidden" id="mem_idx"        name="mem_idx"        value="${user.mem_idx}">
+        <input type="hidden" id="mem_idx"  name="mem_idx"  value="${user.mem_idx}">
         <input type="hidden" name="mem_role_idx"  value="${user.mem_role_idx}">
         <input type="hidden" name="mem_grade_idx" value="${user.mem_grade_idx}">
 
@@ -308,7 +324,7 @@ document.addEventListener("DOMContentLoaded", function () {
       <div class="flex justify-end items-center gap-3">
         <button type="button"
                 class="px-6 py-3 rounded-xl border-2 border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors"
-                onclick="location.href='${pageContext.request.contextPath}/main.do'">
+                onclick="location.href='${pageContext.request.contextPath}/main'">
           취소
         </button>
         <button type="submit"
@@ -324,6 +340,5 @@ document.addEventListener("DOMContentLoaded", function () {
 </main>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
-<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>
 </html>

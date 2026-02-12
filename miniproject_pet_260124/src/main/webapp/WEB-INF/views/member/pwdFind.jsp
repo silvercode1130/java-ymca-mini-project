@@ -15,6 +15,11 @@
 	        alert("아이디를 입력해주세요!");
 	        return;
 	    }
+
+	    // ❌ 비밀번호 불일치
+	    if (!user.getMem_pwd().equals(mem_pwd)) {
+	        return "redirect:loginForm.do?reason=fail";
+	    }
 	
 	    fetch("/member/check_id.do?mem_id=" + encodeURIComponent(memId))
 	        .then(res => res.json())

@@ -39,7 +39,6 @@ public class MemberController {
    
    // 회원가입 관련 ------------------------------------------------------------------------------------------
    
-   // 은정 - 이것만 추가 했따!
    @RequestMapping("/member/signUpForm.do")
    public String signUpForm(MemberVo vo) {
 	   
@@ -54,19 +53,12 @@ public class MemberController {
 	   
 	// 여기서 vo.getMem_id()를 찍어봐서 null이 나오는지 확인해보는 게 좋아.
 	    System.out.println("가입 시도 ID: " + vo.getMem_id());
-		/*
-		 * int result = memberDao.insertMember(vo);
-		 * 
-		 * if(result > 0) { return "redirect:/member/myUpdate.do?mem_id="; // #수정 - 회원가입
-		 * 성공 시 메인 홈(재웅님)으로 이동 } else { return "redirect:/member/signUpForm.do?error=1";
-		 * }
-		 */
 	    
 	    if(vo.getMem_id() == null || vo.getMem_id().isEmpty()) {
 	        return "redirect:/member/signUp.do?error=id_null";
 	    }
 	    
-	    // ip구하기
+	    // ip 구하기
  		String mem_ip = request.getRemoteAddr();
  		vo.setMem_ip(mem_ip);
 	    
@@ -157,8 +149,7 @@ public class MemberController {
      return "redirect:/main";
    }
    
-  
-	// ##또뎡이가 추가   
+ 
 	// 이메일 로그인 처리
    @RequestMapping("/member/emailLoginProc.do")
    public String emailLoginProc(String mem_id, String mem_pwd, HttpSession session) {
@@ -237,64 +228,144 @@ public class MemberController {
    // 수정 관련 ------------------------------------------------------------------------------------------
    
    
-   // 회원 정보 수정 처리
-   @GetMapping("/update/myUpdate_form.do")
-   public String myUpdate(HttpSession session, Model model, String mem_id) {
-
-       MemberVo user = null;
-
-       // 로그인해서 온 경우 → 세션에 user 존재
-       if(session.getAttribute("user") != null){
-           user = (MemberVo) session.getAttribute("user");
-       }
-
-       // 회원가입 후 리다이렉트로 온 경우 → param으로 mem_id
-       else if(mem_id != null){
-           user = memberDao.selectOneFromId(mem_id);
-           session.setAttribute("user", user);
-       }
-
-       System.out.println("------------------------------------------------------------");
-       System.out.println(user);
-       System.out.println("------------------------------------------------------------");
-       
-       // memberDao로 호출. 정은 수정
-       RoleVo role = memberDao.selectDefaultRole();
-       GradeVo grade = memberDao.selectDefaultGrade();
-
-       model.addAttribute("role", role);
-       model.addAttribute("grade", grade);
-       model.addAttribute("user", user);
-       
-       return "update/myUpdate";
-   }
+	// 회원 정보 수정 폼
+	@GetMapping("/update/myUpdate_form.do")
+	public String myUpdate(HttpSession session, Model model, String mem_id) {
+	
+	    MemberVo user = null;
+	
+	    // 세션에 user가 있으면 사용
+	    if (session.getAttribute("user") != null) {
+	        user = (MemberVo) session.getAttribute("user");
+	    }
+	    
+	    // 회원가입 직후 redirect로 들어온 경우
+	    else if (mem_id != null) {
+	        user = memberDao.selectOneFromId(mem_id);
+	        session.setAttribute("user", user);
+	    }
+	
+	    // 여기서 user가 "확정"됨
+	    System.out.println("------------------------------------------------------------");
+	    System.out.println(user);
+	    System.out.println("------------------------------------------------------------");
+	
+	    // model에 실어주기 (한 번만!)
+	    model.addAttribute("user", user);
+	
+	    if (user != null) {
+	        model.addAttribute("member_addr", user.getAddr());
+	    }
+	
+	    // 기타 공통 데이터
+	    RoleVo role = memberDao.selectDefaultRole();
+	    GradeVo grade = memberDao.selectDefaultGrade();
+	
+	    model.addAttribute("role", role);
+	    model.addAttribute("grade", grade);
+	
+	    // 주소 null인지 아닌지 테스트 중
+	    System.out.println(user.getAddr());
+	    
+	    return "update/myUpdate";
+	}
+	
    
-   
-    // 수정 기능
-   @PostMapping("/update/myUpdate.do")
-   public String myUpdateSubmit(MemberVo vo) {
+    // 수정 기능 구현
+	@PostMapping("/update/myUpdate.do")
+	public String myUpdateSubmit(
+	        MemberVo vo,
+	        @RequestParam(required = false) String new_pwd,
+	        HttpSession session
+	) {
+	    // 🔴 세션에서 user 꺼내기
+	    MemberVo sessionUser = (MemberVo) session.getAttribute("user");
 
-       // ✅ 프로필 이미지 업데이트 (값 있을 때만)
-       MemberProfileVo profileVo = new MemberProfileVo();
-       profileVo.setMem_idx(vo.getMem_idx());
+	    // 🔥 세션이 없으면 → mem_id로 다시 조회해서 세션 복구
+	    if (sessionUser == null) {
+	        sessionUser = memberDao.selectOneFromId(vo.getMem_id());
+	        session.setAttribute("user", sessionUser);
+	    }
 
-       if (profileVo.getMem_img() != null && !profileVo.getMem_img().isEmpty()) {
-           memberDao.updateProfile(profileVo);
-       }
+	    // ===== 필수 값 보정 =====
+	    vo.setMem_id(sessionUser.getMem_id());
+	    vo.setMem_role_idx(sessionUser.getMem_role_idx());
+	    vo.setMem_grade_idx(sessionUser.getMem_grade_idx());
+	    vo.setMem_ip(sessionUser.getMem_ip());
 
-       // ✅ 주소 업데이트 (값 있을 때만)
-       MemberAddrVo addrVo = new MemberAddrVo();
-       addrVo.setMem_idx(vo.getMem_idx());
+	    // ===== 비밀번호 처리 =====
+	    if (new_pwd != null && !new_pwd.isEmpty()) {
+	        vo.setMem_pwd(new_pwd);
+	    } else {
+	        vo.setMem_pwd(sessionUser.getMem_pwd());
+	    }
 
-       if (addrVo.getMem_addr() != null && !addrVo.getMem_addr().isEmpty()) {
-           memberDao.updateAddr(addrVo);
-       }
+	    // ===== UPDATE =====
+	    memberDao.update(vo);
 
-       MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
-       session.setAttribute("user", updated);
+	    // ===== 최신 정보 다시 세션 저장 =====
+	    MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
+	    session.setAttribute("user", updated);
 
-       return "redirect:/update/myUpdate_form.do";
-   }
+	    return "redirect:/update/myUpdate_form.do";
+	}
+	
+//	@PostMapping("/update/myUpdate.do")
+//	public String myUpdateSubmit(
+//	        MemberVo vo,
+//	        @RequestParam(required = false) String new_pwd
+//	) {
+//	    MemberVo sessionUser = (MemberVo) session.getAttribute("user");
+//
+//	    // 필수 값 보정
+//	    vo.setMem_id(sessionUser.getMem_id());
+//	    vo.setMem_role_idx(sessionUser.getMem_role_idx());
+//	    vo.setMem_grade_idx(sessionUser.getMem_grade_idx());
+//	    vo.setMem_ip(sessionUser.getMem_ip());
+//
+//	    // 비밀번호 처리
+//	    if (new_pwd != null && !new_pwd.isEmpty()) {
+//	        vo.setMem_pwd(new_pwd);
+//	    } else {
+//	        vo.setMem_pwd(sessionUser.getMem_pwd());
+//	    }
+//
+//	    memberDao.update(vo);
+//
+//	    MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
+//	    session.setAttribute("user", updated);
+//
+//	    return "redirect:/update/myUpdate_form.do";
+//	}
+	
+//   @PostMapping("/update/myUpdate.do")
+//   public String myUpdateSubmit(MemberVo vo) {
+//	   
+//	   // 얘 없어서 업데이트가 안됨ㅠㅠ
+//	   vo.setMem_ip(request.getRemoteAddr());
+//	   memberDao.update(vo);
+//
+//       // ✅ 프로필 이미지 업데이트 (값 있을 때만)
+////       MemberProfileVo profileVo = new MemberProfileVo();
+////       profileVo.setMem_idx(vo.getMem_idx());
+////
+////       if (profileVo.getMem_img() != null && !profileVo.getMem_img().isEmpty()) {
+////           memberDao.updateProfile(profileVo);
+////       }
+//
+//       // ✅ 주소 업데이트 (값 있을 때만)
+//       MemberAddrVo addrVo = new MemberAddrVo();
+//       addrVo.setMem_idx(vo.getMem_idx());
+//
+//       if (addrVo.getMem_addr() != null && !addrVo.getMem_addr().isEmpty()) {
+//           memberDao.updateAddr(addrVo);
+//       }
+//
+//       MemberVo updated = memberDao.selectOneFromId(vo.getMem_id());
+//       session.setAttribute("user", updated);
+//
+//       return "redirect:/update/myUpdate_form.do";
+//   }
    
 //   @PostMapping("/update/myUpdate.do")
 //   public String myUpdateSubmit(MemberVo vo) {
@@ -411,9 +482,10 @@ public class MemberController {
    }
    
    
-   // 로그아웃 관련 ------------------------------------------------------------------------------------------
+   // 탈퇴 관련 ------------------------------------------------------------------------------------------
    
    
+   // 찾아야 함
    @PostMapping("/member/delete.do")
    public String memberDelete(HttpSession session) {
 
@@ -434,49 +506,63 @@ public class MemberController {
 
 
    // aJax 관련 ------------------------------------------------------------------------------------------
-   
-   
-//   // myUpdate.jsp - 프로필 table
-//   @PostMapping("/member/updateProfileAjax.do")
-//   @ResponseBody
-//   public String updateProfileAjax(MemberVo vo, MemberProfileVo profile,
-//           @RequestParam(required=false) MultipartFile mem_photo) {
-//
-//       if (mem_photo != null && !mem_photo.isEmpty()) {
-//           String uploadPath = "C:/upload/profile/";
-//           File folder = new File(uploadPath);
-//           if (!folder.exists()) folder.mkdirs();
-//
-//           String fileName = System.currentTimeMillis() + "_" + mem_photo.getOriginalFilename();
-//           try {
-//               mem_photo.transferTo(new File(uploadPath, fileName));
-//               profile.setMem_img(fileName);
-//           } catch (Exception e) {
-//               e.printStackTrace();
-//           }
-//       }
-//
-//       memberDao.updateProfile(vo);
-//       return "ok";
-//   }
-//
-//   
-//   // myUpdate.jsp - 생년월일
-//   @PostMapping("/member/updateBdayAjax.do")
-//   @ResponseBody
-//   public String updateBdayAjax(MemberVo vo) {
-//       memberDao.update(vo);
-//       return "ok";
-//   }
 
    
-   // myUpdate.jsp - 주소 관련 table
+   // 주소 저장 (없으면 insert / 있으면 update)
    @PostMapping("/member/updateAddrAjax.do")
    @ResponseBody
    public String updateAddrAjax(MemberAddrVo vo) {
-       memberDao.updateAddr(vo);
+
+       MemberAddrVo exist = memberDao.selectAddrByMemIdx(vo.getMem_idx());
+
+       if (exist == null) {
+           memberDao.insertAddr(vo);   // 최초 저장
+       } else {
+           memberDao.updateAddr(vo);   // 수정
+       }
+
        return "ok";
    }
+//   @PostMapping("/member/updateAddrAjax.do")
+//   @ResponseBody
+//   public String updateAddrAjax(MemberAddrVo vo) {
+//
+//       MemberAddrVo exist = memberDao.selectAddrByMemIdx(vo.getMem_idx());
+//
+//       if (exist == null) {
+//           memberDao.insertAddr(vo);   	// 최초 저장(insert)
+//       } else {
+//           memberDao.updateAddr(vo);   // 수정(update)
+//       }
+//
+//       return "ok";
+//   }
+   
+   
+//   // 주소가 없으면 insert / 있으면 update
+//   @PostMapping("/member/updateAddrAjaxxx.do")
+//   @ResponseBody
+//   public String updateAddrAjaxxx(MemberAddrVo vo) {
+//
+//       MemberAddrVo exist = memberDao.selectAddrByMemIdx(vo.getMem_idx());
+//
+//       if (exist == null) {
+//           memberDao.insertAddr(vo);
+//       } else {
+//           memberDao.updateAddr(vo);
+//       }
+//
+//       return "ok";
+//   }
+//   
+//   
+//   // myUpdate.jsp - 주소 관련 table
+//   @PostMapping("/member/updateAddrAjax.do")
+//   @ResponseBody
+//   public String updateAddrAjax(MemberAddrVo vo) {
+//       memberDao.updateAddr(vo);
+//       return "ok";
+//   }
 
    
    
@@ -484,4 +570,3 @@ public class MemberController {
    
       
 }
-

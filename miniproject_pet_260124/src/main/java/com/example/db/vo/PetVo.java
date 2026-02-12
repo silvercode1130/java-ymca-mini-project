@@ -21,4 +21,3 @@ public class PetVo {
 	int				pet_age;
 	LocalDate		pet_bday;
 }
-

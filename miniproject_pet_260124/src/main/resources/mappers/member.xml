@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		LEFT JOIN role r ON
 		m.mem_role_idx = r.role_idx
 		WHERE m.mem_id = #{mem_id} AND
-		m.mem_is_deleted = 'N'
+		mem_is_deleted = 'N'
 	</select>
 
 	<!-- 회원가입 -->
@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        #{mem_ip},      <!-- mem_ip 없어서 회원가입 오류남. 정은 수정 -->
 	        1,              
 	        1,              
-	        #{mem_bday},	<!-- varchar 아니고 date. MyBatis 알아서 연결하므로 type 설정 x -->
+	        #{mem_bday}, <!-- varchar 아니고 date. MyBatis 알아서 연결하므로 type 설정 x -->
 	        SYSDATE
 	    )
 	</insert>
@@ -110,8 +110,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			mem_ip = #{mem_ip},
 			mem_role_idx = #{mem_role_idx},
 			mem_grade_idx = #{mem_grade_idx},
-			mem_bday = #{mem_bday},
+			mem_bday = #{mem_bday}
+			
 		WHERE mem_idx = #{mem_idx}
+			AND (mem_is_deleted IS NULL OR mem_is_deleted = 'N')  <!-- 있어야 함 -->
 	</update>
 			
 	<!-- 회원탈퇴(soft delete) -->
@@ -145,7 +147,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    LEFT OUTER JOIN member_addr ma ON m.mem_idx = ma.mem_idx
 	    
 	    WHERE m.mem_id = #{mem_id}
-	      AND (m.mem_is_deleted IS NULL OR m.mem_is_deleted = 'N')
+	      AND (mem_is_deleted IS NULL OR mem_is_deleted = 'N')
 	</select>
 	
 	<!-- 닉네임 중복 체크 -->
@@ -164,19 +166,75 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	
+	<!-- 프로필 관련 - 없으면 insert / 있으면 update -->
+	<insert id="insertProfile" parameterType="member_profile">
+    INSERT INTO member_profile (
+        mem_idx,
+        mem_nickname,
+        mem_intro,
+        mem_img
+    ) VALUES (
+        #{mem_idx},
+        #{mem_nickname},
+        #{mem_intro},
+        #{mem_img}
+    )
+</insert>
+	
+	
 	<!-- 프로필 수정 -->
+	<!-- 이미지 없으면 업로드 불가 -->
 	<update id="updateProfile" parameterType="member_profile">
-	    UPDATE member_profile SET
-	    	mem_nickname = #{mem_nickname},
-		    mem_intro = #{mem_intro},
-		    mem_img = #{mem_img}
+	    UPDATE member_profile
+	    <set>
+	        mem_nickname = #{mem_nickname},
+	        mem_intro    = #{mem_intro}
+	        <if test="mem_img != null">
+	            , mem_img = #{mem_img}
+	        </if>
+	    </set>
 	    WHERE mem_idx = #{mem_idx}
 	</update>
+
+	
+<!-- 주소 최초저장용 -->
+<insert id="insertAddr" parameterType="member_addr">
+    INSERT INTO member_addr (
+        addr_idx,
+        mem_idx,
+        mem_zipcode,
+        mem_addr,
+        mem_addr_detail
+    ) VALUES (
+        seq_mem_addr_idx.NEXTVAL,
+        #{mem_idx},
+        #{mem_zipcode},
+        #{mem_addr},
+        #{mem_addr_detail}
+    )
+</insert>
+
+<!--  -->
+<select id="selectAddrByMemIdx"
+        parameterType="int"
+        resultType="com.example.db.vo.MemberAddrVo">
+    SELECT
+        addr_idx,
+        mem_idx,
+        mem_zipcode,
+        mem_addr,
+        mem_addr_detail
+        
+    FROM member_addr
+    WHERE mem_idx = #{mem_idx}
+</select>
 	
 	<!-- updateAddrSimple: 이건 무슨 메서드인가요?? -->
+	<!-- 주소 하나만 받기 메서드 입니당 -->
 	<update id="updateAddrSimple" parameterType="member_addr">
 	    UPDATE member_addr SET
 	    	mem_addr = #{mem_addr}
+	    	
 	    WHERE mem_idx = #{mem_idx}
 	</update>
 	
@@ -186,20 +244,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    	mem_zipcode = #{mem_zipcode},
 	        mem_addr = #{mem_addr},
 	        mem_addr_detail = #{mem_addr_detail}
+	        
 	    WHERE mem_idx = #{mem_idx}
 	</update>
 		
 
 </mapper>
-
-
-
-
-
-
-
-
-
-
-
-
