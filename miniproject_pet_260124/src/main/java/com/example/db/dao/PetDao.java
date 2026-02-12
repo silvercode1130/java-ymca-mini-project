@@ -17,6 +17,16 @@ public interface PetDao {
 	int 		update(PetVo vo);
 
 	int 		delete(int pet_idx);
+
+	// void updatePrimaryPet(int pet_idx);
+
+	void resetPrimaryByPetIdx(int pet_idx);
+
+	void setPrimaryByPetIdx(int pet_idx);
+
+	void resetPrimaryByMemIdx(int mem_idx);
+	
+	public int updatePrimaryPet(int pet_idx);
 	
 
 
