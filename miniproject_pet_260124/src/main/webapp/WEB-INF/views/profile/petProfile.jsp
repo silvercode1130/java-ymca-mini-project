@@ -10,6 +10,34 @@
 <meta charset="UTF-8">
 <title>마이펫 | PetOn</title>
 <%@ include file="/WEB-INF/views/common/head.jsp" %>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // 모든 펫 리스트 아이템을 찾아서 나이를 계산해줄게!
+    const today = new Date();
+    
+    // 생일 정보가 담긴 요소들을 모두 가져와 (반복문 대응)
+    const petItems = document.querySelectorAll(".pet-info-item"); // 아래 HTML 수정을 먼저 해줘야해!
+
+    petItems.forEach(item => {
+        const bdayValue = item.getAttribute("data-bday");
+        const ageTarget = item.querySelector(".age-display");
+
+        if (bdayValue && ageTarget) {
+            const bday = new Date(bdayValue);
+            if (!isNaN(bday)) {
+                let age = today.getFullYear() - bday.getFullYear();
+                const m = today.getMonth() - bday.getMonth();
+                if (m < 0 || (m === 0 && today.getDate() < bday.getDate())) {
+                    age--;
+                }
+                ageTarget.innerText = age >= 0 ? age : 0;
+            }
+        }
+    });
+});
+</script>
+
 </head>
 <body class="bg-gray-50 layout-body">
 
@@ -65,61 +93,57 @@
               </p>
 
               <div class="flex flex-col gap-4">
-                <c:forEach var="pet" items="${petList}">
-                  <div class="flex items-center justify-between p-4 border border-gray-100 rounded-2xl hover:border-amber-300 hover:bg-amber-50/40 transition-colors">
-                    <div>
-                      <div class="flex items-center gap-2">
-                        <span class="text-lg font-bold text-gray-900">${pet.pet_name}</span>
-                        <c:if test="${pet.is_primary eq 'Y'}">
-                          <span class="text-xs font-bold text-amber-500 bg-amber-50 px-2 py-1 rounded-full">
-                            대표 반려동물
-                          </span>
-                        </c:if>
-                      </div>
-                      <p class="mt-1 text-sm text-gray-600">
-                        종류: 
-                        <c:choose>
-                          <c:when test="${pet.pet_species eq 'DOG'}">강아지</c:when>
-                          <c:when test="${pet.pet_species eq 'CAT'}">고양이</c:when>
-                          <c:otherwise>${pet.pet_species}</c:otherwise>
-                        </c:choose>
-                        · 성별:
-                        <c:choose>
-                          <c:when test="${pet.pet_gender eq 'M'}">남아</c:when>
-                          <c:when test="${pet.pet_gender eq 'F'}">여아</c:when>
-                          <c:otherwise>${pet.pet_gender}</c:otherwise>
-                        </c:choose>
-                        · 품종:
-                        <c:out value="${fn:replace(pet.pet_breed, ',', '')}" default="-" />
-                      </p>
-                      <p class="mt-1 text-xs text-gray-400">
-                        나이:
-                        <c:out value="${pet.pet_age}" default="-" />살
-                        · 생일:
-                        <c:out value="${pet.pet_bday}" default="-" />
-                      </p>
-                    </div>
-
-                    <button 
-                      type="button"
-                      class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors"
-                      onclick="location.href='${pageContext.request.contextPath}/update/petUpdate_form.do?pet_idx=${pet.pet_idx}'">
-                      수정
-                    </button>
-                  </div>
-                </c:forEach>
-              </div>
-
-              <div class="flex justify-end mt-10 pt-6 border-t border-gray-100">
-                <button 
-                  type="button"
-                  class="px-6 py-3 rounded-xl bg-amber-400 text-white font-bold hover:bg-amber-500 shadow-md transition-all"
-                  onclick="location.href='${pageContext.request.contextPath}/insert/petInsert_form.do'">
-                  반려동물 등록
-                </button>
-              </div>
-            </div>
-          </c:when>
+				  <c:forEach var="pet" items="${petList}">
+				    <div class="pet-item flex items-center justify-between p-4 border border-gray-100 rounded-2xl hover:border-amber-300 hover:bg-amber-50/40 transition-colors" 
+				         data-bday="${pet.pet_bday}">
+				      <div>
+				        <div class="flex items-center gap-2">
+				          <span class="text-lg font-bold text-gray-900">${pet.pet_name}</span>
+				          <c:if test="${pet.is_primary eq 'Y'}">
+				            <span class="text-xs font-bold text-amber-500 bg-amber-50 px-2 py-1 rounded-full">대표 반려동물</span>
+				          </c:if>
+				        </div>
+				        <p class="mt-1 text-sm text-gray-600">
+				          종류: 
+				          <c:choose>
+				            <c:when test="${pet.pet_species eq 'DOG'}">강아지</c:when>
+				            <c:when test="${pet.pet_species eq 'CAT'}">고양이</c:when>
+				            <c:otherwise>${pet.pet_species}</c:otherwise>
+				          </c:choose>
+				          · 성별:
+				          <c:choose>
+				            <c:when test="${pet.pet_gender eq 'M'}">남아</c:when>
+				            <c:when test="${pet.pet_gender eq 'F'}">여아</c:when>
+				            <c:otherwise>${pet.pet_gender}</c:otherwise>
+				          </c:choose>
+				          · 품종: <c:out value="${fn:replace(pet.pet_breed, ',', '')}" default="-" />
+				        </p>
+				        <p class="mt-1 text-xs text-gray-400">
+				          나이: <span class="age-display">-</span>살
+				          · 생일: <c:out value="${pet.pet_bday}" default="-" />
+				        </p>
+				      </div>
+				
+				      <button 
+				        type="button"
+				        class="px-4 py-2 rounded-xl border border-gray-200 text-gray-600 text-sm font-bold hover:bg-gray-50 transition-colors"
+				        onclick="location.href='${pageContext.request.contextPath}/update/petUpdate_form.do?pet_idx=${pet.pet_idx}'">
+				        수정
+				      </button>
+				    </div>
+				  </c:forEach>
+				</div>
+	
+	             <div class="flex justify-end mt-10 pt-6 border-t border-gray-100">
+	               <button 
+	                 type="button"
+	                 class="px-6 py-3 rounded-xl bg-amber-400 text-white font-bold hover:bg-amber-500 shadow-md transition-all"
+	                 onclick="location.href='${pageContext.request.contextPath}/insert/petInsert_form.do'">
+	                 반려동물 등록
+	               </button>
+	             </div>
+	           </div>
+	         </c:when>
 
           <c:otherwise>
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 min-h-[500px] flex flex-col items-center justify-center text-center">

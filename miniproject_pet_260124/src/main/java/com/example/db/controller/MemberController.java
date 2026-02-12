@@ -135,6 +135,11 @@ public class MemberController {
            profile.setMem_img(profile.getMem_img());  
        }
        
+       // ❌ 비밀번호 불일치
+       if (!user.getMem_pwd().equals(mem_pwd)) {
+           return "redirect:loginForm.do?reason=fail";
+       }
+       
        // 3) 세션에 저장
        session.setAttribute("loginMember", user);
        session.setAttribute("profile", profile);

@@ -42,14 +42,44 @@ public class PetController {
 
 	    PetVo vo = petDao.selectOneByPetIdx(pet_idx);
 
-	    // 🔐 보안: 내 펫이 아니면 차단
 	    if (vo == null || vo.getMem_idx() != user.getMem_idx()) {
 	        return "redirect:/profile/petProfile_form.do";
 	    }
 
 	    model.addAttribute("vo", vo);
+	    model.addAttribute("mode", "update");
+
+//	    return "profile/petProfile";
 	    return "update/petUpdate";
 	}
+	
+//	@RequestMapping("/update/petUpdate_form.do")
+//	public String petUpdateForm(
+//	        int pet_idx,
+//	        HttpSession session,
+//	        Model model) {
+//		
+//		System.out.println("넘어온 pet_idx = " + pet_idx);  // ⭐ 여기 추가
+//
+//	    MemberVo user = (MemberVo) session.getAttribute("user");
+//	    if (user == null) {
+//	        return "redirect:/member/loginForm.do";
+//	    }
+//
+//	    PetVo vo = petDao.selectOneByPetIdx(pet_idx);
+//	    
+//	    System.out.println("login mem_idx = " + user.getMem_idx());
+//	    System.out.println("pet mem_idx = " + vo.getMem_idx());
+//
+//	    // 🔐 보안: 내 펫이 아니면 차단
+//	    if (vo == null || vo.getMem_idx() != user.getMem_idx()) {
+//	        return "redirect:/profile/petProfile_form.do";
+//	    }
+//
+//	    model.addAttribute("updateVo", vo);
+//	    model.addAttribute("mode", "update");
+//	    return "profile/petProfile";   
+//	}
 	
 	
 	// petUpdate.jsp - 수정 시키기
@@ -83,7 +113,6 @@ public class PetController {
 
 	    petDao.update(vo);
 
-	    petDao.update(vo);
 	    return "redirect:/profile/petProfile_form.do";
 	}
 	
