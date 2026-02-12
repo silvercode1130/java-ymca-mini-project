@@ -16,49 +16,113 @@
     <!-- 상단 히어로 배너 영역 -->
     <%@ include file="/WEB-INF/views/home/hero.jsp" %>
 
-    <!-- 자주 찾는 서비스 -->
-    <section class="section section-shortcuts">
-        <div class="section-inner">
-            <h3 class="section-title">
-                <span class="section-title-bar"></span>
-                자주 찾는 서비스
-            </h3>
-            <div class="shortcut-grid shortcut-grid-8">
-                <div class="shortcut-card">
-                    <div class="shortcut-icon">🏥</div>
-                    <span class="shortcut-title">동물병원</span>
+    <!-- 마케팅 배너 섹션 -->
+<section class="section section-marketing">
+    <div class="section-inner">
+        <h3 class="section-title">
+            <span class="section-title-bar"></span>
+            펫온 추천 서비스
+        </h3>
+        <p class="section-subtitle">
+            반려생활을 더 편하게 만들어 줄 맞춤 서비스들을 만나보세요.
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-4">
+            <!-- 배너 1: 건강관리 -->
+            <a href="${pageContext.request.contextPath}/lab/list.do"
+               class="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                <div class="w-full" style="position:relative; padding-top:75%; overflow:hidden;">
+                    <img src="${pageContext.request.contextPath}/static/img/banner01.png"
+                         alt="건강 관리"
+                         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center; transition:transform .4s;"
+                         class="group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white">
+                        <span class="inline-block px-2 py-0.5 mb-2 text-[11px] font-bold rounded-full bg-emerald-500/90">
+                            건강 관리
+                        </span>
+                        <h4 class="text-base md:text-lg font-extrabold mb-1">
+                            수의사 콘텐츠로<br class="hidden md:block"> 건강 체크하기
+                        </h4>
+                        <p class="text-xs md:text-sm text-gray-100/90">
+                            PetOn LAB에서 믿을 수 있는 건강 정보를 확인해 보세요.
+                        </p>
+                    </div>
                 </div>
-                <div class="shortcut-card">
-                    <div class="shortcut-icon">✂️</div>
-                    <span class="shortcut-title">미용</span>
+            </a>
+
+            <!-- 배너 2: 쇼핑 특가 -->
+            <a href="${pageContext.request.contextPath}/item/item_list.do"
+               class="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                <div class="w-full" style="position:relative; padding-top:75%; overflow:hidden;">
+                    <img src="${pageContext.request.contextPath}img/banner02.png"
+                         alt="쇼핑 특가"
+                         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center; transition:transform .4s;"
+                         class="group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white">
+                        <span class="inline-block px-2 py-0.5 mb-2 text-[11px] font-bold rounded-full bg-amber-400/95">
+                            쇼핑 특가
+                        </span>
+                        <h4 class="text-base md:text-lg font-extrabold mb-1">
+                            오늘만 이 가격<br class="hidden md:block"> 반려용품 특가 모음
+                        </h4>
+                        <p class="text-xs md:text-sm text-gray-100/90">
+                            마감 임박 특가와 시즌 한정 상품을 한 번에.
+                        </p>
+                    </div>
                 </div>
-                <div class="shortcut-card">
-                    <div class="shortcut-icon">🐱</div>
-                    <span class="shortcut-title">펫시터</span>
+            </a>
+
+            <!-- 배너 3: 커뮤니티 -->
+            <a href="${pageContext.request.contextPath}/board?type=FREE"
+               class="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                <div class="w-full" style="position:relative; padding-top:75%; overflow:hidden;">
+                    <img src="${pageContext.request.contextPath}/static/img/banner04.png"
+                         alt="커뮤니티"
+                         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center; transition:transform .4s;"
+                         class="group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white">
+                        <span class="inline-block px-2 py-0.5 mb-2 text-[11px] font-bold rounded-full bg-sky-500/90">
+                            커뮤니티
+                        </span>
+                        <h4 class="text-base md:text-lg font-extrabold mb-1">
+                            집사들의 진짜 이야기
+                        </h4>
+                        <p class="text-xs md:text-sm text-gray-100/90">
+                            반려생활 꿀팁과 고민, 다른 집사들과 나눠보세요.
+                        </p>
+                    </div>
                 </div>
-                <div class="shortcut-card">
-                    <div class="shortcut-icon">🐕</div>
-                    <span class="shortcut-title">훈련소</span>
+            </a>
+
+            <!-- 배너 4: QnA / 상담 -->
+            <a href="${pageContext.request.contextPath}/board?type=QNA"
+               class="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                <div class="w-full" style="position:relative; padding-top:75%; overflow:hidden;">
+                    <img src="${pageContext.request.contextPath}/static/img/banner05.png"
+                         alt="QnA 상담"
+                         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center; transition:transform .4s;"
+                         class="group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                    <div class="absolute bottom-4 left-4 right-4 text-white">
+                        <span class="inline-block px-2 py-0.5 mb-2 text-[11px] font-bold rounded-full bg-violet-500/90">
+                            QnA
+                        </span>
+                        <h4 class="text-base md:text-lg font-extrabold mb-1">
+                            궁금한 건 바로 질문
+                        </h4>
+                        <p class="text-xs md:text-sm text-gray-100/90">
+                            사료, 건강, 행동까지 전문가와 집사들의 답변을 확인해요.
+                        </p>
+                    </div>
                 </div>
-                <div class="shortcut-card">
-                    <div class="shortcut-icon">🌈</div>
-                    <span class="shortcut-title">장례</span>
-                </div>
-                <div class="shortcut-card">
-                    <div class="shortcut-icon">🏠</div>
-                    <span class="shortcut-title">입양</span>
-                </div>
-                <div class="shortcut-card">
-                    <div class="shortcut-icon">📄</div>
-                    <span class="shortcut-title">보험</span>
-                </div>
-                <div class="shortcut-card">
-                    <div class="shortcut-icon">🦮</div>
-                    <span class="shortcut-title">산책</span>
-                </div>
-            </div>
+            </a>
         </div>
-    </section>
+    </div>
+</section>
+
 
     <!-- 쇼핑몰 추천 상품 -->
     <%-- <section class="section section-shop">

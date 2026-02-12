@@ -48,6 +48,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 
 <!-- petUpdate.jsp - 펫 정보 수정 -->
+<!-- 1. 기존 대표동물 전부 N 처리 -->
+<update id="resetPrimaryByMemIdx" parameterType="int">
+    UPDATE pet
+    SET is_primary = 'N'
+    WHERE mem_idx = #{mem_idx}
+</update>
+
+<!-- 2. 선택한 펫을 Y 처리 -->
+<update id="setPrimaryByPetIdx" parameterType="int">
+    UPDATE pet
+    SET is_primary = 'Y'
+    WHERE pet_idx = #{pet_idx}
+</update>
+
 <update id="update" parameterType="pet">
     UPDATE pet SET
         pet_name = #{pet_name},
@@ -58,7 +72,56 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         pet_bday = #{pet_bday},
         is_primary = #{is_primary}
     WHERE pet_idx = #{pet_idx}
-</update> 
+</update>
+
+<!-- <update id="resetPrimaryByPetIdx" parameterType="int">
+    UPDATE pet
+    SET is_primary = 'N'
+    WHERE mem_idx = (
+        SELECT mem_idx FROM pet WHERE pet_idx = #{pet_idx}
+    )
+</update>
+
+<update id="update" parameterType="pet">
+    UPDATE pet SET
+        pet_name = #{pet_name},
+        pet_species = #{pet_species},
+        pet_gender = #{pet_gender},
+        pet_breed = #{pet_breed},
+        pet_age = #{pet_age},
+        pet_bday = #{pet_bday},
+        is_primary = #{is_primary}
+    WHERE pet_idx = #{pet_idx}
+</update> -->
+
+<!-- <update id="update" parameterType="pet">
+    UPDATE pet SET
+        pet_name = #{pet_name},
+        pet_species = #{pet_species},
+        pet_gender = #{pet_gender},
+        pet_breed = #{pet_breed},
+        pet_age = #{pet_age},
+        pet_bday = #{pet_bday},
+        is_primary = #{is_primary}
+    WHERE pet_idx = #{pet_idx}
+</update>  -->
+
+
+<!-- 대표동물 한마리만 등록 -->
+<!-- <update id="resetPrimaryByPetIdx" parameterType="int">
+    UPDATE pet
+    SET is_primary = 'N'
+    WHERE mem_idx = (
+        SELECT mem_idx FROM pet WHERE pet_idx = #{pet_idx}
+    )
+</update> -->
+
+<!-- 대표동물 한마리만 등록 -->
+<!-- <update id="setPrimaryByPetIdx" parameterType="int">
+    UPDATE pet
+    SET is_primary = 'Y'
+    WHERE pet_idx = #{pet_idx}
+</update> -->
 
 
 <!-- petUpdate.jsp - 펫정보 삭제-->
@@ -70,13 +133,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
 <!-- ========== 부가기능 ========== -->
 <!-- 대표동물 설정 시 기존 Y → N 업데이트 -->
-<update id="updatePrimaryPet" parameterType="int">
-    <!-- 1. 기존 대표동물 N으로 -->
-    UPDATE pet SET is_primary = 'N' WHERE mem_idx = (SELECT mem_idx FROM pet WHERE pet_idx = #{pet_idx});
+<!-- <update id="updatePrimaryPet" parameterType="int">
+    1. 기존 대표동물 N으로
+    UPDATE pet SET is_primary = 'N' WHERE mem_idx = (SELECT mem_idx FROM pet WHERE pet_idx = #{pet_idx})
     
-    <!-- 2. 새 대표동물 Y로 -->
+    2. 새 대표동물 Y로
     UPDATE pet SET is_primary = 'Y' WHERE pet_idx = #{pet_idx}
-</update>
+</update> -->
 
 <!-- 대표동물만 조회하기 -->
 <select id="selectPrimaryPet" parameterType="int" resultType="pet">

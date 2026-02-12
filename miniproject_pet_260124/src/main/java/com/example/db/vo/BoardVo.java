@@ -27,6 +27,7 @@ public class BoardVo {
 	
 	// =========== 조인 객체 ============
 	MemberVo		writer;				// 조인된 참조테이블을 객체째로 담음
+	MemberProfileVo		writerProfile;	// 작성자 프로필
 	BoardTypeVo		boardType;			// vo.getWriter().getMem_id()
 	
 	// =========== 날짜 표기 변환용 게터 ============

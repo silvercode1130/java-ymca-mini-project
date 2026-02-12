@@ -69,6 +69,25 @@ function setPetType(type) {
         dogBreed.style.display = "none";
     }
 }
+
+
+// 펫 삭제
+function deletePet(pet_idx) {
+    if (confirm("정말로 이 반려동물 정보를 삭제하시겠습니까?")) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '${pageContext.request.contextPath}/petDelete.do';
+        
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'pet_idx';
+        input.value = pet_idx;
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
 </script>
 </head>
 
@@ -246,6 +265,12 @@ function setPetType(type) {
           </div>
 
           <div class="flex justify-end gap-3 mt-10 pt-6 border-t border-gray-100">
+		    <button type="button"
+		            class="px-6 py-3 rounded-xl border border-red-200 text-red-500 font-bold hover:bg-red-50 transition-colors mr-auto"
+		            onclick="deletePet(${vo.pet_idx})">
+		        삭제
+		    </button>
+          
             <button type="button"
                     class="px-6 py-3 rounded-xl border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors"
                     onclick="location.href='${pageContext.request.contextPath}/profile/petProfile_form.do'">
@@ -266,6 +291,5 @@ function setPetType(type) {
 </main>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
-<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.example.db.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -35,5 +36,14 @@ public interface BoardDao {
             @Param("board_idx")       int board_idx,
             @Param("board_type_code") String board_type_code
     );
+    
+    // 게시판 검색 (타입 + 태그 + 검색)
+    List<BoardVo> selectSearchListByTypeCodeTag(Map<String, Object> param);
+    
+    // 페이징용
+    int selectRowTotalByTypeTagSearch(Map<String, Object> param);
+
+    List<BoardVo> selectPageListByTypeTagSearch(Map<String, Object> param);
+
 }
 
