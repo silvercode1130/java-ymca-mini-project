@@ -187,7 +187,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     SET board_title   = #{board_title},
         board_content = #{board_content},
         board_tag     = #{board_tag},
-        board_thumbnail     = #{board_thumbnail},
+        board_thumbnail     = #{board_thumbnail, jdbcType=VARCHAR},
         board_moddate = SYSDATE
     WHERE board_idx = #{board_idx}
 </update>

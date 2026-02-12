@@ -43,7 +43,7 @@
             <p class="text-gray-500 mb-8">우리 아이를 위한 선물을 골라보세요!</p>
             <button 
                 type="button"
-                onclick="goShop()"
+                onclick="location.href='/item/item_list.do'"
                 class="px-8 py-3 bg-amber-400 text-white rounded-xl font-bold hover:bg-amber-500 transition-colors">
                 쇼핑하러 가기
             </button>
@@ -168,10 +168,24 @@
                            class="w-full text-center py-3 rounded-xl font-bold text-white bg-amber-400 hover:bg-amber-500 shadow-md">
                             주문하기
                         </a>
-                        <a href="/item/item_list.do"
-                           class="w-full text-center py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200">
-                            계속 쇼핑하기
-                        </a>
+                        <c:choose>
+						    <%-- 비로그인 담기 -> 로그인 과정을 거쳐온 특수한 경우라면? --%>
+						    <c:when test="${sessionScope.forceAllList == true}">
+						        <a href="/item/item_list.do?item_for=all&from=cart"
+						           onclick="<% session.removeAttribute("forceAllList"); %>" <%-- 한번 썼으면 증거 인멸! --%>
+						           class="w-full text-center py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200">
+						            계속 쇼핑하기
+						        </a>
+						    </c:when>
+						    
+						    <%-- 그 외에 평범하게 장바구니에 온 경우 --%>
+						    <c:otherwise>
+						        <a href="/item/item_list.do?from=cart"
+						           class="w-full text-center py-3 rounded-xl font-bold text-gray-600 bg-gray-100 hover:bg-gray-200">
+						            계속 쇼핑하기
+						        </a>
+						    </c:otherwise>
+						</c:choose>
                     </div>
                 </div>
             </div>

@@ -31,4 +31,7 @@ public interface OrdersDao {
     GradeVo getGradeInfo(int grade_idx);
 
 	void updateOrderStatus(int orders_idx, int i);
+	
+	// 6. 특정 회원의 쿠폰 사용 여부 확인 (주문 내역 중 쿠폰 할인이 있는 건수 조회)
+    int checkCouponUsed(int mem_idx);
 }

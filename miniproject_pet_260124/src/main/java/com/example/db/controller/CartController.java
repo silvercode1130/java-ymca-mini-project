@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,18 +26,18 @@ public class CartController {
 	// Model : jsp로 보내도록 값을 담아주는 파라미터 
     public String getCart(HttpSession session, Model model) {
 		// [테스트용 더미 추가] 로그인 안 되어 있으면 강제로 1번 회원 만들기
-	    if (session.getAttribute("user") == null) {
-	        MemberVo dummy = new MemberVo();
-	        dummy.setMem_idx(1);  // DB에 있는 회원번호로
-	        session.setAttribute("user", dummy);
-	    }
+//	    if (session.getAttribute("user") == null) {
+//	        MemberVo dummy = new MemberVo();
+//	        dummy.setMem_idx(1);  // DB에 있는 회원번호로
+//	        session.setAttribute("user", dummy);
+//	    }
 		
 		// 세션에서 로그인한 회원 정보를 MemberVo로 꺼내기(다운캐스팅)
         MemberVo user = (MemberVo) session.getAttribute("user"); 
         
         //  만약 회원정보가 없다면 로그인 페이지로 이동
         if (user == null) {
-            return "redirect:/loginForm"; 
+            return "redirect:/member/loginForm.do"; 
         }
 
         // 로그인 한 회원의 회원 번호로 장바구니 목록을 조회(dao 메서드 호출) 후 그 값을 list로 받음
@@ -55,27 +54,31 @@ public class CartController {
 	@RequestMapping("/cart/add/{item_idx}")
 	// @PathVariable : 주소창에 붙어온 번호({item_idx})를 받아서 자바 변수로 만듬
     public String addToCart(@PathVariable("item_idx") int item_idx, HttpSession session) {
-		// [추가] 로그인이 안 되어 있어도 1번 회원이 담는 것으로 처리
-	    if (session.getAttribute("user") == null) {
-	        MemberVo dummy = new MemberVo();
-	        dummy.setMem_idx(1); 
-	        session.setAttribute("user", dummy);
-	    }
+//		// 로그인이 안 되어 있어도 1번 회원이 담는 것으로 처리
+//	    if (session.getAttribute("user") == null) {
+//	        MemberVo dummy = new MemberVo();
+//	        dummy.setMem_idx(1); 
+//	        session.setAttribute("user", dummy);
+//	    }
 		
 	    // 세션에서 로그인한 회원 정보를 MemberVo로 꺼내기(다운캐스팅)
         MemberVo user = (MemberVo) session.getAttribute("user");
         
         //  만약 회원정보가 없다면 로그인 페이지로 이동
         if (user == null) {
-        	return "redirect:/loginForm";
+        	// [중요!] 로그인 성공 후 돌아올 주소를 세션에 저장해뎡!
+            session.setAttribute("redirectURL", "/cart/add/" + item_idx);
+            // [핵심!] 이 사람은 비로그인 상태에서 전체 리스트를 보다 왔다는 증거를 남겨뎡!
+            session.setAttribute("forceAllList", true);
+            
+        	return "redirect:/member/loginForm.do";
         }
         
         int mem_idx = user.getMem_idx();
-        // 3. 이 회원의 장바구니(cart_idx)가 DB에 있는지 확인해보기
-        // (cartDao에 getCartIdxByMemIdx 메서드가 있다고 가정할게!)
+        // 이 회원의 장바구니(cart_idx)가 DB에 있는지 확인해보기
         Integer cartIdx = cartDao.getCartIdxByMemIdx(mem_idx);
         
-        // 4. 만약 없다면(null이라면)? 장바구니 방을 먼저 만들어주기!
+        // 만약 없다면(null이라면)? 장바구니 방을 먼저 만들어주기
         if (cartIdx == null) {
             cartDao.createCart(mem_idx); 
         }

@@ -43,4 +43,15 @@ public class BoardService {
         // 이미지 없으면 썸네일 없음
         return null;
     }
+    
+    
+    // 게시글 수정용 썸네일 저장 메서드
+    public int updateBoardWithThumbnail(BoardVo vo) {
+    	
+        String thumb = extractFirstImageSrc(vo.getBoard_content());
+        vo.setBoard_thumbnail(thumb);
+        
+        return boardDao.update(vo);
+    }
+
 }

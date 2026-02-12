@@ -33,7 +33,7 @@
           <a href="${pageContext.request.contextPath}/shop" class="gnb-link">쇼핑몰</a>
         </li>
         <li class="gnb-item has-mega" data-menu="community">
-          <a href="${pageContext.request.contextPath}/community" class="gnb-link">커뮤니티</a>
+          <a href="${pageContext.request.contextPath}/qna/list.do" class="gnb-link">커뮤니티</a>
         </li>
         <li class="gnb-item has-mega" data-menu="service">
           <a href="${pageContext.request.contextPath}/service" class="gnb-link">서비스</a>
@@ -143,40 +143,24 @@
 
         <!-- 쇼핑몰 -->
         <div class="mega-group" data-menu="shop">
-          <a href="${pageContext.request.contextPath}/shop?cat=dog-food" class="mega-item">
-            <span class="mega-item-title">강아지 사료/간식</span>
+          <a href="${pageContext.request.contextPath}/shop?cat=dog" class="mega-item">
+            <span class="mega-item-title">강아지 용품</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/shop?cat=cat-food" class="mega-item">
-            <span class="mega-item-title">고양이 사료/간식</span>
-            <span class="mega-item-bar"></span>
-          </a>
-          <a href="${pageContext.request.contextPath}/shop?cat=toy" class="mega-item">
-            <span class="mega-item-title">용품/장난감</span>
-            <span class="mega-item-bar"></span>
-          </a>
-          <a href="${pageContext.request.contextPath}/shop?cat=hygiene" class="mega-item">
-            <span class="mega-item-title">위생/배변</span>
+          <a href="${pageContext.request.contextPath}/shop?cat=cat" class="mega-item">
+            <span class="mega-item-title">고양이 용품</span>
             <span class="mega-item-bar"></span>
           </a>
         </div>
 
         <!-- 커뮤니티 -->
         <div class="mega-group" data-menu="community">
-          <a href="${pageContext.request.contextPath}/board?type=QNA" class="mega-item">
+          <a href="${pageContext.request.contextPath}/qna/list.do" class="mega-item">
             <span class="mega-item-title">Q&A</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/board?type=FREE" class="mega-item">
+          <a href="${pageContext.request.contextPath}/free/list.do" class="mega-item">
             <span class="mega-item-title">자유게시판</span>
-            <span class="mega-item-bar"></span>
-          </a>
-          <a href="${pageContext.request.contextPath}/board?type=INFO" class="mega-item">
-            <span class="mega-item-title">정보공유</span>
-            <span class="mega-item-bar"></span>
-          </a>
-          <a href="${pageContext.request.contextPath}/board?type=SHOW" class="mega-item">
-            <span class="mega-item-title">펫자랑</span>
             <span class="mega-item-bar"></span>
           </a>
         </div>

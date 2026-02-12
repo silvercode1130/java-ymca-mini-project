@@ -25,12 +25,12 @@
       <span class="text-gray-400">&gt;</span>
       <span class="text-gray-900">
         <c:choose>
-          <c:when test="${b_type == 'qna'}">Q&A</c:when>
-          <c:when test="${b_type == 'free'}">자유게시판</c:when>
-          <c:when test="${b_type == 'lab'}">연구소</c:when>
-          <c:when test="${b_type == 'notice'}">공지사항</c:when>
-          <c:when test="${b_type == 'event'}">이벤트</c:when>
-          <c:otherwise>게시판</c:otherwise>
+            <c:when test="${vo.boardType.board_type_code == 'NOTICE'}">공지사항</c:when>
+            <c:when test="${vo.boardType.board_type_code == 'EVENT'}">이벤트</c:when>
+            <c:when test="${vo.boardType.board_type_code == 'LAB'}">연구소</c:when>
+            <c:when test="${vo.boardType.board_type_code == 'QNA'}">QnA</c:when>
+            <c:when test="${vo.boardType.board_type_code == 'FREE'}">자유게시판</c:when>
+            <c:otherwise>게시판</c:otherwise>
         </c:choose>
       </span>
     </div>
@@ -39,12 +39,12 @@
     <div class="bg-white rounded-t-3xl border-x border-t border-gray-100 p-8 pb-4">
       <span class="inline-block bg-amber-50 text-amber-600 font-bold px-3 py-1 rounded-full text-xs mb-3">
         <c:choose>
-          <c:when test="${b_type == 'qna'}">Q&A</c:when>
-          <c:when test="${b_type == 'free'}">자유게시판</c:when>
-          <c:when test="${b_type == 'lab'}">연구소</c:when>
-          <c:when test="${b_type == 'notice'}">공지사항</c:when>
-          <c:when test="${b_type == 'event'}">이벤트</c:when>
-          <c:otherwise>게시판</c:otherwise>
+            <c:when test="${vo.boardType.board_type_code == 'NOTICE'}">공지사항</c:when>
+            <c:when test="${vo.boardType.board_type_code == 'EVENT'}">이벤트</c:when>
+            <c:when test="${vo.boardType.board_type_code == 'LAB'}">연구소</c:when>
+            <c:when test="${vo.boardType.board_type_code == 'QNA'}">QnA</c:when>
+            <c:when test="${vo.boardType.board_type_code == 'FREE'}">자유게시판</c:when>
+            <c:otherwise>게시판</c:otherwise>
         </c:choose>
       </span>
 

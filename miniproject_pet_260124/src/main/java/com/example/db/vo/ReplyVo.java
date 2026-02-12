@@ -23,4 +23,16 @@ public class ReplyVo {
 	int				reply_ref;			// 원댓
 	int				reply_step;			// 댓글 순서
 	int				reply_depth;		// 댓글 깊이
+	
+	// 댓글 작성자 정보 (association)
+    MemberVo        writer;
+    
+ // =========== 날짜 표기 변환용 게터 ============
+    public String getReplyRegdateFormatted() {
+        if (reply_regdate == null) return "";
+        return reply_regdate.format(
+                java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm:ss")
+        );
+    }
+
 }

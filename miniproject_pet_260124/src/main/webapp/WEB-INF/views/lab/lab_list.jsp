@@ -83,11 +83,14 @@
         </div>
 
         <!-- 글쓰기 버튼: /lab/insert_form.do = b_type=lab -->
-        <button type="button"
-                onclick="location.href='${pageContext.request.contextPath}/lab/insert_form.do?page=${page}&tag=${tag}'"
-                class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm">
-          <span class="text-xs">✏️</span> 글쓰기
-        </button>
+        <c:if test="${not empty sessionScope.user}">
+		  <button type="button"
+		          onclick="location.href='${pageContext.request.contextPath}/lab/insert_form.do?page=${page}&tag=${tag}'"
+		          class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm">
+		    <span class="text-xs">✏️</span> 글쓰기
+		  </button>
+		</c:if>
+
       </div>
     </section>
 

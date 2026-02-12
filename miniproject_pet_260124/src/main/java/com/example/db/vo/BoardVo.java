@@ -36,4 +36,22 @@ public class BoardVo {
         // 또는 원하는 패턴으로:
         // return board_regdate.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"));
     }
+    
+    // =========== 내용 프리뷰용 게터 ============
+    public String getBoard_preview() {
+        if (board_content == null) return "";
+
+        // 1) HTML 태그 제거 (CKEditor 고려)
+        String plain = board_content.replaceAll("<[^>]*>", "");
+        plain = plain.replaceAll("\\s+", " ").trim(); // 공백 정리 (옵션)
+
+        // 2) 길이 제한 + ...
+        int maxLen = 40; // 원하는 길이
+        if (plain.length() > maxLen) {
+            return plain.substring(0, maxLen) + "...";
+        } else {
+            return plain;
+        }
+    }
+
 }

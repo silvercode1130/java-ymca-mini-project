@@ -122,6 +122,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    SET orders_status_idx = #{param2} 
 	    WHERE orders_idx = #{param1}
 	</update>
+	
+	<select id="checkCouponUsed" parameterType="int" resultType="int">
+	    SELECT COUNT(*) 
+	    FROM orders 
+	    WHERE mem_idx = #{mem_idx}
+	</select>
 </mapper>
 
 

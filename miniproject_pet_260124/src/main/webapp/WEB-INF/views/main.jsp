@@ -61,11 +61,11 @@
     </section>
 
     <!-- 쇼핑몰 추천 상품 -->
-    <section class="section section-shop">
+    <%-- <section class="section section-shop">
         <div class="section-inner">
             <div class="section-header">
                 <h3 class="section-title best-title">이번 주 인기 상품 🏆</h3>
-				<p class="section-subtitle">집사님들이 가장 많이 선택한 베스트셀러</p>
+<p class="section-subtitle">집사님들이 가장 많이 선택한 베스트셀러</p>
                 <a href="${pageContext.request.contextPath}/shop" class="section-link">전체 보기</a>
             </div>
             <div class="card-grid">
@@ -103,7 +103,47 @@
                 </c:if>
             </div>
         </div>
-    </section>
+    </section> --%>
+    
+<section class="section section-shop">
+    <div class="section-inner">
+        <div class="section-header">
+            <h3 class="section-title best-title">마감 임박 상품 🚨</h3>
+            <p class="section-subtitle">재고가 20개 이하인 상품들입니다. 서두르세요!</p>
+        </div>
+        
+        <div class="card-grid">
+            <c:forEach var="itemvo" items="${lowStockList}">
+                <a href="${pageContext.request.contextPath}/item/item_detail.do?item_idx=${itemvo.item_idx}" class="item-card">
+                    <div class="item-thumb">
+                        <img src="${pageContext.request.contextPath}/img/${itemvo.item_thumbnail_img}" alt="${itemvo.item_name}">
+                        <span class="item-tag" style="background-color: #ff4d4d; color: white;">품절주의</span>
+                    </div>
+                    
+                    <div class="item-info">
+                        <p class="item-name">${itemvo.item_name}</p>
+                        <div class="item-meta">
+                            <span class="item-meta-star">★ 남은 수량:</span>
+                            <span class="item-meta-count">${itemvo.item_stock}</span>
+                        </div>
+                        <p class="item-price">
+                            <span class="item-price-sale">LAST</span>
+    <span class="item-price-now">
+        ${itemvo.item_now_price}원
+    </span>
+                        </p>
+                    </div>
+                </a>
+            </c:forEach>
+            
+            <c:if test="${empty lowStockList}">
+                <div class="item-card placeholder-box" style="grid-column: span 4; text-align: center; padding: 60px; border: 1px dashed #ccc;">
+                    현재 마감 임박 상품이 없습니다.
+                </div>
+            </c:if>
+        </div>
+    </div>
+</section>
 
     <!-- 커뮤니티 최신글 / QnA 최신글 -->
     <section class="section section-community">

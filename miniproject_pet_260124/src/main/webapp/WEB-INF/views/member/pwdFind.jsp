@@ -15,6 +15,11 @@
 	        alert("아이디를 입력해주세요!");
 	        return;
 	    }
+
+	    // ❌ 비밀번호 불일치
+	    if (!user.getMem_pwd().equals(mem_pwd)) {
+	        return "redirect:loginForm.do?reason=fail";
+	    }
 	
 	    fetch("/member/check_id.do?mem_id=" + encodeURIComponent(memId))
 	        .then(res => res.json())
@@ -62,5 +67,8 @@
         <input type="text" id="randomOutput" readonly placeholder="버튼을 클릭하세요.">
         <button type="button" onclick="generateRandomPassword()">비밀번호 받기</button>
     </div>
+    
+<%@ include file="/WEB-INF/views/common/footer.jsp" %>
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>
 </html>

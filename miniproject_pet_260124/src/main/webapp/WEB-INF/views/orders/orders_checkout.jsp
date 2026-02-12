@@ -124,6 +124,14 @@
             <span>등급 할인</span>
             <span class="font-bold text-red-500">-${grade_discount_amount}원</span>
           </div>
+          
+		  <c:if test="${coupon_discount_amount > 0}">
+			  <div class="flex justify-between">
+				  <span>첫 구매 쿠폰(30%)</span>
+				  <span class="font-bold text-red-500">-${coupon_discount_amount}원</span>
+			  </div>
+		  </c:if>
+          
           <div class="flex justify-between text-gray-500">
             <span>배송비</span>
             <span class="font-bold">0원</span>
