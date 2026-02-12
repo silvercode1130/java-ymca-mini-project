@@ -135,4 +135,5 @@ public class ItemController {
         
         return "redirect:/shop"; // 등록 후 쇼핑몰 리스트로 이동
     }
+    
 }

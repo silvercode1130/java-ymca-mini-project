@@ -28,7 +28,9 @@ public interface ItemDao {
     
     void insertItem(ItemVo vo);
     
-    
 	// 회원의 mem_idx를 넣으면 대표 동물의 종(고양이/강아지)을 한글로 반환!
 	public String getPrimaryPetSpecies(int mem_idx);
+	
+	// 재고 20개 이하 상품 4개 가져오기
+	List<ItemVo> getLowStockItems();
 }

@@ -109,6 +109,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	        SYSDATE
 	    )
 	</insert>
+	
+	<select id="getLowStockItems" resultMap="ItemFullMap">
+	    SELECT * FROM (
+	        SELECT * FROM item 
+	        WHERE item_stock &lt;= 20 
+	        ORDER BY item_stock ASC
+	    ) WHERE ROWNUM &lt;= 4
+	</select>
 </mapper>
 
 
