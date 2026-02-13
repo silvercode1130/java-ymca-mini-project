@@ -298,7 +298,25 @@
 
   </div>
 </main>
-
+<!-- 오른쪽 플로팅 툴박스 -->
+<aside class="floating-toolbox">
+    <!-- <button type="button" class="toolbox-btn" title="내 정보">
+        <span class="toolbox-icon">👤</span>
+    </button>
+    <button type="button" class="toolbox-btn" title="알림">
+        <span class="toolbox-icon">🔔</span>
+    </button>
+    <button type="button" class="toolbox-btn" title="설정">
+        <span class="toolbox-icon">⚙️</span>
+    </button>
+    <div class="toolbox-divider"></div> -->
+    <button type="button" class="toolbox-btn" id="btnScrollTop" title="맨 위로">
+        <span class="toolbox-icon">↑</span>
+    </button>
+    <button type="button" class="toolbox-btn" id="btnScrollBottom" title="맨 아래로">
+        <span class="toolbox-icon">↓</span>
+    </button>
+</aside>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>

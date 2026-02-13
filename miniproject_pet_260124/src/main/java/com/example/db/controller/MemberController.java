@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.db.dao.MemberDao;
 import com.example.db.vo.GradeVo;
@@ -112,46 +113,42 @@ public class MemberController {
    
    
     // signUp.jsp ->  -> myUpdate.jsp
-   @RequestMapping("/member/login.do") 
-   // 1. 괄호 안에 HttpSession session 꼭 추가하기!
-   public String login(String mem_id,String mem_pwd) { 
-       
-      
-       // 2. 중요! 'int res'가 아니라 'MemberVo loginVO'로 받아야 해.
-       // Dao에서 MemberVo를 돌려주기로 했으니까, 받을 때도 MemberVo 그릇에 담아야 하거든!
-//       MemberVo user = memberDao.login(vo);
-      MemberVo user = memberDao.selectOneFromId(mem_id);
-      // System.out.println(user);
-       if (user == null) {
-          
-          return "redirect:/member/loginForm.do?reason=fail";
+   @RequestMapping("/member/login.do")
+   public String login(@RequestParam String mem_id,
+                       @RequestParam String mem_pwd,
+                       @RequestParam(required = false) String redirect,
+                       RedirectAttributes ra) {
+
+       MemberVo user = memberDao.selectOneFromId(mem_id);
+
+       // 아이디 없음 or 비번 틀림
+       if (user == null || !user.getMem_pwd().equals(mem_pwd)) {
+           ra.addAttribute("reason", "fail");
+           if (redirect != null && !redirect.isBlank()) {
+               ra.addAttribute("redirect", redirect);
+           }
+           return "redirect:/member/loginForm.do";
        }
-       
-       // 1) MemberProfileVo 가져오기
+
+       // 프로필
        MemberProfileVo profile = memberDao.selectProfileByMemIdx(user.getMem_idx());
-       
-       // 2) MemberVo에 mem_img setter가 있어야 함
-       if(profile != null) {
-           profile.setMem_img(profile.getMem_img());  
+       if (profile != null) {
+           profile.setMem_img(profile.getMem_img());
        }
-       
-       // ❌ 비밀번호 불일치
-       if (!user.getMem_pwd().equals(mem_pwd)) {
-           return "redirect:/member/loginForm.do?reason=fail";
-       }
-       
-       // 3) 세션에 저장
+
+       // 세션 저장
        session.setAttribute("profile", profile);
-       
-       // 3. 로그인이 성공했는지 확인 (데이터가 들어있으면 성공!)
-       
-           // 4. [이게 핵심!] 세션에 "vo"라는 이름으로 회원 정보를 통째로 저장해.
-           // 그래야 나중에 ${vo.mem_id} 처럼 꺼내 쓸 수 있어.
-           session.setAttribute("user", user); 
-     
-     
-     return "redirect:/main";
+       session.setAttribute("user", user);
+
+       // ★ redirect가 있으면 그쪽으로 보내기
+       if (redirect != null && !redirect.isBlank()) {
+           return "redirect:" + redirect;
+       }
+
+       // 없으면 메인
+       return "redirect:/main";
    }
+
    
  
 	// 이메일 로그인 처리

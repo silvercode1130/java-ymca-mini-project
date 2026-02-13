@@ -816,6 +816,51 @@ a {
   color: #9ca3af;
 }
 
+/* ========= 공통 페이지네이션 ========= */
+.pagination {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.pagination li {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination li a {
+  display: inline-flex;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  font-size: 12px;
+  color: #4b5563;
+  text-decoration: none;
+  background-color: #ffffff;
+  transition: background-color .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.pagination li a:hover {
+  background-color: #f9fafb;
+  border-color: #d1d5db;
+}
+
+.pagination li.active a,
+.pagination li a.active {
+  background-color: #fbbf24;
+  border-color: #fbbf24;
+  color: #111827;
+  font-weight: 700;
+}
+
+
 /* ========= LAB 공통 ========= */
 .lab-hero-section {
   padding: 40px 0 24px;

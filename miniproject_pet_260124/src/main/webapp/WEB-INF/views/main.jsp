@@ -15,114 +15,7 @@
 <main class="layout-main">
     <!-- 상단 히어로 배너 영역 -->
     <%@ include file="/WEB-INF/views/home/hero.jsp" %>
-
-    <!-- 마케팅 배너 섹션 -->
-<section class="section section-marketing">
-    <div class="section-inner">
-        <h3 class="section-title">
-            <span class="section-title-bar"></span>
-            펫온 추천 서비스
-        </h3>
-        <p class="section-subtitle">
-            반려생활을 더 편하게 만들어 줄 맞춤 서비스들을 만나보세요.
-        </p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mt-4">
-            <!-- 배너 1: 건강관리 -->
-            <a href="${pageContext.request.contextPath}/lab/list.do"
-               class="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
-                <div class="w-full" style="position:relative; padding-top:75%; overflow:hidden;">
-                    <img src="${pageContext.request.contextPath}/static/img/banner01.png"
-                         alt="건강 관리"
-                         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center; transition:transform .4s;"
-                         class="group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                    <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <span class="inline-block px-2 py-0.5 mb-2 text-[11px] font-bold rounded-full bg-emerald-500/90">
-                            건강 관리
-                        </span>
-                        <h4 class="text-base md:text-lg font-extrabold mb-1">
-                            수의사 콘텐츠로<br class="hidden md:block"> 건강 체크하기
-                        </h4>
-                        <p class="text-xs md:text-sm text-gray-100/90">
-                            PetOn LAB에서 믿을 수 있는 건강 정보를 확인해 보세요.
-                        </p>
-                    </div>
-                </div>
-            </a>
-
-            <!-- 배너 2: 쇼핑 특가 -->
-            <a href="${pageContext.request.contextPath}/item/item_list.do"
-               class="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
-                <div class="w-full" style="position:relative; padding-top:75%; overflow:hidden;">
-                    <img src="${pageContext.request.contextPath}img/banner02.png"
-                         alt="쇼핑 특가"
-                         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center; transition:transform .4s;"
-                         class="group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                    <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <span class="inline-block px-2 py-0.5 mb-2 text-[11px] font-bold rounded-full bg-amber-400/95">
-                            쇼핑 특가
-                        </span>
-                        <h4 class="text-base md:text-lg font-extrabold mb-1">
-                            오늘만 이 가격<br class="hidden md:block"> 반려용품 특가 모음
-                        </h4>
-                        <p class="text-xs md:text-sm text-gray-100/90">
-                            마감 임박 특가와 시즌 한정 상품을 한 번에.
-                        </p>
-                    </div>
-                </div>
-            </a>
-
-            <!-- 배너 3: 커뮤니티 -->
-            <a href="${pageContext.request.contextPath}/board?type=FREE"
-               class="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
-                <div class="w-full" style="position:relative; padding-top:75%; overflow:hidden;">
-                    <img src="${pageContext.request.contextPath}/static/img/banner04.png"
-                         alt="커뮤니티"
-                         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center; transition:transform .4s;"
-                         class="group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                    <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <span class="inline-block px-2 py-0.5 mb-2 text-[11px] font-bold rounded-full bg-sky-500/90">
-                            커뮤니티
-                        </span>
-                        <h4 class="text-base md:text-lg font-extrabold mb-1">
-                            집사들의 진짜 이야기
-                        </h4>
-                        <p class="text-xs md:text-sm text-gray-100/90">
-                            반려생활 꿀팁과 고민, 다른 집사들과 나눠보세요.
-                        </p>
-                    </div>
-                </div>
-            </a>
-
-            <!-- 배너 4: QnA / 상담 -->
-            <a href="${pageContext.request.contextPath}/board?type=QNA"
-               class="group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-lg transition-shadow duration-300">
-                <div class="w-full" style="position:relative; padding-top:75%; overflow:hidden;">
-                    <img src="${pageContext.request.contextPath}/static/img/banner05.png"
-                         alt="QnA 상담"
-                         style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; transform-origin:center; transition:transform .4s;"
-                         class="group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                    <div class="absolute bottom-4 left-4 right-4 text-white">
-                        <span class="inline-block px-2 py-0.5 mb-2 text-[11px] font-bold rounded-full bg-violet-500/90">
-                            QnA
-                        </span>
-                        <h4 class="text-base md:text-lg font-extrabold mb-1">
-                            궁금한 건 바로 질문
-                        </h4>
-                        <p class="text-xs md:text-sm text-gray-100/90">
-                            사료, 건강, 행동까지 전문가와 집사들의 답변을 확인해요.
-                        </p>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
-</section>
-
+	
 
     <!-- 쇼핑몰 추천 상품 -->
     <%-- <section class="section section-shop">
@@ -209,74 +102,143 @@
     </div>
 </section>
 
-    <!-- 커뮤니티 최신글 / QnA 최신글 -->
-    <section class="section section-community">
-        <div class="section-inner section-inner-flex community-wrap">
-            <div class="section-block community-block">
-                <div class="section-header">
-                    <h3 class="section-title community-title">커뮤니티 최신글 🔥</h3>
-                    <a href="${pageContext.request.contextPath}/board?type=FREE" class="section-link">더 보기</a>
+       <!-- 보험 광고 배너 (다른 섹션과 동일 너비) -->
+<section class="section section-banner">
+    <div class="section-inner">
+        <div class="bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl overflow-hidden relative shadow-lg">
+            <div class="flex flex-col md:flex-row items-center">
+                <!-- 텍스트 영역 -->
+                <div class="p-8 md:p-12 md:w-1/2 z-10 relative">
+                    <div class="inline-block px-3 py-1 bg-amber-400 text-slate-900 font-bold text-xs rounded-full mb-4">
+                        PetOn Care Plus
+                    </div>
+                    <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4 leading-tight">
+                        우리 아이 병원비 걱정,<br/>
+                        <span class="text-amber-400">펫온 펫보험</span>으로 든든하게!
+                    </h2>
+                    <p class="text-slate-300 mb-8 text-base md:text-lg">
+                        슬개골 탈구부터 피부병까지.<br/>
+                        예상치 못한 의료비를 최대 90% 보장해드립니다.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <button
+                                type="button"
+                                class="px-6 md:px-8 py-3 bg-white text-slate-900 font-bold rounded-xl hover:bg-amber-50 transition-colors text-sm md:text-base">
+                            내 보험료 확인하기
+                        </button>
+                        <button
+                                type="button"
+                                class="px-6 md:px-8 py-3 bg-transparent border border-slate-600 text-white font-bold rounded-xl hover:bg-slate-800 transition-colors text-sm md:text-base">
+                            보장 내용 자세히보기
+                        </button>
+                    </div>
                 </div>
-                <ul class="board-list board-list-card">
+
+                <!-- 이미지 영역 -->
+                <div class="md:w-1/2 h-64 md:h-96 relative w-full">
+                    <img
+                            src="https://images.unsplash.com/photo-1599889305003-f9e211e31f8f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080"
+                            alt="Happy dog with vet"
+                            class="absolute inset-0 w-full h-full object-cover object-center"
+                    />
+                    <div
+                            class="absolute inset-0 bg-gradient-to-t from-slate-900/90 md:bg-gradient-to-l md:from-transparent md:to-slate-900 via-slate-900/30 to-transparent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+        <!-- 커뮤니티 최신글 / QnA 최신글 -->
+    <section class="section section-community">
+        <div class="section-inner community-wrap" style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px;">
+            <!-- FREE 커뮤니티 -->
+            <div class="community-block">
+                <div class="section-header" style="margin-bottom: 12px;">
+                    <h3 class="section-title community-title">커뮤니티 최신글 🔥</h3>
+                    <a href="${pageContext.request.contextPath}/free/list.do" class="section-link">더 보기</a>
+                </div>
+
+                <ul class="board-list" style="list-style: none; margin: 0; padding: 0;">
                     <c:forEach var="post" items="${latestCommunityList}">
-                        <li>
-                            <a href="${pageContext.request.contextPath}/board/detail?boardIdx=${post.board_idx}">
-                                <div class="board-card">
-                                    <div class="board-card-header">
-                                        <span class="board-tag-pill board-tag-${post.board_tag}">
-                                            ${post.board_tag}
-                                        </span>
-                                        <span class="board-date">
-                                            <fmt:formatDate value="${post.board_regdate}" pattern="yyyy.MM.dd"/>
-                                        </span>
-                                    </div>
-                                    <div class="board-card-title">${post.board_title}</div>
-                                    <div class="board-card-meta">
-                                        <span>조회 ${post.board_readhit}</span>
-                                    </div>
-                                </div>
+                        <li style="margin: 4px 0;">
+                            <a href="${pageContext.request.contextPath}/free/view.do?board_idx=${post.board_idx}"
+                               class="board-row"
+                               style="display: flex; justify-content: flex-end; gap: 8px; font-size: 14px; color: #333; text-decoration: none;">
+                                <!-- 오른쪽 정렬을 위해 전체를 flex-end로 -->
+                                <span class="board-date" style="color:#999; white-space: nowrap;">
+                                    <fmt:formatDate value="${post.board_regdate}" pattern="yy.MM.dd"/>
+                                </span>
+                                <span class="board-meta-read" style="color:#bbb; white-space: nowrap;">
+                                    조회 ${post.board_readhit}
+                                </span>
+                                <span class="board-title" style="flex: 1; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <span class="board-tag-pill"
+                                          style="display:inline-block; margin-right:4px; padding:2px 6px; border-radius:999px; font-size:11px; background-color:#f3f4ff; color:#4f46e5; vertical-align:middle;">
+                                        ${post.board_tag}
+                                    </span>
+                                    ${post.board_title}
+                                </span>
                             </a>
                         </li>
                     </c:forEach>
+
                     <c:if test="${empty latestCommunityList}">
-                        <li class="board-empty">최신 커뮤니티 글이 없습니다.</li>
+                        <li class="board-empty" style="padding: 8px 0; font-size: 14px; color: #999; text-align: right;">
+                            최신 커뮤니티 글이 없습니다.
+                        </li>
                     </c:if>
                 </ul>
             </div>
 
-            <div class="section-block community-block">
-                <div class="section-header">
+            <!-- QnA -->
+            <div class="community-block">
+                <div class="section-header" style="margin-bottom: 12px;">
                     <h3 class="section-title">QnA 최신글</h3>
-                    <a href="${pageContext.request.contextPath}/board?type=QNA" class="section-link">더 보기</a>
+                    <a href="${pageContext.request.contextPath}/qna/list.do" class="section-link">더 보기</a>
                 </div>
-                <ul class="board-list board-list-card">
+
+                <ul class="board-list" style="list-style: none; margin: 0; padding: 0;">
                     <c:forEach var="qna" items="${latestQnaList}">
-                        <li>
-                            <a href="${pageContext.request.contextPath}/board/detail?boardIdx=${qna.board_idx}">
-                                <div class="board-card">
-                                    <div class="board-card-header">
-                                        <span class="board-tag-pill">QnA</span>
-                                        <span class="board-date">
-                                            <fmt:formatDate value="${qna.board_regdate}" pattern="yyyy.MM.dd"/>
-                                        </span>
-                                    </div>
-                                    <div class="board-card-title">${qna.board_title}</div>
-                                </div>
+                        <li style="margin: 4px 0;">
+                            <a href="${pageContext.request.contextPath}/qna/view.do?board_idx=${qna.board_idx}"
+                               class="board-row"
+                               style="display: flex; justify-content: flex-end; gap: 8px; font-size: 14px; color: #333; text-decoration: none;">
+                                <span class="board-date" style="color:#999; white-space: nowrap;">
+                                    <fmt:formatDate value="${qna.board_regdate}" pattern="yy.MM.dd"/>
+                                </span>
+                                <span class="board-meta-read" style="color:#bbb; white-space: nowrap;">
+                                    조회 ${qna.board_readhit}
+                                </span>
+                                <span class="board-title" style="flex: 1; text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    <span class="board-tag-pill"
+                                          style="display:inline-block; margin-right:4px; padding:2px 6px; border-radius:999px; font-size:11px; background-color:#fee2e2; color:#b91c1c; vertical-align:middle;">
+                                        QnA
+                                    </span>
+                                    ${qna.board_title}
+                                </span>
                             </a>
                         </li>
                     </c:forEach>
+
                     <c:if test="${empty latestQnaList}">
-                        <li class="board-empty">등록된 QnA 글이 없습니다.</li>
+                        <li class="board-empty" style="padding: 8px 0; font-size: 14px; color: #999; text-align: right;">
+                            등록된 QnA 글이 없습니다.
+                        </li>
                     </c:if>
                 </ul>
             </div>
         </div>
     </section>
+
 </main>
 
 <!-- 오른쪽 플로팅 툴박스 -->
 <aside class="floating-toolbox">
-    <button type="button" class="toolbox-btn" title="내 정보">
+    <!-- <button type="button" class="toolbox-btn" title="내 정보">
         <span class="toolbox-icon">👤</span>
     </button>
     <button type="button" class="toolbox-btn" title="알림">
@@ -285,7 +247,7 @@
     <button type="button" class="toolbox-btn" title="설정">
         <span class="toolbox-icon">⚙️</span>
     </button>
-    <div class="toolbox-divider"></div>
+    <div class="toolbox-divider"></div> -->
     <button type="button" class="toolbox-btn" id="btnScrollTop" title="맨 위로">
         <span class="toolbox-icon">↑</span>
     </button>

@@ -1,5 +1,7 @@
 package com.example.db.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +20,7 @@ import com.example.db.constant.MyConstant;
 import com.example.db.dao.BoardDao;
 import com.example.db.dao.ReplyDao;
 import com.example.db.service.BoardService;
+import com.example.db.util.Paging;
 import com.example.db.vo.BoardVo;
 import com.example.db.vo.MemberVo;
 import com.example.db.vo.ReplyVo;
@@ -44,7 +47,7 @@ public class BoardController {
     ReplyDao replyDao;
 
 
-    // ===== 사이트 전체글 조회 (MVP면 나중에 정리해도 됨) =====
+    // ===== 사이트 전체글 조회 (테스트용) =====
     @RequestMapping("/board/list.do")
     public String list(Model model) {
         List<BoardVo> list = boardDao.selectList();
@@ -52,12 +55,12 @@ public class BoardController {
         return "board/board_list";
     }
 
-    // ===== 공지사항 목록 + 검색 + 페이징 =====
+ // ===== 공지사항 목록 + 검색 + 페이징 =====
     @GetMapping("/notice/list.do")
     public String noticeList(@RequestParam(defaultValue = "1") int page,
                              @RequestParam(required = false) String searchType,
                              @RequestParam(required = false) String keyword,
-                             Model model) {
+                             Model model) throws UnsupportedEncodingException {
 
         int pageSize = MyConstant.Board.BLOCK_LIST;
         int start = (page - 1) * pageSize + 1;
@@ -65,7 +68,7 @@ public class BoardController {
 
         Map<String, Object> param = new HashMap<>();
         param.put("board_type_code", "NOTICE");
-        param.put("board_tag", "ALL");      // 태그 없음
+        param.put("board_tag", "ALL");
         param.put("searchType", searchType);
         param.put("keyword", keyword);
         param.put("start", start);
@@ -74,6 +77,26 @@ public class BoardController {
         int rowTotal = boardDao.selectRowTotalByTypeTagSearch(param);
         List<BoardVo> list = boardDao.selectPageListByTypeTagSearch(param);
 
+        String sf = String.format(
+                "searchType=%s&keyword=%s",
+                searchType == null ? "" : searchType,
+                keyword == null ? "" : URLEncoder.encode(keyword, "utf-8")
+        );
+
+        String pageMenu = Paging.getPaging3(
+                "list.do",
+                sf,
+                page,
+                rowTotal,
+                MyConstant.Board.BLOCK_LIST,
+                MyConstant.Board.BLOCK_PAGE
+        );
+
+        // 글쓰기 권한: NOTICE
+        MemberVo user = (MemberVo) session.getAttribute("user");
+        int minRole = boardDao.selectMinRoleByTypeCode("NOTICE");
+        boolean canWrite = (user != null && user.getMem_role_idx() >= minRole);
+
         model.addAttribute("list", list);
         model.addAttribute("b_type", "notice");
         model.addAttribute("page", page);
@@ -81,17 +104,18 @@ public class BoardController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("pageMenu", pageMenu);
+        model.addAttribute("canWrite", canWrite);
 
-        // Paging 유틸 쓰고 싶으면 여기서 pageMenu 만들어서 넘겨도 됨
         return "home/notice_list";
     }
 
-    // ===== 이벤트 목록 + 검색(원하면) + 페이징 =====
+    // ===== 이벤트 목록 + 검색 + 페이징 =====
     @GetMapping("/event/list.do")
     public String eventList(@RequestParam(defaultValue = "1") int page,
                             @RequestParam(required = false) String searchType,
                             @RequestParam(required = false) String keyword,
-                            Model model) {
+                            Model model) throws UnsupportedEncodingException {
 
         int pageSize = MyConstant.Board.BLOCK_LIST;
         int start = (page - 1) * pageSize + 1;
@@ -108,6 +132,25 @@ public class BoardController {
         int rowTotal = boardDao.selectRowTotalByTypeTagSearch(param);
         List<BoardVo> list = boardDao.selectPageListByTypeTagSearch(param);
 
+        String sf = String.format(
+                "searchType=%s&keyword=%s",
+                searchType == null ? "" : searchType,
+                keyword == null ? "" : URLEncoder.encode(keyword, "utf-8")
+        );
+
+        String pageMenu = Paging.getPaging3(
+                "list.do",
+                sf,
+                page,
+                rowTotal,
+                MyConstant.Board.BLOCK_LIST,
+                MyConstant.Board.BLOCK_PAGE
+        );
+
+        MemberVo user = (MemberVo) session.getAttribute("user");
+        int minRole = boardDao.selectMinRoleByTypeCode("EVENT");
+        boolean canWrite = (user != null && user.getMem_role_idx() >= minRole);
+
         model.addAttribute("list", list);
         model.addAttribute("b_type", "event");
         model.addAttribute("page", page);
@@ -115,6 +158,8 @@ public class BoardController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("pageMenu", pageMenu);
+        model.addAttribute("canWrite", canWrite);
 
         return "home/event_list";
     }
@@ -125,7 +170,7 @@ public class BoardController {
                           @RequestParam(defaultValue = "1") int page,
                           @RequestParam(required = false) String searchType,
                           @RequestParam(required = false) String keyword,
-                          Model model) {
+                          Model model) throws UnsupportedEncodingException {
 
         int pageSize = MyConstant.Board.BLOCK_LIST;
         int start = (page - 1) * pageSize + 1;
@@ -142,6 +187,26 @@ public class BoardController {
         int rowTotal = boardDao.selectRowTotalByTypeTagSearch(param);
         List<BoardVo> list = boardDao.selectPageListByTypeTagSearch(param);
 
+        String sf = String.format(
+                "tag=%s&searchType=%s&keyword=%s",
+                tag,
+                searchType == null ? "" : searchType,
+                keyword == null ? "" : URLEncoder.encode(keyword, "utf-8")
+        );
+
+        String pageMenu = Paging.getPaging3(
+                "list.do",
+                sf,
+                page,
+                rowTotal,
+                MyConstant.Board.BLOCK_LIST,
+                MyConstant.Board.BLOCK_PAGE
+        );
+
+        MemberVo user = (MemberVo) session.getAttribute("user");
+        int minRole = boardDao.selectMinRoleByTypeCode("LAB");
+        boolean canWrite = (user != null && user.getMem_role_idx() >= minRole);
+
         model.addAttribute("list", list);
         model.addAttribute("tag", tag);
         model.addAttribute("b_type", "lab");
@@ -150,6 +215,8 @@ public class BoardController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("pageMenu", pageMenu);
+        model.addAttribute("canWrite", canWrite);
 
         return "lab/lab_list";
     }
@@ -160,7 +227,7 @@ public class BoardController {
                           @RequestParam(defaultValue = "1") int page,
                           @RequestParam(required = false) String searchType,
                           @RequestParam(required = false) String keyword,
-                          Model model) {
+                          Model model) throws UnsupportedEncodingException {
 
         int pageSize = MyConstant.Board.BLOCK_LIST;
         int start = (page - 1) * pageSize + 1;
@@ -177,6 +244,26 @@ public class BoardController {
         int rowTotal = boardDao.selectRowTotalByTypeTagSearch(param);
         List<BoardVo> list = boardDao.selectPageListByTypeTagSearch(param);
 
+        String sf = String.format(
+                "tag=%s&searchType=%s&keyword=%s",
+                tag,
+                searchType == null ? "" : searchType,
+                keyword == null ? "" : URLEncoder.encode(keyword, "utf-8")
+        );
+
+        String pageMenu = Paging.getPaging3(
+                "list.do",
+                sf,
+                page,
+                rowTotal,
+                MyConstant.Board.BLOCK_LIST,
+                MyConstant.Board.BLOCK_PAGE
+        );
+
+        MemberVo user = (MemberVo) session.getAttribute("user");
+        int minRole = boardDao.selectMinRoleByTypeCode("QNA");
+        boolean canWrite = (user != null && user.getMem_role_idx() >= minRole);
+
         model.addAttribute("list", list);
         model.addAttribute("tag", tag);
         model.addAttribute("b_type", "qna");
@@ -185,6 +272,8 @@ public class BoardController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("pageMenu", pageMenu);
+        model.addAttribute("canWrite", canWrite);
 
         return "community/qna_list";
     }
@@ -195,7 +284,7 @@ public class BoardController {
                            @RequestParam(defaultValue = "1") int page,
                            @RequestParam(required = false) String searchType,
                            @RequestParam(required = false) String keyword,
-                           Model model) {
+                           Model model) throws UnsupportedEncodingException {
 
         int pageSize = MyConstant.Board.BLOCK_LIST;
         int start = (page - 1) * pageSize + 1;
@@ -212,6 +301,26 @@ public class BoardController {
         int rowTotal = boardDao.selectRowTotalByTypeTagSearch(param);
         List<BoardVo> list = boardDao.selectPageListByTypeTagSearch(param);
 
+        String sf = String.format(
+                "tag=%s&searchType=%s&keyword=%s",
+                tag,
+                searchType == null ? "" : searchType,
+                keyword == null ? "" : URLEncoder.encode(keyword, "utf-8")
+        );
+
+        String pageMenu = Paging.getPaging3(
+                "list.do",
+                sf,
+                page,
+                rowTotal,
+                MyConstant.Board.BLOCK_LIST,
+                MyConstant.Board.BLOCK_PAGE
+        );
+
+        MemberVo user = (MemberVo) session.getAttribute("user");
+        int minRole = boardDao.selectMinRoleByTypeCode("FREE");
+        boolean canWrite = (user != null && user.getMem_role_idx() >= minRole);
+
         model.addAttribute("list", list);
         model.addAttribute("tag", tag);
         model.addAttribute("b_type", "free");
@@ -220,9 +329,12 @@ public class BoardController {
         model.addAttribute("pageSize", pageSize);
         model.addAttribute("searchType", searchType);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("pageMenu", pageMenu);
+        model.addAttribute("canWrite", canWrite);
 
         return "community/free_list";
     }
+
 
     // ===== 게시글 상세 =====
     @GetMapping("/{b_type}/view.do")

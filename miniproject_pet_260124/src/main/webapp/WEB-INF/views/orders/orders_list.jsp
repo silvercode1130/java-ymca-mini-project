@@ -7,6 +7,31 @@
 <head>
 <meta charset="UTF-8">
 <title>나의 주문 내역 | PetOn</title>
+<script>
+   // 1. 취소 버튼 클릭 시 스크롤 위치를 포함해서 이동하는 함수
+   function cancelWithScroll(ordersIdx) {
+       if(confirm('정말 취소하시겠습니까?')) {
+           const scrollPos = window.scrollY; // 현재 스크롤 위치 저장
+           // 주소 뒤에 scroll 파라미터를 붙여서 컨트롤러로 보냄
+           location.href = '${pageContext.request.contextPath}/orders/cancel/' + ordersIdx + '?scroll=' + scrollPos;
+       }
+   }
+   
+   // 2. 페이지가 로드되었을 때 스크롤 위치가 파라미터에 있으면 복구!
+   window.onload = function() {
+       const urlParams = new URLSearchParams(window.location.search);
+       const scrollPos = urlParams.get('scroll');
+       if (scrollPos) {
+           // 브라우저가 요소를 배치할 시간을 0.1초(100ms)만 
+           setTimeout(function() {
+               window.scrollTo({
+                   top: parseInt(scrollPos),
+                   behavior: 'instant' // 즉시 이동
+               });
+           }, 100);
+       }
+   };
+</script>
 <%@ include file="/WEB-INF/views/common/head.jsp" %>
 </head>
 <body class="bg-gray-50 layout-body">
@@ -149,15 +174,30 @@
                   <span class="text-sm text-gray-400 font-mono">
                     주문번호 ${vo.orders_idx}
                   </span>
+                  <a href="${pageContext.request.contextPath}/orders/detail/${vo.orders_idx}"
+                    class="text-[10px] text-gray-400 hover:text-gray-600 hover:underline transition-colors ml-2">
+                     상세내역보기 <span class="text-[8px]">〉</span>
+                 </a>
                 </div>
-                <button type="button"
-                        onclick="location.href='${pageContext.request.contextPath}/orders/detail/${vo.orders_idx}'"
-                        class="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-900 font-medium">
-                  주문상세보기
-                  <span class="text-xs">›</span>
-                </button>
               </div>
-
+           
+           <div class="mb-5 space-y-3">
+             <%-- itemMap에서 현재 주문번호(vo.orders_idx)에 해당하는 리스트를 꺼내서 돌림 --%>
+             <c:forEach var="oi" items="${itemMap[vo.orders_idx]}">
+               <div class="flex items-center gap-4">
+                 <img src="${pageContext.request.contextPath}/img/${oi.item.item_thumbnail_img}" 
+                      alt="상품" class="w-12 h-12 rounded-lg object-cover bg-gray-50 border border-gray-100">
+               
+                 <div class="flex-1 min-w-0">
+                   <p class="text-sm font-bold text-gray-800 truncate">${oi.item.item_name}</p>
+                   <p class="text-xs text-gray-400">
+                       ${oi.orders_price_at}원 · ${oi.orders_item_quantity}개
+                   </p>
+                 </div>
+               </div>
+             </c:forEach>
+           </div>
+           
               <!-- 바디: 상태 배지 + 금액/버튼 -->
               <div class="flex flex-col sm:flex-row gap-4 sm:items-center sm:justify-between">
                 <div class="flex items-center gap-2">
@@ -180,21 +220,23 @@
                       </button>
                     </c:if>
 
-                    <%-- 오직 '결제대기(1)' 상태일 때만 취소 버튼이 보여뎡! --%>
-					<c:if test="${vo.orders_status_idx < 3}">
-					    <button type="button"
-					            onclick="if(confirm('정말 취소하시겠습니까?')) { location.href='${pageContext.request.contextPath}/orders/cancel/${vo.orders_idx}'; }"
-					            class="px-4 py-2 border border-red-200 rounded-lg text-sm font-bold text-red-500 hover:bg-red-50">
-					        주문취소
-					    </button>
-					</c:if>
-					
-					<%-- 결제완료(2) 이상이거나 취소(5)된 경우에는 상태만 보여줘뎡! --%>
-					<c:if test="${vo.orders_status_idx >= 3}">
-					    <span class="px-4 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-500">
-					        취소 불가
-					    </span>
-					</c:if>
+                    <%-- 오직 '결제대기(1)' 상태일 때만 취소 버튼이 보이게 --%>
+               <c:if test="${vo.orders_status_idx < 3}">
+                   <button type="button"
+                           onclick="if(confirm('정말 취소하시겠습니까?')) { location.href='${pageContext.request.contextPath}/orders/cancel/${vo.orders_idx}?scroll=' + window.scrollY; }"
+                           class="px-4 py-2 border border-red-200 rounded-lg text-sm font-bold text-red-500 hover:bg-red-50">
+                       주문취소
+                   </button>
+               </c:if>
+               
+               <%-- 결제완료(2) 이상이거나 취소(5)된 경우에는 상태만 보여줌 --%>
+               <c:if test="${vo.orders_status_idx >= 3}">
+                   <span class="px-4 py-2 bg-gray-50 rounded-lg text-sm font-medium text-gray-500">
+                       취소 불가
+                   </span>
+               </c:if>
+               
+                  
                   </div>
                 </div>
               </div>
@@ -212,7 +254,25 @@
     </section>
   </div>
 </main>
-
+<!-- 오른쪽 플로팅 툴박스 -->
+<aside class="floating-toolbox">
+    <!-- <button type="button" class="toolbox-btn" title="내 정보">
+        <span class="toolbox-icon">👤</span>
+    </button>
+    <button type="button" class="toolbox-btn" title="알림">
+        <span class="toolbox-icon">🔔</span>
+    </button>
+    <button type="button" class="toolbox-btn" title="설정">
+        <span class="toolbox-icon">⚙️</span>
+    </button>
+    <div class="toolbox-divider"></div> -->
+    <button type="button" class="toolbox-btn" id="btnScrollTop" title="맨 위로">
+        <span class="toolbox-icon">↑</span>
+    </button>
+    <button type="button" class="toolbox-btn" id="btnScrollBottom" title="맨 아래로">
+        <span class="toolbox-icon">↓</span>
+    </button>
+</aside>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>

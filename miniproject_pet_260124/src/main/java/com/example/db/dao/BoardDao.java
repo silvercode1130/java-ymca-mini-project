@@ -44,6 +44,8 @@ public interface BoardDao {
     int selectRowTotalByTypeTagSearch(Map<String, Object> param);
 
     List<BoardVo> selectPageListByTypeTagSearch(Map<String, Object> param);
-
+    
+    // 게시판 타입코드로 최소 롤 조회
+    int selectMinRoleByTypeCode(String board_type_code);
 }
 

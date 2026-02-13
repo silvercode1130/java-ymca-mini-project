@@ -14,7 +14,7 @@
 
 <div class="max-w-7xl mx-auto px-4 py-8">
 
-    <!-- Header = 이달의 이벤트 섹션 (React Header 거의 그대로) -->
+    <!-- Header = 이달의 이벤트 섹션 -->
     <div class="bg-amber-100 rounded-3xl p-8 mb-8 relative overflow-hidden">
         <div class="relative z-10">
             <span class="bg-white text-amber-500 font-bold px-3 py-1 rounded-full text-xs shadow-sm mb-3 inline-block">
@@ -28,23 +28,42 @@
             </p>
         </div>
         <div class="absolute right-0 bottom-0 opacity-20 pointer-events-none select-none">
-            <!-- lucide 아이콘 대신 비슷한 느낌으로 처리 -->
             <div class="w-52 h-52 rounded-full border-[6px] border-amber-400 flex items-center justify-center text-6xl text-amber-400 translate-x-10 translate-y-10">
                 🎁
             </div>
         </div>
     </div>
 
-    <!-- Toolbar: 오른쪽 글쓰기 버튼만 (React Toolbar 그대로) -->
+    <!-- 로그인 후 돌아올 URL (이벤트 리스트) -->
+    <c:set var="returnUrl"
+           value='${pageContext.request.contextPath}/event/list.do?page=${page}' />
+
+    <!-- Toolbar: 오른쪽 글쓰기 버튼 -->
     <div class="flex justify-end mb-6">
-        <button class="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm"
-	    		onclick="location.href='${pageContext.request.contextPath}/event/insert_form.do?page=${page}&tag=${tag}'">
-	      <!-- 아이콘은 일단 텍스트로 대체 -->
-	      <span class="text-xs">✏️</span> 글쓰기
-	    </button>
+        <button
+            class="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm"
+            onclick="
+              <c:choose>
+                <c:when test='${canWrite}'>
+                  location.href='${pageContext.request.contextPath}/event/insert_form.do?page=${page}';
+                </c:when>
+
+                <c:when test='${empty sessionScope.user}'>
+                  if (confirm('이벤트 등록은 로그인 후 이용 가능합니다.\n로그인 페이지로 이동할까요?')) {
+                    location.href='${pageContext.request.contextPath}/member/loginForm.do?reason=need_login&redirect=${fn:escapeXml(returnUrl)}';
+                  }
+                </c:when>
+
+                <c:otherwise>
+                  alert('이벤트 등록 권한이 없습니다.');
+                </c:otherwise>
+              </c:choose>
+            ">
+          <span class="text-xs">✏️</span> 글쓰기
+        </button>
     </div>
 
-    <!-- Grid: React EVENTS.map 부분을 list forEach로 변환 -->
+    <!-- Grid: 이벤트 리스트 -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <c:forEach var="b" items="${list}">
             <!-- 제목에 '종료'가 들어가면 종료 상태 -->
@@ -54,7 +73,7 @@
             </c:if>
 
             <!-- 카드 전체를 링크로 감싸기 -->
-            <a href="${pageContext.request.contextPath}/event/view.do?board_idx=${b.board_idx}&page=${page}&tag=${tag}"
+            <a href="${pageContext.request.contextPath}/event/view.do?board_idx=${b.board_idx}&page=${page}"
                class="group cursor-pointer bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-xl transition-all block">
                 
                 <!-- 이미지 영역 -->
@@ -121,6 +140,14 @@
         </c:if>
     </div>
 
+    <!-- 페이지네이션 -->
+    <section class="flex justify-center mt-8 mb-4">
+      <c:if test="${not empty pageMenu}">
+        <div class="inline-block">
+          <c:out value="${pageMenu}" escapeXml="false" />
+        </div>
+      </c:if>
+    </section>
 
 </div>
 

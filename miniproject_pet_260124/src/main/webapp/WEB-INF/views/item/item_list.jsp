@@ -250,11 +250,11 @@
             <div class="flex justify-between items-center mb-6">
             	<div>
 	            	<c:if test="${sessionScope.user.mem_role_idx == 3}">
-		                <button onclick="location.href='/item/insert_form.do'" 
-		                        class="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors">
-		                    + 상품 등록
-		                </button>
-		            </c:if>
+                      <button onclick="location.href='/item/insert_form.do'" 
+                              class="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 transition-colors">
+                          + 상품 등록
+                      </button>
+                  </c:if>
 	                <span class="text-gray-500 font-bold text-sm">
 	                    총 
 	                    <span class="text-gray-900">
@@ -356,6 +356,26 @@
 			</div>
         </section>
     </div>
+    
+    <!-- 오른쪽 플로팅 툴박스 -->
+<aside class="floating-toolbox">
+    <!-- <button type="button" class="toolbox-btn" title="내 정보">
+        <span class="toolbox-icon">👤</span>
+    </button>
+    <button type="button" class="toolbox-btn" title="알림">
+        <span class="toolbox-icon">🔔</span>
+    </button>
+    <button type="button" class="toolbox-btn" title="설정">
+        <span class="toolbox-icon">⚙️</span>
+    </button>
+    <div class="toolbox-divider"></div> -->
+    <button type="button" class="toolbox-btn" id="btnScrollTop" title="맨 위로">
+        <span class="toolbox-icon">↑</span>
+    </button>
+    <button type="button" class="toolbox-btn" id="btnScrollBottom" title="맨 아래로">
+        <span class="toolbox-icon">↓</span>
+    </button>
+</aside>
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>

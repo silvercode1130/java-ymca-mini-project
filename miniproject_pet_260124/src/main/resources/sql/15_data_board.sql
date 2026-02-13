@@ -63,4 +63,6 @@ INSERT INTO reply (
     seq_reply_idx.CURRVAL, 0, 0
 );
 
+select * from board
+delete from board where board_idx=110
 */

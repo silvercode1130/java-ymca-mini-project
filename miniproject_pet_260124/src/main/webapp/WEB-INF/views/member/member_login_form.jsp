@@ -111,6 +111,7 @@
 
     <!-- 폼 -->
     <form name="emailLoginForm" method="post" action="${pageContext.request.contextPath}/member/login.do">
+     <input type="hidden" name="redirect" value="${param.redirect}" />
       
       <!-- 아이디 -->
       <div class="form-group">
@@ -152,15 +153,24 @@
     </form>
 
     <!-- 에러 -->
-    <c:if test="${not empty param.reason}">
-      <div class="error-message">
-        <c:choose>
-          <c:when test="${param.reason == 'fail'}">아이디 또는 비밀번호가 틀립니다.</c:when>
-          <c:when test="${param.reason == 'id_null'}">아이디를 입력해주세요!</c:when>
-          <c:otherwise>로그인에 실패했습니다. 다시 시도해주세요.</c:otherwise>
-        </c:choose>
-      </div>
-    </c:if>
+    <!-- 로그인 실패 관련 -->
+	<c:if test="${param.reason eq 'fail' or param.reason eq 'id_null'}">
+	  <div class="error-message">
+	    <c:choose>
+	      <c:when test="${param.reason eq 'fail'}">아이디 또는 비밀번호가 틀립니다.</c:when>
+	      <c:when test="${param.reason eq 'id_null'}">아이디를 입력해주세요!</c:when>
+	      <c:otherwise>로그인에 실패했습니다. 다시 시도해주세요.</c:otherwise>
+	    </c:choose>
+	  </div>
+	</c:if>
+	
+	<!-- 단순 안내: 로그인 필요 -->
+	<c:if test="${param.reason eq 'need_login'}">
+	  <div class="error-message" style="background: linear-gradient(135deg,#fef9c3,#fef3c7); border-color:#facc15; color:#92400e;">
+	    로그인 후 이용 가능한 기능입니다.
+	  </div>
+	</c:if>
+
 
   </div>
 </main>
@@ -233,5 +243,6 @@ document.addEventListener('keypress', function(e) {
     }
 });
 </script>
+<script src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 </body>
 </html>

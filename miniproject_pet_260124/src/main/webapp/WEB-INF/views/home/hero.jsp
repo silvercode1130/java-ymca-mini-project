@@ -12,7 +12,7 @@
             <span class="hero-tag">EVENT</span>
             <h2 class="hero-title">2026 펫페스타 개최</h2>
             <p class="hero-subtitle">사랑하는 반려동물과 함께하는 축제</p>
-            <a href="${pageContext.request.contextPath}/event/festa2026"
+            <a href="#"
                class="btn btn-primary hero-cta">
               이벤트 보러가기
             </a>
@@ -29,7 +29,7 @@
             <span class="hero-tag">SHOP</span>
             <h2 class="hero-title">하림 펫푸드 세일 이벤트</h2>
             <p class="hero-subtitle">우리 아이 건강을 위한 선택</p>
-            <a href="${pageContext.request.contextPath}/shop/event/harim"
+            <a href="#"
                class="btn btn-primary hero-cta">
               특가 상품 확인하기
             </a>
@@ -46,7 +46,7 @@
             <span class="hero-tag">NEWS</span>
             <h2 class="hero-title">반려동물 보호법, 이렇게 바뀝니다</h2>
             <p class="hero-subtitle">꼭 알아야 할 2026년 개정안</p>
-            <a href="${pageContext.request.contextPath}/lab/news/pet-law-2026"
+            <a href="#"
                class="btn btn-primary hero-cta">
               뉴스 보러가기
             </a>

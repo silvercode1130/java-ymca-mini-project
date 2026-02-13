@@ -1,6 +1,8 @@
 package com.example.db.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -32,7 +34,7 @@ public class OrdersController {
     // 체크아웃 페이지 (장바구니 -> 주문서)
     @RequestMapping("/orders/orders_checkout.do")
     public String checkout(Model model, HttpSession session) {
-//    	 // 세션에서 user 가져오기 (CartController와 통일)
+//        // 세션에서 user 가져오기 (CartController와 통일)
 //        MemberVo user = (MemberVo) session.getAttribute("user");
 //        
 //        // 테스트용 더미
@@ -78,7 +80,7 @@ public class OrdersController {
 //        model.addAttribute("coupon_discount_amount", couponDiscount); // JSP에 전달!
 //        model.addAttribute("finPrice", finPrice);
 //        
-    	MemberVo user = (MemberVo) session.getAttribute("user");
+       MemberVo user = (MemberVo) session.getAttribute("user");
         Integer mem_idx = user.getMem_idx();
 
         List<CartItemVo> cartList = cartDao.getCartList(mem_idx);
@@ -121,10 +123,10 @@ public class OrdersController {
     @RequestMapping("/orders/create")
     @Transactional
     public String createOrder(HttpSession session, @RequestParam("orders_total_price") int total_price, 
-            																	   @RequestParam(value="orders_grade_discount", defaultValue="0") double grade_discount) {
-    	MemberVo user = (MemberVo) session.getAttribute("user");
-    	
-    	// 데스트용 더미
+                                                                  @RequestParam(value="orders_grade_discount", defaultValue="0") double grade_discount) {
+       MemberVo user = (MemberVo) session.getAttribute("user");
+       
+       // 데스트용 더미
         if(user == null) {
             user = new MemberVo();
             user.setMem_idx(1);
@@ -170,31 +172,43 @@ public class OrdersController {
     // 주문 목록
     @RequestMapping("/orders/list")
     public String getOrdersList(Model model, HttpSession session, @RequestParam(value="searchKeyword", required=false) String searchKeyword) {
-    	MemberVo user = (MemberVo) session.getAttribute("user");
-    	
-    	// 더미 데이터 체크를 맨 위로
-        if(user == null) {
-            user = new MemberVo();
-            user.setMem_idx(1); // 테스트용 1번 회원
-            user.setMem_grade_idx(4); // 등급도 4번
-            session.setAttribute("user", user);
-        }
-    	
-	    // if(user == null) return "redirect:/login";
-	    
-	    Integer mem_idx = user.getMem_idx();
-	    
-	    // 검색어를 포함해서 리스트를 가져오기
-	    model.addAttribute("list", ordersDao.getOrdersList(mem_idx, searchKeyword));
-	    model.addAttribute("searchKeyword", searchKeyword); // 검색창에 검색어 남겨두기용
-	    
-	    return "orders/orders_list";
+       MemberVo user = (MemberVo) session.getAttribute("user");
+       
+//       // 더미 데이터 체크를 맨 위로
+//        if(user == null) {
+//            user = new MemberVo();
+//            user.setMem_idx(1); // 테스트용 1번 회원
+//            user.setMem_grade_idx(4); // 등급도 4번
+//            session.setAttribute("user", user);
+//        }
+       
+       // if(user == null) return "redirect:/login";
+       
+       Integer mem_idx = user.getMem_idx();
+       List<OrdersVo> list = ordersDao.getOrdersList(mem_idx, searchKeyword);
+       
+       // [핵심] 각 주문번호별로 상품 리스트를 담을 맵을 생성
+       // Key: 주문번호(orders_idx), Value: 상품리스트(List<OrdersItemVo>)
+       Map<Integer, List<OrdersItemVo>> itemMap = new HashMap<>();
+       
+       for(OrdersVo vo : list) {
+           int oIdx = vo.getOrders_idx();
+           
+           List<OrdersItemVo> items = ordersDao.getOrdersItemList(oIdx);
+           itemMap.put(oIdx, items);
+       }
+       
+       model.addAttribute("list", list);
+       model.addAttribute("itemMap", itemMap); // JSP에서 사용할 상품 데이터 맵
+       model.addAttribute("searchKeyword", searchKeyword);
+       
+       return "orders/orders_list";
     }
     
     // 주문 상세
     @RequestMapping("/orders/detail/{orders_idx}")
     public String getOrdersDetail(@PathVariable("orders_idx") int orders_idx, Model model) {
-    	model.addAttribute("order", ordersDao.getOrdersDetail(orders_idx));
+       model.addAttribute("order", ordersDao.getOrdersDetail(orders_idx));
         model.addAttribute("itemList", ordersDao.getOrdersItemList(orders_idx));
         
         return "orders/orders_detail";
@@ -202,20 +216,26 @@ public class OrdersController {
     
     // 주문 취소
     @RequestMapping("/orders/cancel/{orders_idx}")
-    public String cancelOrder(@PathVariable("orders_idx") int orders_idx, HttpSession session) {
-    	// 취소할 때도 혹시 세션 끊길지 모르니까 더미 체크
+    public String cancelOrder(@PathVariable("orders_idx") int orders_idx, HttpSession session, @RequestParam(value="scroll", required=false) String scroll) {
+       // 취소할 때도 혹시 세션 끊길지 모르니까 더미 체크
         MemberVo user = (MemberVo) session.getAttribute("user");
         if(user == null) {
             user = new MemberVo();
             user.setMem_idx(1);
             session.setAttribute("user", user);
         }
-    	
-    	// DB에서 주문 상태를 취소로 변경하거나 삭제
+       
+       // DB에서 주문 상태를 취소로 변경하거나 삭제
         ordersDao.cancelOrders(orders_idx);
         
+        // ✨ 리다이렉트 주소 조립!
+        String redirectUrl = "redirect:/orders/list";
+        if (scroll != null && !scroll.isEmpty()) {
+            redirectUrl += "?scroll=" + scroll;
+        }
+        
         // 취소 후 다시 주문 목록으로 리다이렉트
-        return "redirect:/orders/list";
+        return redirectUrl;
     }
     
     // 결제 처리 
@@ -232,7 +252,7 @@ public class OrdersController {
     @RequestMapping("/orders/get_coupon.do")
     @ResponseBody // 페이지 이동 없이 데이터만 보낼 때 사용해뎡!
     public String getCoupon(HttpSession session) {
-    	MemberVo user = (MemberVo) session.getAttribute("user");
+       MemberVo user = (MemberVo) session.getAttribute("user");
         if (user == null) return "login_required";
 
         // [핵심!] DB에서 이 사용자의 이전 주문 내역을 조회해뎡!

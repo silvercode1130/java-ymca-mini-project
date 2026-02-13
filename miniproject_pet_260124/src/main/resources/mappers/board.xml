@@ -600,6 +600,15 @@
     WHERE no BETWEEN #{start} AND #{end}
 </select>
 
+<select id="selectMinRoleByTypeCode"
+        parameterType="string"
+        resultType="int">
+    SELECT board_min_role
+    FROM board_type
+    WHERE UPPER(board_type_code) = UPPER(#{board_type_code})
+</select>
+
+
     
 
 </mapper>

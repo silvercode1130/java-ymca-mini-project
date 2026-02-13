@@ -107,7 +107,7 @@
       <div class="mega-links">
         <!-- 홈 -->
         <div class="mega-group" data-menu="home">
-          <a href="${pageContext.request.contextPath}/about" class="mega-item">
+          <a href="#" class="mega-item">
             <span class="mega-item-title">기업소개</span>
             <span class="mega-item-bar"></span>
           </a>
@@ -135,19 +135,15 @@
             <span class="mega-item-title">고양이 연구소</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/lab/list.do?tag=FREE" class="mega-item">
-            <span class="mega-item-title">뉴스</span>
-            <span class="mega-item-bar"></span>
-          </a>
         </div>
 
         <!-- 쇼핑몰 -->
         <div class="mega-group" data-menu="shop">
-          <a href="${pageContext.request.contextPath}/shop?cat=dog" class="mega-item">
+          <a href="${pageContext.request.contextPath}/item/search.do?item_for=dog" class="mega-item">
             <span class="mega-item-title">강아지 용품</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/shop?cat=cat" class="mega-item">
+          <a href="${pageContext.request.contextPath}/item/search.do?item_for=cat" class="mega-item">
             <span class="mega-item-title">고양이 용품</span>
             <span class="mega-item-bar"></span>
           </a>
@@ -167,19 +163,19 @@
 
         <!-- 서비스 -->
         <div class="mega-group" data-menu="service">
-          <a href="${pageContext.request.contextPath}/support/notice" class="mega-item">
+          <a href="#" class="mega-item">
             <span class="mega-item-title">고객문의 안내</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/support/faq" class="mega-item">
+          <a href="#" class="mega-item">
             <span class="mega-item-title">자주 묻는 질문</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/support/inquiry" class="mega-item">
+          <a href="#" class="mega-item">
             <span class="mega-item-title">1:1 문의</span>
             <span class="mega-item-bar"></span>
           </a>
-          <a href="${pageContext.request.contextPath}/support/as" class="mega-item">
+          <a href="#" class="mega-item">
             <span class="mega-item-title">AS 안내</span>
             <span class="mega-item-bar"></span>
           </a>
@@ -187,4 +183,21 @@
       </div>
     </div>
   </div>
+  
+  <script>
+    window.addEventListener('load', function() {
+        // 1. 세션에 저장된 돌아갈 주소가 있는지 확인 (JSTL 사용)
+        <c:if test="${not empty sessionScope.redirectURL and not empty sessionScope.user}">
+            // 2. 로그인도 되어 있고, 가야 할 주소도 있다면?
+            const targetURL = "${sessionScope.redirectURL}";
+            
+            // 3. 기록을 지워줘뎡 (안 그러면 로그인할 때마다 계속 그리로 가뎡!)
+            <% session.removeAttribute("redirectURL"); %>
+            
+            // 4. 원래 가려던 장바구니 담기 주소로 슝!
+            location.href = targetURL;
+        </c:if>
+    });
+</script>
+  
 </header>

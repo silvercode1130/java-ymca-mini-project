@@ -17,83 +17,138 @@
   <div class="max-w-7xl mx-auto px-4 py-8">
 
     <!-- Lab Header -->
-    <section class="mb-12">
-      <div class="bg-amber-50 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden">
-        <!-- Background Icon -->
-        <div class="absolute top-0 right-0 opacity-10 pointer-events-none text-amber-400">
-          <!-- 간단한 플라스크 SVG -->
-          <svg width="260" height="260" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9 2v2l-3 6v8a4 4 0 0 0 4 4h4a4 4 0 0 0 4-4v-8l-3-6V2H9zm2 2h2v2.1l2.4 4.8H8.6L11 6.1V4z"/>
-          </svg>
-        </div>
+	<section class="mb-12">
+	  <div class="bg-amber-50 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-amber-100 shadow-sm">
+	    <div>
+	      <span class="inline-block py-1 px-3 rounded-full bg-white text-amber-500 font-bold text-sm mb-4 border border-amber-200">
+	        PetOn Laboratory
+	      </span>
+	      <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-2">반려동물 연구소 🧪</h1>
+	      <p class="text-gray-600 text-sm md:text-base">
+	        수의사와 반려동물 전문가들이 직접 검증한 믿을 수 있는 정보.<br/>
+	        우리 아이의 건강하고 행복한 삶을 위한 연구 결과를 확인하세요.
+	      </p>
+	    </div>
+	
+	    <!-- 검색 박스 (free 스타일) -->
+	    <div class="bg-gray-50 p-5 rounded-2xl border border-gray-100 w-full md:w-80">
+	      <div class="flex items-center justify-between mb-2">
+	        <h3 class="font-bold text-gray-900 text-sm">연구 내용 검색</h3>
+	        <!-- 전체보기 버튼 -->
+	        <button type="button"
+	                onclick="location.href='${pageContext.request.contextPath}/lab/list.do?tag=ALL&page=1'"
+	                class="text-[11px] px-2 py-0.5 rounded-full border border-gray-200 text-gray-500 hover:bg-gray-100">
+	          전체보기
+	        </button>
+	      </div>
+	
+	      <form method="get"
+	            action="${pageContext.request.contextPath}/lab/list.do"
+	            class="space-y-2">
+	
+	        <!-- 태그 유지 -->
+	        <input type="hidden" name="tag" value="${empty tag ? 'ALL' : tag}" />
+	
+	        <!-- 검색 타입 -->
+	        <select name="searchType"
+	                class="w-full text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400">
+	          <option value="title"
+	                  <c:if test="${searchType == 'title'}">selected</c:if>>
+	            제목
+	          </option>
+	          <option value="content"
+	                  <c:if test="${searchType == 'content'}">selected</c:if>>
+	            내용
+	          </option>
+	          <option value="titleContent"
+	                  <c:if test="${searchType == 'titleContent' || empty searchType}">selected</c:if>>
+	            제목+내용
+	          </option>
+	        </select>
+	
+	        <!-- 검색어 -->
+	        <div class="relative">
+	          <span class="absolute left-3 top-2.5 text-gray-400 text-base">🔍</span>
+	          <input
+	            type="text"
+	            name="keyword"
+	            value="${keyword}"
+	            placeholder="예: 분리불안, 사료 추천"
+	            class="w-full pl-9 pr-3 py-2 bg-white rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm"
+	          />
+	        </div>
+	
+	        <button type="submit"
+	                class="w-full mt-1 py-1.5 text-xs font-bold bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
+	          검색
+	        </button>
+	      </form>
+	    </div>
+	  </div>
+	</section>
 
-        <div class="relative z-10">
-          <span class="inline-block py-1 px-3 rounded-full bg-white text-amber-500 font-bold text-sm mb-4 border border-amber-200 shadow-sm">
-            PetOn Laboratory
-          </span>
-          <h1 class="text-4xl font-extrabold text-gray-900 mb-4">반려동물 연구소 🧪</h1>
-          <p class="text-gray-600 max-w-xl text-lg">
-            수의사와 반려동물 전문가들이 직접 검증한 믿을 수 있는 정보.<br/>
-            우리 아이의 건강하고 행복한 삶을 위한 연구 결과를 확인하세요.
-          </p>
-        </div>
-
-        <div class="bg-white p-6 rounded-2xl shadow-sm w-full md:w-80 relative z-10">
-          <h3 class="font-bold text-gray-900 mb-4">궁금한 내용을 검색해보세요</h3>
-          <div class="relative">
-            <span class="absolute left-3 top-3.5 text-gray-400 text-lg">🔍</span>
-            <input
-              type="text"
-              placeholder="예: 분리불안, 사료 추천"
-              class="w-full pl-10 pr-4 py-3 bg-gray-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-400 transition-all text-sm"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
 
     <!-- Category Tabs + 글쓰기 버튼 -->
-    <section class="mb-12">
-      <div class="relative flex justify-center">
-        <div class="bg-gray-100 p-1.5 rounded-full flex gap-2">
-          <!-- 전체 연구 -->
-          <button type="button"
-                  onclick="location.href='${pageContext.request.contextPath}/lab/list.do?tag=ALL&page=${page}'"
-                  class="flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm transition-all
-                         <c:if test='${tag == \"ALL\"}'>bg-white text-amber-500 shadow-sm</c:if>
-                         <c:if test='${tag != \"ALL\"}'>text-gray-500 hover:text-gray-700</c:if>">
-            🧪 전체 연구
-          </button>
-          <!-- 강아지 연구소 -->
-          <button type="button"
-                  onclick="location.href='${pageContext.request.contextPath}/lab/list.do?tag=DOG&page=${page}'"
-                  class="flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm transition-all
-                         <c:if test='${tag == \"DOG\"}'>bg-white text-amber-500 shadow-sm</c:if>
-                         <c:if test='${tag != \"DOG\"}'>text-gray-500 hover:text-gray-700</c:if>">
-            🐶 강아지 연구소
-          </button>
-          <!-- 고양이 연구소 -->
-          <button type="button"
-                  onclick="location.href='${pageContext.request.contextPath}/lab/list.do?tag=CAT&page=${page}'"
-                  class="flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm transition-all
-                         <c:if test='${tag == \"CAT\"}'>bg-white text-amber-500 shadow-sm</c:if>
-                         <c:if test='${tag != \"CAT\"}'>text-gray-500 hover:text-gray-700</c:if>">
-            🐱 고양이 연구소
-          </button>
-        </div>
+	<section class="mb-12">
+	  <div class="relative flex justify-center">
+	    <div class="bg-gray-100 p-1.5 rounded-full flex gap-2">
+	      <!-- 전체 연구 -->
+	      <button type="button"
+	              onclick="location.href='${pageContext.request.contextPath}/lab/list.do?tag=ALL&page=${page}'"
+	              class="flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm transition-all
+	                     <c:if test='${tag == "ALL"}'>bg-white text-amber-500 shadow-sm</c:if>
+	                     <c:if test='${tag != "ALL"}'>text-gray-500 hover:text-gray-700</c:if>">
+	        🧪 전체 연구
+	      </button>
+	      <!-- 강아지 연구소 -->
+	      <button type="button"
+	              onclick="location.href='${pageContext.request.contextPath}/lab/list.do?tag=DOG&page=${page}'"
+	              class="flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm transition-all
+	                     <c:if test='${tag == "DOG"}'>bg-white text-amber-500 shadow-sm</c:if>
+	                     <c:if test='${tag != "DOG"}'>text-gray-500 hover:text-gray-700</c:if>">
+	        🐶 강아지 연구소
+	      </button>
+	      <!-- 고양이 연구소 -->
+	      <button type="button"
+	              onclick="location.href='${pageContext.request.contextPath}/lab/list.do?tag=CAT&page=${page}'"
+	              class="flex items-center gap-2 px-6 py-3 rounded-full font-bold text-sm transition-all
+	                     <c:if test='${tag == "CAT"}'>bg-white text-amber-500 shadow-sm</c:if>
+	                     <c:if test='${tag != "CAT"}'>text-gray-500 hover:text-gray-700</c:if>">
+	        🐱 고양이 연구소
+	      </button>
+	    </div>
+	
+	    <!-- 로그인 후 돌아올 URL (연구소 리스트) -->
+	    <c:set var="returnUrl"
+	           value='/lab/list.do?page=${page}&tag=${tag}&searchType=${searchType}&keyword=${fn:escapeXml(keyword)}' />
+	
+	    <!-- 글쓰기 버튼: /lab/insert_form.do -->
+	    <button type="button"
+	            onclick="
+	              <c:choose>
+	                <c:when test='${canWrite}'>
+	                  location.href='${pageContext.request.contextPath}/lab/insert_form.do?page=${page}&tag=${tag}';
+	                </c:when>
+	
+	                <c:when test='${empty sessionScope.user}'>
+	                  if (confirm('연구소 글쓰기는 로그인 후 이용 가능합니다.\n로그인 페이지로 이동할까요?')) {
+	                    location.href='${pageContext.request.contextPath}/member/loginForm.do?reason=need_login&redirect=${fn:escapeXml(returnUrl)}';
+	                  }
+	                </c:when>
+	
+	                <c:otherwise>
+	                  alert('작성 권한이 없습니다.');
+	                </c:otherwise>
+	              </c:choose>
+	            "
+	            class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm">
+	      <span class="text-xs">✏️</span> 글쓰기
+	    </button>
+	
+	  </div>
+	</section>
 
-        <!-- 글쓰기 버튼: /lab/insert_form.do = b_type=lab -->
-        <c:if test="${not empty sessionScope.user}">
-		  <button type="button"
-		          onclick="location.href='${pageContext.request.contextPath}/lab/insert_form.do?page=${page}&tag=${tag}'"
-		          class="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-bold hover:bg-gray-800 transition-colors text-sm">
-		    <span class="text-xs">✏️</span> 글쓰기
-		  </button>
-		</c:if>
-
-      </div>
-    </section>
-
+	<c:if test="${tag == 'ALL' and empty keyword}">
     <!-- 오늘의 추천 연구 (정적 1건) -->
     <section class="mb-16">
       <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
@@ -101,7 +156,7 @@
         오늘의 추천 연구
       </h2>
 
-      <a href="${pageContext.request.contextPath}/lab/view.do?board_idx=1&page=${page}&tag=${tag}"
+      <a href="${pageContext.request.contextPath}/lab/view.do?board_idx=105&page=1&tag=ALL"
          class="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-shadow cursor-pointer group">
         <div class="h-64 md:h-auto overflow-hidden">
           <img
@@ -134,6 +189,7 @@
         </div>
       </a>
     </section>
+    </c:if>
 
     <!-- 연구 리스트 -->
     <section class="mb-12">
@@ -158,8 +214,8 @@
 			        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
 			    </c:otherwise>
 			  </c:choose>
-
-  			<!-- 태그 뱃지 -->
+			
+			  <!-- 태그 뱃지 -->
 			  <div class="absolute top-4 left-4">
 			    <c:choose>
 			      <c:when test="${vo.board_tag == 'DOG'}">
@@ -180,7 +236,6 @@
 			    </c:choose>
 			  </div>
 			</div>
-
 
               <!-- 카드 본문 -->
               <div class="p-6">
@@ -210,29 +265,37 @@
         </c:if>
       </div>
 
-      <!-- 페이지네이션 (목업 / 기존 구조 유지 원하면 이 자리에서 교체) -->
-      <div class="flex justify-center mt-16 gap-2">
-        <button type="button"
-                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-amber-400 text-white">
-          1
-        </button>
-        <button type="button"
-                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-gray-50 text-gray-500 hover:bg-gray-100">
-          2
-        </button>
-        <button type="button"
-                class="w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm bg-gray-50 text-gray-500 hover:bg-gray-100">
-          3
-        </button>
-        <button type="button"
-                class="w-10 h-10 rounded-full flex items-center justify-center bg-gray-50 text-gray-500 hover:bg-gray-100">
-          &gt;
-        </button>
-      </div>
+      <!-- 페이지네이션 -->
+    <section class="flex justify-center mt-8 mb-4">
+      <c:if test="${not empty pageMenu}">
+        <div class="inline-block">
+          <c:out value="${pageMenu}" escapeXml="false" />
+        </div>
+      </c:if>
     </section>
 
   </div>
 </main>
+
+<!-- 오른쪽 플로팅 툴박스 -->
+<aside class="floating-toolbox">
+    <!-- <button type="button" class="toolbox-btn" title="내 정보">
+        <span class="toolbox-icon">👤</span>
+    </button>
+    <button type="button" class="toolbox-btn" title="알림">
+        <span class="toolbox-icon">🔔</span>
+    </button>
+    <button type="button" class="toolbox-btn" title="설정">
+        <span class="toolbox-icon">⚙️</span>
+    </button>
+    <div class="toolbox-divider"></div> -->
+    <button type="button" class="toolbox-btn" id="btnScrollTop" title="맨 위로">
+        <span class="toolbox-icon">↑</span>
+    </button>
+    <button type="button" class="toolbox-btn" id="btnScrollBottom" title="맨 아래로">
+        <span class="toolbox-icon">↓</span>
+    </button>
+</aside>
 
 <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 <script src="${pageContext.request.contextPath}/resources/js/main.js"></script>

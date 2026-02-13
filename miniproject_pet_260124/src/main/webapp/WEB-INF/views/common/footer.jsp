@@ -27,8 +27,8 @@
         <ul class="footer-links">
           <li><a href="#" class="footer-link">브랜드 스토리</a></li>
           <li><a href="#" class="footer-link">채용 정보</a></li>
-          <li><a href="${pageContext.request.contextPath}/terms" class="footer-link">이용약관</a></li>
-          <li><a href="${pageContext.request.contextPath}/privacy" class="footer-link strong">개인정보처리방침</a></li>
+          <li><a href="${pageContext.request.contextPath}/agree/agreeService.do" class="footer-link">이용약관</a></li>
+          <li><a href="${pageContext.request.contextPath}/agree/agreePrivacy.do" class="footer-link strong">개인정보처리방침</a></li>
         </ul>
       </div>
 
@@ -36,10 +36,10 @@
       <div class="footer-col">
         <h4 class="footer-col-title">고객 지원</h4>
         <ul class="footer-links">
-          <li><a href="${pageContext.request.contextPath}/support/notice" class="footer-link">공지사항</a></li>
-          <li><a href="${pageContext.request.contextPath}/support/faq" class="footer-link">자주 묻는 질문</a></li>
-          <li><a href="${pageContext.request.contextPath}/support/inquiry" class="footer-link">1:1 문의</a></li>
-          <li><a href="${pageContext.request.contextPath}/support/partner" class="footer-link">제휴 문의</a></li>
+          <li><a href="${pageContext.request.contextPath}/notice/list.do" class="footer-link">공지사항</a></li>
+          <li><a href="${pageContext.request.contextPath}/service">자주 묻는 질문</a></li>
+          <li><a href="#">1:1 문의</a></li>
+          <li><a href="#">제휴 문의</a></li>
         </ul>
       </div>
 

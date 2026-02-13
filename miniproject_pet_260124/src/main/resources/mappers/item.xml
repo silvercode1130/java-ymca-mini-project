@@ -33,22 +33,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
     
     <select id="getItemListWithFilter" resultMap="ItemFullMap" parameterType="map">
-	    SELECT * FROM item
-	    <where>
-	        <if test="item_for != null and item_for != ''">
-	            AND LOWER(item_for) = LOWER(#{item_for})
-	        </if>
-	        
-	        <if test="type_idx != null">
-	            AND item_type_idx = #{type_idx}
-	        </if>
-	        
-	        <if test="searchKeyword != null and searchKeyword != ''">
-	            AND item_name LIKE '%' || #{searchKeyword} || '%'
-	        </if>
-	    </where>
-	    ORDER BY item_idx DESC
-	</select>
+       SELECT * FROM item
+       <where>
+           <if test="item_for != null and item_for != ''">
+               AND (LOWER(item_for) = LOWER(#{item_for}) OR LOWER(item_for) = 'general')
+           </if>
+           
+           <if test="type_idx != null">
+               AND item_type_idx = #{type_idx}
+           </if>
+           
+           <if test="searchKeyword != null and searchKeyword != ''">
+               AND item_name LIKE '%' || #{searchKeyword} || '%'
+           </if>
+       </where>
+       ORDER BY item_idx DESC
+   </select>
 	
 	<select id="getPrimaryPetSpecies" parameterType="int" resultType="string">
 	    SELECT pet_species 
