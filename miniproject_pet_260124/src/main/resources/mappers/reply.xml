@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.db.dao.ReplyDao">
+
+    <!-- 공통 컬럼 + 작성자 정보 -->
+    <sql id="replyColumns">
+        r.reply_idx,
+        r.board_idx,
+        r.mem_idx,
+        r.reply_content,
+        r.reply_ip,
+        r.reply_regdate,
+        r.reply_moddate,
+        r.reply_is_deleted,
+        r.reply_deldate,
+        r.reply_ref,
+        r.reply_step,
+        r.reply_depth,
+        m.mem_idx      AS m_mem_idx,
+        m.mem_id       AS m_mem_id,
+        m.mem_name     AS m_mem_name,
+        m.mem_role_idx AS m_mem_role_idx
+    </sql>
+
+    <!-- Reply + Member writer -->
+    <resultMap id="replyMap" type="reply">
+        <id     property="reply_idx"        column="reply_idx" />
+        <result property="board_idx"        column="board_idx" />
+        <result property="mem_idx"          column="mem_idx" />
+        <result property="reply_content"    column="reply_content" />
+        <result property="reply_ip"         column="reply_ip" />
+        <result property="reply_regdate"    column="reply_regdate" />
+        <result property="reply_moddate"    column="reply_moddate" />
+        <result property="reply_is_deleted" column="reply_is_deleted" />
+        <result property="reply_deldate"    column="reply_deldate" />
+        <result property="reply_ref"        column="reply_ref" />
+        <result property="reply_step"       column="reply_step" />
+        <result property="reply_depth"      column="reply_depth" />
+
+        <association property="writer" javaType="member">
+            <id     property="mem_idx"      column="m_mem_idx" />
+            <result property="mem_id"       column="m_mem_id" />
+            <result property="mem_name"     column="m_mem_name" />
+            <result property="mem_role_idx" column="m_mem_role_idx" />
+        </association>
+    </resultMap>
+
+    <!-- 1) 특정 게시글의 전체 댓글 (페이징 없이) -->
+    <select id="selectListByBoardIdx" parameterType="int" resultMap="replyMap">
+        SELECT
+            <include refid="replyColumns" />
+        FROM reply r
+        JOIN member m ON r.mem_idx = m.mem_idx
+        WHERE r.board_idx = #{board_idx}
+          AND r.reply_is_deleted = 'N'
+        ORDER BY r.reply_ref ASC, r.reply_step ASC
+    </select>
+
+    <!-- 2) 댓글 단건 조회 -->
+    <select id="selectOne" parameterType="int" resultMap="replyMap">
+        SELECT
+            <include refid="replyColumns" />
+        FROM reply r
+        JOIN member m ON r.mem_idx = m.mem_idx
+        WHERE r.reply_idx = #{reply_idx}
+    </select>
+
+    <!-- 3) 멤버 아이디로 댓글 목록 -->
+    <select id="selectOneFromId" parameterType="string" resultMap="replyMap">
+        SELECT
+            <include refid="replyColumns" />
+        FROM reply r
+        JOIN member m ON r.mem_idx = m.mem_idx
+        WHERE m.mem_id = #{mem_id}
+          AND r.reply_is_deleted = 'N'
+        ORDER BY r.reply_regdate DESC
+    </select>
+
+    <!-- 4) 원댓글 등록 -->
+    <insert id="insert" parameterType="reply">
+        <!-- 새 PK -->
+        <selectKey keyProperty="reply_idx" resultType="int" order="BEFORE">
+            SELECT seq_reply_idx.NEXTVAL FROM dual
+        </selectKey>
+
+        <!-- 원댓글: ref = 자기 PK, step=0, depth=0 -->
+        INSERT INTO reply (
+            reply_idx,
+            board_idx,
+            mem_idx,
+            reply_content,
+            reply_ip,
+            reply_regdate,
+            reply_is_deleted,
+            reply_ref,
+            reply_step,
+            reply_depth
+        ) VALUES (
+            #{reply_idx},
+            #{board_idx},
+            #{mem_idx},
+            #{reply_content},
+            #{reply_ip},
+            SYSDATE,
+            'N',
+            #{reply_idx},
+            0,
+            0
+        )
+    </insert>
+
+    <!-- 5) 댓글 수정 -->
+    <update id="update" parameterType="reply">
+        UPDATE reply
+        SET reply_content = #{reply_content},
+            reply_moddate = SYSDATE
+        WHERE reply_idx = #{reply_idx}
+    </update>
+
+    <!-- 6) 소프트 삭제 -->
+    <update id="softDelete" parameterType="int">
+        UPDATE reply
+        SET reply_is_deleted = 'Y',
+            reply_deldate     = SYSDATE
+        WHERE reply_idx = #{reply_idx}
+    </update>
+
+    <!-- 7) 대댓글 등록 (기준 댓글 baseVo 기준) -->
+    <insert id="rereply" parameterType="reply">
+        <selectKey keyProperty="reply_idx" resultType="int" order="BEFORE">
+            SELECT seq_reply_idx.NEXTVAL FROM dual
+        </selectKey>
+
+        INSERT INTO reply (
+            reply_idx,
+            board_idx,
+            mem_idx,
+            reply_content,
+            reply_ip,
+            reply_regdate,
+            reply_is_deleted,
+            reply_ref,
+            reply_step,
+            reply_depth
+        ) VALUES (
+            #{reply_idx},
+            #{board_idx},
+            #{mem_idx},
+            #{reply_content},
+            #{reply_ip},
+            SYSDATE,
+            'N',
+            #{reply_ref},
+            #{reply_step},
+            #{reply_depth}
+        )
+    </insert>
+
+    <!-- 8) 대댓글 정렬용 step 밀기 -->
+    <update id="updateStep" parameterType="reply">
+        UPDATE reply
+        SET reply_step = reply_step + 1
+        WHERE reply_ref = #{reply_ref}
+          AND reply_step > #{reply_step}
+    </update>
+
+    <!-- 9) 페이징용 부분 조회 (board 단위) -->
+    <select id="selectConditionList" parameterType="map" resultMap="replyMap">
+        SELECT *
+        FROM (
+            SELECT
+                <include refid="replyColumns" />,
+                ROW_NUMBER() OVER (ORDER BY r.reply_ref ASC, r.reply_step ASC) AS rn
+            FROM reply r
+            JOIN member m ON r.mem_idx = m.mem_idx
+            WHERE r.board_idx = #{board_idx}
+              <if test="includeDeleted == null or includeDeleted == false">
+                  AND r.reply_is_deleted = 'N'
+              </if>
+        )
+        WHERE rn BETWEEN #{start} AND #{end}
+    </select>
+
+</mapper>

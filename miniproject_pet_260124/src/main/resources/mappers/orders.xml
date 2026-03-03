@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mapper -> MyBatis에서 SQL들이 모여 있는 가장 바깥 상자(컨테이너) 역할 즉, SQL 파일임을 알리는 시작점 -->
+<!-- namespace ->  mapper가 어떤 Dao와 연결되는지 알려주는 이름표 -->
+<mapper namespace="com.example.db.dao.OrdersDao">
+	
+	<!-- resultMap 정의 -->
+    <resultMap id="OrdersMap" type="com.example.db.vo.OrdersVo">
+	    <id property="orders_idx" column="orders_idx"/>
+	    <result property="mem_idx" column="mem_idx"/>
+	    <result property="orders_total_price" column="orders_total_price"/>
+	    <result property="orders_grade_discount" column="orders_grade_discount"/>
+	    <result property="orders_status_idx" column="orders_status_idx"/>
+	    <result property="orders_regdate" column="orders_regdate"/>
+	    
+	    <!-- OrdersStatusVo와 연관 -->
+	    <association property="status" javaType="com.example.db.vo.OrdersStatusVo">
+	        <id property="orders_status_idx" column="orders_status_idx"/>
+	        <result property="orders_status_name" column="orders_status_name"/>
+	    </association>
+	</resultMap>
+	
+	<resultMap id="OrdersItemMap" type="com.example.db.vo.OrdersItemVo">
+	    <id property="orders_item_idx" column="orders_item_idx"/>
+	    <result property="orders_idx" column="orders_idx"/>
+	    <result property="item_idx" column="item_idx"/>
+	    <result property="orders_item_quantity" column="orders_item_quantity"/>
+	    <result property="orders_price_at" column="orders_price_at"/>
+	    
+	    <association property="item" javaType="com.example.db.vo.ItemVo">
+	        <result property="item_name" column="item_name"/>
+	        <result property="item_thumbnail_img" column="item_thumbnail_img"/>
+	    </association>
+	</resultMap>
+	
+    <select id="getOrdersList" resultMap="OrdersMap">
+	    SELECT o.*, s.orders_status_name
+			    FROM orders o
+			    JOIN orders_status s ON o.orders_status_idx = s.orders_status_idx
+			    WHERE o.mem_idx = #{mem_idx}
+	    <if test="searchKeyword != null and searchKeyword != ''">
+	        AND (
+			            o.orders_idx LIKE '%' || #{searchKeyword} || '%'
+			            OR o.orders_idx IN (
+											                SELECT oi.orders_idx 
+											                FROM orders_item oi 
+											                JOIN item i ON oi.item_idx = i.item_idx
+											                WHERE i.item_name LIKE '%' || #{searchKeyword} || '%'
+	            											)
+	       			 )
+	    </if>
+	    ORDER BY o.orders_regdate DESC
+	</select>
+	
+	<select id="getOrdersDetail" resultMap="OrdersMap">
+	    SELECT o.*, s.orders_status_name 
+			    FROM orders o 
+			    JOIN orders_status s ON o.orders_status_idx = s.orders_status_idx
+			    WHERE o.orders_idx = #{orders_idx}
+	</select>
+
+
+    <select id="getOrdersItemList" resultMap="OrdersItemMap">
+        SELECT oi.*, i.item_name, i.item_thumbnail_img
+		        FROM orders_item oi
+		        JOIN item i ON oi.item_idx = i.item_idx
+		        WHERE oi.orders_idx = #{orders_idx}
+    </select>
+
+    <insert id="createOrders" parameterType="orders">
+        <selectKey keyProperty="orders_idx" resultType="int" order="BEFORE">
+            SELECT seq_orders_idx.NEXTVAL FROM dual
+        </selectKey>
+        INSERT INTO orders (
+        										orders_idx, mem_idx, 
+        										orders_total_price, 
+        										orders_grade_discount, 
+        										orders_coupon_discount, 
+        										orders_status_idx, 
+        										orders_regdate
+        										)
+        VALUES (
+        				#{orders_idx}, 
+        				#{mem_idx}, 
+        				#{orders_total_price}, 
+        				#{orders_grade_discount, jdbcType=DECIMAL}, 
+        				#{orders_coupon_discount, jdbcType=DECIMAL}, 
+        				1, 
+        				SYSDATE
+        				)
+    </insert>
+
+    <insert id="createOrdersItem" parameterType="orders_item">
+        INSERT INTO orders_item (
+        												orders_item_idx, 
+        												orders_idx, item_idx, 
+        												orders_item_quantity, 
+        												orders_price_at
+        												)
+        VALUES (
+        				seq_orders_item_idx.NEXTVAL, 
+        				#{orders_idx}, 
+        				#{item_idx}, 
+        				#{orders_item_quantity}, 
+        				#{orders_price_at}
+        				)
+    </insert>
+	
+	<update id="cancelOrders" parameterType="int">
+	    UPDATE orders SET orders_status_idx = 5 WHERE orders_idx = #{orders_idx}
+	</update>
+	
+	<!-- null 값 떨어져서 에러남! 정은 수정 -->
+	<select id="getGradeInfo" parameterType="int" resultType="grade">
+	    SELECT * FROM grade WHERE grade_idx = #{value}
+	</select>
+	
+	<update id="updateOrderStatus">
+	    UPDATE orders 
+	    SET orders_status_idx = #{param2} 
+	    WHERE orders_idx = #{param1}
+	</update>
+	
+	<select id="checkCouponUsed" parameterType="int" resultType="int">
+	    SELECT COUNT(*) 
+	    FROM orders 
+	    WHERE mem_idx = #{mem_idx}
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+

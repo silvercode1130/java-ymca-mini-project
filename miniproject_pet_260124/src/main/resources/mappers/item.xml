@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- mapper -> MyBatis에서 SQL들이 모여 있는 가장 바깥 상자(컨테이너) 역할 즉, SQL 파일임을 알리는 시작점 -->
+<!-- namespace ->  mapper가 어떤 Dao와 연결되는지 알려주는 이름표 -->
+<mapper namespace="com.example.db.dao.ItemDao">
+	
+	<resultMap id="ItemFullMap" type="item">
+	    <id property="item_idx" column="item_idx" />
+	    <result property="item_name" column="item_name" />
+	    <result property="item_origin_price" column="item_origin_price" />
+	    <result property="item_now_price" column="item_now_price" />
+	    <result property="item_stock" column="item_stock" />
+	    <result property="item_type_idx" column="item_type_idx" />
+	    <result property="item_for" column="item_for" />
+	    <result property="item_is_sale" column="item_is_sale" />
+	    <result property="item_brand" column="item_brand" />
+	    <result property="item_thumbnail_img" column="item_thumbnail_img" />
+	    <result property="item_detail_img" column="item_detail_img" />
+	    <result property="item_regdate" column="item_regdate" />
+	    <result property="item_moddate" column="item_moddate" />
+	    <association property="type" javaType="com.example.db.vo.ItemTypeVo">
+	        <id property="item_type_idx" column="item_type_idx" />
+	        <result property="item_type_category" column="item_type_category" />
+	    </association>
+	</resultMap>
+	
+	<!-- id -> dao에서 요청한 메서드를 어떤 sql코드를 실행해야할지 알려주는 이름(dao의 메서드 이름과 id는 동일해야함!!) -->
+	<!-- resultType -> SQL 결과를 어떤 Java 객체에 담을지 지정 -->
+	<select id="getItemList" resultMap="ItemFullMap">
+        SELECT * FROM item ORDER BY item_idx DESC  <!-- item이라는 테이블을 내림차순(최신순)으로 조회 -->
+    </select>
+    
+    <select id="getItemListWithFilter" resultMap="ItemFullMap" parameterType="map">
+       SELECT * FROM item
+       <where>
+           <if test="item_for != null and item_for != ''">
+               AND (LOWER(item_for) = LOWER(#{item_for}) OR LOWER(item_for) = 'general')
+           </if>
+           
+           <if test="type_idx != null">
+               AND item_type_idx = #{type_idx}
+           </if>
+           
+           <if test="searchKeyword != null and searchKeyword != ''">
+               AND item_name LIKE '%' || #{searchKeyword} || '%'
+           </if>
+       </where>
+       ORDER BY item_idx DESC
+   </select>
+	
+	<select id="getPrimaryPetSpecies" parameterType="int" resultType="string">
+	    SELECT pet_species 
+	    FROM pet 
+	    WHERE mem_idx = #{mem_idx} AND is_primary = 'Y'
+	</select>
+    
+    <!-- #{} -> 자바에서 받은 값을 sql에서 안전하게 사용할 수 있도록 도와줌(파라미터 바인딩이라고 함) -->
+    <select id="getItemDetail" resultMap="ItemFullMap">
+    	SELECT * FROM item WHERE item_idx = #{item_idx}  <!-- item이라는 테이블에서 요청받은 idx만 조회 -->
+    </select>
+    
+    <!-- 
+    	태그는 MyBatis가 SQL 목적을 구분하도록 돕는 표시 
+    	select면 MyBatis가 아 이건 select문이구나 하고 생각함
+    	단, 태그 이름 ≠ SQL 문법이 아님 -> <select> 안에는 실제 SQL로 SELECT ... 라고 직접 써야 함
+    -->
+    <select id="searchItem"  resultMap="ItemFullMap">
+	    SELECT * FROM item WHERE REGEXP_REPLACE(item_name, '\s', '') 
+	    							LIKE '%' || REGEXP_REPLACE(#{searchKeyword}, '\s', '') || '%' ORDER BY item_idx DESC 
+	    <!-- item이라는 테이블에서 요청받은 값이 포함된 name을 앞, 뒤, 중간 공백(탭, 스페이스, 줄바꿈 등)을 제거 후 내림차순(최신순)으로 모두 조회 -->
+	</select>
+	
+	<select id="getItemByCategory" resultMap="ItemFullMap">
+	    SELECT i.*, t.item_type_category 
+															    FROM item i
+															    JOIN item_type t ON i.item_type_idx = t.item_type_idx
+															    WHERE i.item_type_idx = #{type_idx}  ORDER BY i.item_idx DESC
+	    <!-- item이라는 테이블에서 요청받은 값이 포함된 category를 앞, 뒤, 중간 공백(탭, 스페이스, 줄바꿈 등)을 제거 후 내림차순(최신순)으로 모두 조회-->
+	</select>
+	
+	<insert id="insertItem" parameterType="com.example.db.vo.ItemVo">
+	    INSERT INTO item (
+	        item_idx,
+	        item_name,
+	        item_origin_price,
+	        item_now_price,
+	        item_stock,
+	        item_type_idx,
+	        item_for,
+	        item_is_sale,
+	        item_brand,
+	        item_thumbnail_img,
+	        item_detail_img,
+	        item_regdate
+	    ) VALUES (
+	        seq_item_idx.NEXTVAL,
+	        #{item_name},
+	        #{item_origin_price},
+	        #{item_now_price},
+	        #{item_stock},
+	        #{item_type_idx},
+	        #{item_for},
+	        #{item_is_sale},
+	        #{item_brand},
+	        #{item_thumbnail_img},
+	        #{item_detail_img},
+	        SYSDATE
+	    )
+	</insert>
+	
+	<select id="getLowStockItems" resultMap="ItemFullMap">
+	    SELECT * FROM (
+	        SELECT * FROM item 
+	        WHERE item_stock &lt;= 20 
+	        ORDER BY item_stock ASC
+	    ) WHERE ROWNUM &lt;= 4
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
